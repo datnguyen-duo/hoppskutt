@@ -1,0 +1,1936 @@
+.app-shell {
+  --brand-accent: #4f836d;
+  --brand-accent-strong: #386653;
+  --brand-ink: #20312b;
+  --brand-muted: rgba(32, 49, 43, 0.72);
+  --brand-cream: #fbf7f0;
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 14% 12%, color-mix(in srgb, var(--theme-secondary) 14%, transparent), transparent 28%),
+    radial-gradient(circle at 84% 10%, color-mix(in srgb, var(--theme-accent) 14%, transparent), transparent 28%),
+    linear-gradient(180deg, color-mix(in srgb, var(--theme-background-alt) 90%, white 10%), var(--theme-background));
+  color: var(--brand-ink);
+}
+
+.theme-maryland {
+  --theme-accent: #5a8c78;
+  --theme-secondary: #d0a06b;
+  --theme-background: #eef4ef;
+  --theme-background-alt: #dce8df;
+}
+
+.theme-rhode-island {
+  --theme-accent: #6c8798;
+  --theme-secondary: #d8b486;
+  --theme-background: #f1f4f5;
+  --theme-background-alt: #dde7ea;
+}
+
+.theme-colorado {
+  --theme-accent: #6f8f68;
+  --theme-secondary: #c98b56;
+  --theme-background: #f1f3ed;
+  --theme-background-alt: #e3e6db;
+}
+
+.theme-greece {
+  --theme-accent: #5f86ad;
+  --theme-secondary: #ddb16b;
+  --theme-background: #f3f6f8;
+  --theme-background-alt: #e1eaf0;
+}
+
+.theme-sweden {
+  --theme-accent: #749082;
+  --theme-secondary: #c76a57;
+  --theme-background: #eef4f1;
+  --theme-background-alt: #dde8e2;
+}
+
+.theme-vietnam {
+  --theme-accent: #5a916b;
+  --theme-secondary: #d69b52;
+  --theme-background: #f1f5ef;
+  --theme-background-alt: #dfe9df;
+}
+
+.app-shell__backdrop,
+.app-shell__grain {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+
+.app-shell__backdrop {
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.3), transparent 18%),
+    radial-gradient(circle at 72% 16%, rgba(255, 255, 255, 0.22), transparent 22%);
+}
+
+.app-shell__grain {
+  background-image:
+    linear-gradient(rgba(32, 49, 43, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(32, 49, 43, 0.015) 1px, transparent 1px);
+  background-size: 22px 22px;
+  mask-image: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.44), transparent);
+}
+
+.screen {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 1320px);
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 1.2rem clamp(1rem, 2.8vw, 2rem) 1.5rem;
+}
+
+.screen-card {
+  border: 1px solid rgba(54, 73, 66, 0.1);
+  border-radius: 28px;
+  background: rgba(251, 247, 240, 0.94);
+  box-shadow:
+    0 16px 34px rgba(78, 92, 86, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.72);
+}
+
+.eyebrow {
+  margin: 0;
+  color: color-mix(in srgb, var(--theme-accent) 78%, #315548);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-family: 'Bree Serif', serif;
+  font-weight: 400;
+  line-height: 0.96;
+  letter-spacing: -0.035em;
+}
+
+p {
+  margin: 0;
+}
+
+.lede,
+.board-feature__copy,
+.reward-card__intro p,
+.reward-card__prize p,
+.unlock-banner p,
+.notice span,
+.run-tip,
+.run-status,
+.daypack-choice__copy span,
+.destination-card__status,
+.recipe-shelf-card p,
+.kit-item__copy span,
+.start-rule span,
+.start-preview-card small,
+.passport-cover p {
+  color: var(--brand-muted);
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0.8rem 1.18rem;
+  border-radius: 999px;
+  border: 0;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease,
+    opacity 150ms ease,
+    background-color 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease;
+}
+
+.button svg,
+.summary-chip svg,
+.loadout-chip svg,
+.run-hud__panel > svg,
+.start-menu-item svg {
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 auto;
+}
+
+.button svg,
+.start-menu-item svg {
+  margin-right: 0.45rem;
+}
+
+.button:hover {
+  transform: translateY(-1px);
+}
+
+.button:disabled {
+  opacity: 0.46;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.button--primary {
+  background: var(--brand-accent);
+  color: #fdfaf4;
+  box-shadow: 0 10px 20px rgba(64, 104, 87, 0.22);
+}
+
+.button--primary:hover {
+  background: var(--brand-accent-strong);
+}
+
+.button--ghost {
+  background: rgba(255, 253, 249, 0.94);
+  color: var(--brand-ink);
+  border: 1px solid rgba(54, 73, 66, 0.1);
+}
+
+.button--quiet {
+  min-height: auto;
+  padding: 0.2rem 0;
+  background: transparent;
+  color: rgba(32, 49, 43, 0.62);
+}
+
+.topbar {
+  display: grid;
+  gap: 0.9rem;
+  align-items: end;
+  margin-bottom: 0.75rem;
+}
+
+.topbar h2 {
+  max-width: 30rem;
+  font-size: clamp(1.95rem, 4vw, 2.9rem);
+}
+
+.topbar__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.notice {
+  margin-bottom: 1rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid rgba(54, 73, 66, 0.08);
+  border-radius: 18px;
+  background: rgba(255, 252, 245, 0.92);
+}
+
+.notice--loss {
+  background: rgba(255, 242, 236, 0.92);
+}
+
+.notice--success {
+  background: rgba(241, 248, 243, 0.92);
+}
+
+.notice--info {
+  background: rgba(245, 248, 246, 0.92);
+}
+
+.postcard-scene {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(57, 76, 68, 0.1);
+  border-radius: 24px;
+  background: #f6f0e5;
+}
+
+.postcard-scene svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.postcard-scene img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(1.02) contrast(1.01);
+}
+
+.postcard-scene--hero {
+  aspect-ratio: 2.25 / 1;
+}
+
+.postcard-scene--compact {
+  aspect-ratio: 2.2 / 1;
+}
+
+.chloe-pin {
+  position: absolute;
+  width: 2.55rem;
+  height: 2.55rem;
+  border-radius: 999px;
+  border: 1px solid rgba(54, 73, 66, 0.12);
+  background: #fffaf2;
+  box-shadow: 0 10px 18px rgba(71, 88, 82, 0.1);
+  z-index: 3;
+}
+
+.chloe-pin::before,
+.chloe-pin::after {
+  content: '';
+  position: absolute;
+  top: 0.32rem;
+  width: 0.54rem;
+  height: 0.88rem;
+  border-radius: 999px;
+  background: #121418;
+}
+
+.chloe-pin::before {
+  left: 0.58rem;
+  transform: rotate(-28deg);
+}
+
+.chloe-pin::after {
+  right: 0.6rem;
+  transform: rotate(25deg);
+}
+
+.chloe-pin--passport {
+  right: 1rem;
+  top: 1rem;
+}
+
+.summary-chip,
+.loadout-chip {
+  border: 1px solid rgba(54, 73, 66, 0.1);
+  border-radius: 18px;
+  background: rgba(255, 252, 246, 0.88);
+}
+
+.summary-chip {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.65rem;
+  align-items: center;
+  padding: 0.8rem 0.9rem;
+}
+
+.loadout-chip {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.65rem;
+  align-items: center;
+  padding: 0.86rem 1rem;
+}
+
+.summary-chip span,
+.loadout-chip span,
+.board-feature__metrics span,
+.reward-card__stats span,
+.recipe-card__country,
+.kit-item__actions span:first-child,
+.daypack-choice__meta span,
+.destination-strip__state {
+  display: block;
+  color: rgba(32, 49, 43, 0.56);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.summary-chip strong,
+.loadout-chip strong,
+.board-feature__metrics strong,
+.reward-card__stats strong {
+  display: block;
+  margin-top: 0.34rem;
+  color: var(--brand-ink);
+}
+
+.start-screen {
+  width: 100%;
+  max-width: none;
+  padding: 0;
+}
+
+.start-hero__sign,
+.start-hero__stamp,
+.destination-hero__route-badge,
+.destination-hero__country-badge,
+.reward-card__hero-route,
+.reward-card__hero-stamp,
+.destination-strip__route-label,
+.recipe-card__stamp {
+  position: absolute;
+  z-index: 3;
+  padding: 0.35rem 0.68rem;
+  border-radius: 999px;
+  border: 1px solid rgba(57, 76, 68, 0.12);
+  background: rgba(255, 251, 244, 0.92);
+  color: var(--brand-ink);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.destination-hero__route-badge,
+.reward-card__hero-route,
+.destination-strip__route-label {
+  left: 0.9rem;
+  top: 0.9rem;
+}
+
+.destination-hero__country-badge,
+.reward-card__hero-stamp {
+  right: 0.9rem;
+  top: 0.9rem;
+}
+
+.start-landing {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.start-landing__scene,
+.start-landing__photo {
+  position: absolute;
+  inset: 0;
+}
+
+.start-landing__photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 46%;
+  filter: saturate(0.96) contrast(1.03) brightness(0.74);
+  animation: landing-photo-drift 22s ease-in-out infinite alternate;
+}
+
+.start-landing__wash {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 38%, rgba(245, 241, 232, 0.12), transparent 25%),
+    linear-gradient(180deg, rgba(9, 18, 15, 0.18) 0%, rgba(9, 18, 15, 0.08) 28%, rgba(9, 18, 15, 0.36) 100%),
+    linear-gradient(90deg, rgba(10, 19, 17, 0.56) 0%, rgba(10, 19, 17, 0.18) 24%, rgba(10, 19, 17, 0.1) 50%, rgba(10, 19, 17, 0.2) 72%, rgba(10, 19, 17, 0.54) 100%);
+}
+
+.start-landing__ambient,
+.start-landing__beam {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.start-landing__ambient {
+  mix-blend-mode: screen;
+  opacity: 0.26;
+}
+
+.start-landing__ambient--one {
+  background: radial-gradient(circle at 26% 28%, rgba(255, 230, 160, 0.42), transparent 22%);
+  animation: landing-glow-one 11s ease-in-out infinite alternate;
+}
+
+.start-landing__ambient--two {
+  background: radial-gradient(circle at 72% 24%, rgba(165, 215, 255, 0.18), transparent 20%);
+  animation: landing-glow-two 15s ease-in-out infinite alternate;
+}
+
+.start-landing__beam {
+  background: linear-gradient(108deg, transparent 34%, rgba(255, 241, 205, 0.12) 48%, transparent 61%);
+  opacity: 0.36;
+  transform: translateX(-12%);
+  animation: landing-beam-drift 14s ease-in-out infinite alternate;
+}
+
+.start-landing__topbar,
+.start-landing__hero,
+.start-menu-drawer,
+.start-photo-modal {
+  position: relative;
+  z-index: 1;
+}
+
+.start-landing__topbar {
+  position: absolute;
+  inset: 1.2rem 1.4rem auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+}
+
+.start-landing__brand {
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 250, 241, 0.18);
+  background: rgba(12, 22, 19, 0.3);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 10px 22px rgba(8, 18, 16, 0.18);
+}
+
+.start-landing__brand-icon {
+  width: 2.1rem;
+  height: 2.1rem;
+  display: block;
+}
+
+.start-landing__menu-button {
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  padding: 0;
+  border: 1px solid rgba(255, 250, 241, 0.18);
+  border-radius: 20px;
+  background: rgba(12, 22, 19, 0.3);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  box-shadow: 0 10px 22px rgba(8, 18, 16, 0.18);
+}
+
+.start-landing__menu-button svg {
+  width: 1.15rem;
+  height: 1.15rem;
+  color: rgba(251, 247, 240, 0.92);
+}
+
+.start-landing__hero {
+  position: absolute;
+  left: clamp(1.5rem, 4vw, 3.5rem);
+  bottom: clamp(2rem, 6vh, 4rem);
+  display: grid;
+  gap: 1.5rem;
+  max-width: min(44rem, 58vw);
+  justify-items: start;
+  text-align: left;
+}
+
+.start-landing__hero h1 {
+  font-size: clamp(4.4rem, 9.2vw, 7rem);
+  color: #fbf7f0;
+  line-height: 0.9;
+  text-shadow: 0 10px 22px rgba(8, 18, 16, 0.28);
+}
+
+.start-landing__subtitle {
+  max-width: 38rem;
+  font-size: clamp(1.24rem, 2.4vw, 1.78rem);
+  font-weight: 700;
+  line-height: 1.12;
+  color: rgba(251, 247, 240, 0.94);
+}
+
+.start-landing__lede {
+  max-width: 38rem;
+  color: rgba(251, 247, 240, 0.74);
+  font-size: 1.04rem;
+  line-height: 1.55;
+}
+
+.start-landing__actions,
+.reward-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.start-landing__actions .button--primary {
+  min-width: 11rem;
+  min-height: 3.5rem;
+  font-size: 1.08rem;
+  box-shadow: 0 14px 24px rgba(12, 28, 24, 0.26);
+}
+
+.start-menu-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 19;
+  background: rgba(8, 18, 16, 0.38);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+}
+
+.start-menu-overlay.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.start-menu-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 20;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  gap: 1rem;
+  width: min(27rem, 92vw);
+  height: 100vh;
+  padding: 1.2rem;
+  background: rgba(248, 244, 236, 0.98);
+  box-shadow: -24px 0 40px rgba(8, 18, 16, 0.18);
+  transform: translateX(102%);
+  transition: transform 220ms ease;
+}
+
+.start-menu-drawer.is-open {
+  transform: translateX(0);
+}
+
+.start-menu-drawer__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: start;
+}
+
+.start-menu-drawer__header h2 {
+  font-size: 2rem;
+}
+
+.start-menu-drawer__nav {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.start-menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 3rem;
+  padding: 0.8rem 0;
+  border: 0;
+  border-bottom: 1px solid rgba(32, 49, 43, 0.1);
+  background: transparent;
+  color: var(--brand-ink);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.start-menu-drawer__play {
+  margin-top: 0.4rem;
+}
+
+.start-menu-drawer__body {
+  display: grid;
+  align-content: start;
+}
+
+.start-menu-panel {
+  display: grid;
+  gap: 0.8rem;
+  padding: 1rem 0;
+  color: var(--brand-muted);
+  line-height: 1.55;
+}
+
+.start-menu-resources {
+  display: grid;
+  gap: 0.5rem;
+  padding-left: 1.1rem;
+  margin: 0;
+}
+
+.start-photo-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 22;
+  display: grid;
+  place-items: center;
+}
+
+.start-photo-modal__scrim {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(8, 18, 16, 0.56);
+  cursor: pointer;
+}
+
+.start-photo-modal__card {
+  position: relative;
+  z-index: 1;
+  width: min(56rem, calc(100vw - 2rem));
+  padding: 1rem;
+  border-radius: 28px;
+  background: rgba(248, 244, 236, 0.98);
+  box-shadow: 0 28px 46px rgba(8, 18, 16, 0.28);
+}
+
+.start-photo-modal__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: start;
+  margin-bottom: 1rem;
+}
+
+.start-photo-modal__header h2 {
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+}
+
+.start-photo-modal__image {
+  display: block;
+  width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+  border-radius: 22px;
+  background: #dfe7de;
+}
+
+.start-photo-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.destination-screen,
+.collection-screen,
+.reward-screen {
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+}
+
+.destination-screen--hub {
+  gap: 1.1rem;
+}
+
+.destination-topbar {
+  margin-bottom: 0;
+}
+
+.destination-topbar__copy {
+  display: grid;
+  gap: 0.58rem;
+}
+
+.destination-topbar__copy h2 {
+  max-width: none;
+  font-size: clamp(2.2rem, 4.8vw, 3.5rem);
+}
+
+.destination-topbar__copy p {
+  max-width: none;
+  color: var(--brand-muted);
+}
+
+.destination-hub {
+  display: grid;
+  gap: 0.9rem;
+  align-items: start;
+}
+
+.destination-hero-panel {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  min-height: min(38rem, calc(100vh - 11rem));
+  padding: 0;
+  overflow: hidden;
+}
+
+.destination-hero-panel__art {
+  position: relative;
+  min-height: 21rem;
+}
+
+.destination-hero-panel__scene,
+.destination-hero-panel__shade,
+.destination-hero-panel__copy {
+  position: absolute;
+  inset: 0;
+}
+
+.destination-hero-panel__scene .postcard-scene--hero {
+  height: 100%;
+  min-height: 100%;
+  aspect-ratio: auto;
+  border: 0;
+  border-radius: 28px 28px 0 0;
+}
+
+.destination-hero-panel__shade {
+  background:
+    linear-gradient(180deg, rgba(10, 18, 16, 0.04) 0%, rgba(10, 18, 16, 0) 34%, rgba(10, 18, 16, 0.58) 100%),
+    linear-gradient(90deg, rgba(10, 18, 16, 0.26) 0%, rgba(10, 18, 16, 0.04) 44%, rgba(10, 18, 16, 0.14) 100%);
+}
+
+.destination-hero-panel__copy {
+  inset: auto 1.15rem 1.15rem 1.15rem;
+  display: grid;
+  gap: 0.72rem;
+}
+
+.destination-hero-panel__copy h3 {
+  max-width: 10ch;
+  font-size: clamp(2.25rem, 4.8vw, 3.5rem);
+  color: #fbf7f0;
+  text-shadow: 0 10px 20px rgba(8, 18, 16, 0.28);
+}
+
+.destination-hero-panel__tagline {
+  max-width: 34rem;
+  color: rgba(251, 247, 240, 0.96);
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.42;
+}
+
+.destination-hero-panel__overview {
+  max-width: 38rem;
+  color: rgba(251, 247, 240, 0.82);
+  line-height: 1.56;
+}
+
+.destination-hero-panel__footer {
+  display: grid;
+  gap: 0.85rem;
+  padding: 0.9rem;
+  background: rgba(251, 247, 240, 0.94);
+}
+
+.destination-hero-panel__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.destination-hero-panel__cta {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.destination-hero-panel__playbox {
+  display: grid;
+  gap: 0.75rem;
+  align-content: start;
+}
+
+.destination-hero-panel__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.destination-hero-panel__actions .button--primary {
+  min-width: 11rem;
+}
+
+.destination-sidebar {
+  display: grid;
+  gap: 0.75rem;
+  align-content: start;
+  grid-template-columns: 1fr;
+}
+
+.destination-sidebar__section {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.8rem;
+}
+
+.destination-sidebar__section:first-child {
+  grid-area: auto;
+}
+
+.destination-sidebar__section--pack {
+  grid-area: pack;
+}
+
+.destination-stop-header {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.destination-stop-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.destination-stop-list {
+  display: grid;
+  gap: 0.6rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.destination-stop-card {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.52rem;
+  align-items: start;
+  width: 100%;
+  padding: 0.62rem;
+  border: 1px solid rgba(54, 73, 66, 0.1);
+  border-radius: 22px;
+  background: rgba(255, 252, 246, 0.88);
+  color: var(--brand-ink);
+  text-align: left;
+  min-height: 100%;
+}
+
+.destination-stop-card.is-selected {
+  border-color: color-mix(in srgb, var(--card-accent) 44%, #43675a);
+  box-shadow: 0 12px 20px rgba(73, 90, 84, 0.08);
+}
+
+.destination-stop-card.is-locked {
+  opacity: 0.58;
+}
+
+.destination-stop-card__art .postcard-scene--compact {
+  aspect-ratio: 2.25 / 1;
+  border-radius: 18px;
+}
+
+.destination-stop-card__body {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.destination-stop-card__copy {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.destination-stop-card__copy strong {
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+.destination-stop-card__name {
+  color: var(--brand-muted);
+  font-size: 0.92rem;
+}
+
+.destination-stop-card__copy .destination-card__status {
+  color: var(--brand-muted);
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.destination-stop-card__state,
+.destination-pack-card__state {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem 0.62rem;
+  border-radius: 999px;
+  border: 1px solid rgba(54, 73, 66, 0.1);
+  background: rgba(255, 253, 248, 0.84);
+  color: rgba(32, 49, 43, 0.72);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.destination-sidebar__section--pack {
+  gap: 0.85rem;
+}
+
+.destination-pack-summary {
+  display: grid;
+  gap: 0.32rem;
+  padding: 0.86rem 0.95rem;
+  border: 1px solid rgba(54, 73, 66, 0.1);
+  border-radius: 20px;
+  background: rgba(255, 252, 246, 0.84);
+}
+
+.destination-pack-summary__copy {
+  display: grid;
+  gap: 0.18rem;
+}
+
+.destination-pack-summary .eyebrow {
+  display: block;
+}
+
+.destination-pack-summary strong {
+  display: block;
+  color: var(--brand-ink);
+  font-size: 1.05rem;
+}
+
+.destination-pack-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.destination-pack-card {
+  display: grid;
+  gap: 0.5rem;
+  width: 100%;
+  min-height: 100%;
+  padding: 0.76rem;
+  border: 1px solid rgba(54, 73, 66, 0.1);
+  border-radius: 22px;
+  background: rgba(255, 252, 246, 0.88);
+  color: var(--brand-ink);
+  text-align: left;
+}
+
+.destination-pack-card.is-active {
+  border-color: color-mix(in srgb, var(--boost-accent) 42%, #43675a);
+  box-shadow: 0 12px 20px rgba(73, 90, 84, 0.08);
+}
+
+.destination-pack-card.is-empty {
+  opacity: 0.54;
+}
+
+.destination-pack-card__top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.destination-pack-card__count {
+  color: rgba(32, 49, 43, 0.58);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.destination-pack-card__copy {
+  display: grid;
+  gap: 0.18rem;
+}
+
+.destination-pack-card__copy strong {
+  font-size: 0.96rem;
+}
+
+.destination-pack-card__copy span {
+  color: rgba(32, 49, 43, 0.58);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.destination-pack-card__copy p {
+  color: var(--brand-muted);
+  font-size: 0.84rem;
+  line-height: 1.35;
+}
+
+.board-layout {
+  display: grid;
+  gap: 1rem;
+}
+
+.board-feature {
+  display: grid;
+  gap: 0.9rem;
+  padding: 0.9rem;
+}
+
+.board-feature__main {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.board-feature__scene,
+.reward-card__hero,
+.recipe-shelf-card__scene {
+  position: relative;
+}
+
+.board-feature__scene .postcard-scene--hero {
+  min-height: 18.5rem;
+  aspect-ratio: auto;
+}
+
+.board-feature__body {
+  display: grid;
+  gap: 0.68rem;
+  align-content: start;
+}
+
+.board-feature__header {
+  display: grid;
+  gap: 0.62rem;
+}
+
+.board-feature__header h3 {
+  font-size: clamp(1.9rem, 4vw, 2.8rem);
+}
+
+.board-feature__tagline {
+  margin-top: 0.35rem;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #294138;
+}
+
+.board-feature__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.board-feature__copy {
+  max-width: 34rem;
+  font-size: 0.98rem;
+}
+
+.board-feature__metrics,
+.reward-card__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.board-feature__metrics div,
+.reward-card__stats div,
+.board-feature__reward,
+.reward-card__prize,
+.unlock-banner,
+.recipe-shelf-card,
+.kit-item,
+.daypack-choice,
+.board-route-card {
+  border: 1px solid rgba(54, 73, 66, 0.1);
+  border-radius: 22px;
+  background: rgba(255, 252, 246, 0.88);
+}
+
+.board-feature__metrics div,
+.reward-card__stats div,
+.board-feature__reward,
+.reward-card__prize,
+.unlock-banner {
+  padding: 0.82rem 0.9rem;
+}
+
+.board-feature__reward {
+  display: grid;
+  gap: 0.35rem;
+  border-color: color-mix(in srgb, var(--screen-accent) 22%, rgba(54, 73, 66, 0.1));
+}
+
+.board-feature__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.board-routes,
+.board-loadout,
+.kit-panel,
+.recipe-shelf,
+.passport-cover {
+  padding: 1rem;
+}
+
+.section-heading,
+.daypack-panel__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: start;
+}
+
+.section-heading--compact h3,
+.daypack-panel__header h3 {
+  font-size: 1.35rem;
+}
+
+.board-route-list,
+.daypack-panel__list,
+.kit-list {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.board-feature__dock {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.board-mini-section {
+  display: grid;
+  gap: 0.68rem;
+  padding: 0.78rem;
+  border-radius: 22px;
+  border: 1px solid rgba(54, 73, 66, 0.1);
+  background: rgba(255, 252, 246, 0.84);
+}
+
+.board-route-card {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.6rem;
+  align-items: start;
+  width: 100%;
+  padding: 0.72rem;
+  text-align: left;
+  color: var(--brand-ink);
+}
+
+.board-route-card.is-selected,
+.daypack-choice.is-active,
+.kit-item.is-active {
+  border-color: color-mix(in srgb, var(--card-accent, var(--boost-accent, var(--brand-accent))) 42%, #43675a);
+  box-shadow: 0 12px 20px rgba(73, 90, 84, 0.08);
+}
+
+.board-route-card.is-locked,
+.daypack-choice.is-empty,
+.kit-item.is-empty,
+.recipe-shelf-card.is-locked {
+  opacity: 0.58;
+}
+
+.board-route-card__art {
+  position: relative;
+}
+
+.board-route-card__art .postcard-scene--compact,
+.recipe-shelf-card__scene .postcard-scene--compact {
+  aspect-ratio: 2.65 / 1;
+}
+
+.board-route-card__copy,
+.daypack-choice__copy,
+.kit-item__copy,
+.recipe-shelf-card__body {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.board-route-card__copy strong {
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.board-mini-section--loadout .daypack-choice {
+  padding-block: 0.78rem;
+}
+
+.daypack-panel__list--dock {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.daypack-choice,
+.kit-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.85rem;
+  align-items: center;
+  width: 100%;
+  padding: 0.86rem 0.95rem;
+  text-align: left;
+  color: var(--brand-ink);
+}
+
+.daypack-choice__dot,
+.kit-item__swatch {
+  width: 0.88rem;
+  height: 0.88rem;
+  border-radius: 999px;
+  background: var(--boost-accent, var(--kit-accent));
+  box-shadow: 0 0 0 0.24rem rgba(255, 255, 255, 0.72);
+}
+
+.daypack-choice__meta,
+.kit-item__actions {
+  display: grid;
+  gap: 0.18rem;
+  justify-items: end;
+}
+
+.collection-board {
+  display: grid;
+  gap: 1rem;
+  min-height: calc(100vh - 10rem);
+  align-content: start;
+}
+
+.passport-cover {
+  position: relative;
+  display: grid;
+  gap: 0.9rem;
+}
+
+.passport-cover__copy {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.passport-cover__copy h3 {
+  font-size: clamp(1.55rem, 2.6vw, 2.1rem);
+}
+
+.passport-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.collection-layout {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.recipe-shelf__grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.recipe-shelf-card {
+  display: grid;
+  gap: 0.62rem;
+  padding: 0.72rem;
+}
+
+.recipe-shelf-card__body {
+  padding: 0.1rem 0.1rem 0.15rem;
+}
+
+.recipe-card__country {
+  color: rgba(32, 49, 43, 0.58);
+}
+
+.recipe-card__stamp {
+  position: absolute;
+  right: 0.72rem;
+  top: 0.72rem;
+}
+
+.recipe-illustration {
+  display: grid;
+  place-items: center;
+  min-height: 5.7rem;
+  border-radius: 18px;
+  border: 1px solid rgba(54, 73, 66, 0.08);
+  background: color-mix(in srgb, var(--recipe-secondary, #ead5b2) 16%, white);
+  overflow: hidden;
+}
+
+.recipe-illustration svg {
+  width: min(100%, 7rem);
+  height: auto;
+}
+
+.recipe-illustration img {
+  display: block;
+  width: min(100%, 9rem);
+  height: auto;
+  object-fit: contain;
+}
+
+.recipe-illustration--mini {
+  min-height: 4.6rem;
+}
+
+.recipe-illustration.is-locked {
+  filter: saturate(0.2);
+  opacity: 0.72;
+}
+
+.recipe-lock-plate {
+  display: grid;
+  place-items: center;
+  min-height: 4.2rem;
+  border-radius: 18px;
+  border: 1px dashed rgba(54, 73, 66, 0.14);
+  background: rgba(247, 243, 236, 0.86);
+  color: rgba(32, 49, 43, 0.52);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.reward-screen {
+  place-items: start center;
+}
+
+.reward-card {
+  display: grid;
+  gap: 0.9rem;
+  width: min(100%, 60rem);
+  padding: 0.95rem;
+}
+
+.reward-card__intro {
+  display: grid;
+  gap: 0.42rem;
+}
+
+.reward-card__intro h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.reward-card__board {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.reward-card__main,
+.reward-card__side {
+  display: grid;
+  gap: 0.9rem;
+  align-content: start;
+}
+
+.reward-card__prize {
+  display: grid;
+  gap: 0.9rem;
+  align-items: start;
+}
+
+.reward-card__prize-copy {
+  display: grid;
+  gap: 0.32rem;
+  min-width: 0;
+  align-content: start;
+}
+
+.reward-card__prize-art {
+  display: grid;
+  place-items: center;
+  width: 9.5rem;
+  justify-self: end;
+}
+
+.reward-card__prize--recipe {
+  grid-template-columns: minmax(0, 1fr) 9.5rem;
+}
+
+.reward-card__prize--recipe .recipe-illustration {
+  width: 9.5rem;
+  min-height: 9.5rem;
+}
+
+.reward-card__prize--recipe .recipe-illustration img {
+  width: 8.5rem;
+}
+
+.reward-illustration {
+  display: grid;
+  place-items: center;
+  min-height: 8.4rem;
+}
+
+.unlock-banner strong {
+  display: block;
+  margin: 0.22rem 0 0.3rem;
+}
+
+.reward-card__actions {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.run-screen {
+  position: relative;
+  min-height: 100vh;
+}
+
+.run-screen__canvas {
+  display: block;
+  width: 100%;
+  height: 100vh;
+}
+
+.run-overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  padding: 1rem;
+  pointer-events: none;
+}
+
+.run-topbar,
+.run-bottombar {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.85rem;
+  align-items: flex-start;
+}
+
+.run-topbar .button {
+  pointer-events: auto;
+}
+
+.run-bottombar {
+  align-self: end;
+  justify-content: flex-start;
+}
+
+.run-hud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.run-hud__panel,
+.run-tip,
+.run-status,
+.hud-pop {
+  border: 1px solid rgba(54, 73, 66, 0.12);
+  border-radius: 20px;
+  background: rgba(251, 247, 240, 0.92);
+  box-shadow: 0 14px 24px rgba(66, 83, 76, 0.1);
+  color: var(--brand-ink);
+}
+
+.run-hud__panel {
+  min-width: 8rem;
+  padding: 0.84rem 0.95rem;
+}
+
+.run-hud__panel > svg {
+  color: rgba(32, 49, 43, 0.62);
+  margin-bottom: 0.28rem;
+}
+
+.run-hud__panel .eyebrow,
+.run-status .eyebrow,
+.run-tip .eyebrow {
+  display: block;
+}
+
+.run-hud__panel strong {
+  display: block;
+  margin-top: 0.25rem;
+  color: var(--brand-ink);
+}
+
+.run-hud__panel small {
+  display: block;
+  margin-top: 0.16rem;
+  color: rgba(32, 49, 43, 0.62);
+}
+
+.run-hud__panel--score {
+  min-width: min(17rem, 46vw);
+}
+
+.run-hud__panel--route {
+  min-width: min(16rem, 40vw);
+}
+
+.run-hud__panel--run {
+  min-width: min(10.5rem, 32vw);
+}
+
+.run-progress {
+  margin-top: 0.65rem;
+}
+
+.run-progress__track {
+  height: 0.5rem;
+  border-radius: 999px;
+  background: rgba(54, 73, 66, 0.1);
+  overflow: hidden;
+}
+
+.run-progress__fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--brand-accent);
+}
+
+.run-progress__fill--route {
+  background: color-mix(in srgb, var(--run-secondary) 60%, var(--brand-accent));
+}
+
+.run-paws {
+  display: flex;
+  gap: 0.42rem;
+  margin-top: 0.45rem;
+}
+
+.run-paws__dot {
+  width: 0.88rem;
+  height: 0.88rem;
+  border-radius: 999px;
+  background: rgba(54, 73, 66, 0.16);
+}
+
+.run-paws__dot.is-active {
+  background: var(--brand-accent);
+}
+
+.run-popups {
+  position: absolute;
+  left: 50%;
+  bottom: 6.7rem;
+  transform: translateX(-50%);
+  display: grid;
+  gap: 0.55rem;
+  justify-items: center;
+  width: min(24rem, calc(100vw - 2rem));
+  pointer-events: none;
+}
+
+.hud-pop {
+  width: 100%;
+  padding: 0.8rem 0.95rem;
+  text-align: center;
+}
+
+.hud-pop--good {
+  border-color: rgba(94, 166, 144, 0.32);
+}
+
+.hud-pop--bad {
+  border-color: rgba(198, 110, 91, 0.32);
+}
+
+.hud-pop--boost {
+  border-color: rgba(79, 131, 109, 0.32);
+}
+
+.run-tip,
+.run-status {
+  max-width: 25rem;
+  padding: 0.9rem 1rem;
+}
+
+.hud-pop strong,
+.hud-pop span {
+  display: block;
+}
+
+.hud-pop strong {
+  line-height: 1.2;
+}
+
+.hud-pop span {
+  margin-top: 0.22rem;
+  color: rgba(32, 49, 43, 0.72);
+  line-height: 1.2;
+}
+
+.run-tip strong,
+.run-status strong {
+  display: block;
+  margin-top: 0.2rem;
+  color: #1c3029;
+}
+
+.run-status small {
+  display: block;
+  margin-top: 0.18rem;
+  color: rgba(32, 49, 43, 0.66);
+}
+
+.run-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.75rem;
+}
+
+.run-controls span {
+  padding: 0.34rem 0.62rem;
+  border-radius: 999px;
+  border: 1px solid rgba(54, 73, 66, 0.1);
+  background: rgba(255, 253, 248, 0.84);
+  color: rgba(32, 49, 43, 0.72);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+@media (min-width: 920px) {
+  .topbar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .destination-hub {
+    grid-template-columns: 1fr;
+  }
+
+  .destination-hero-panel__cta {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .destination-hero-panel__actions {
+    justify-content: space-between;
+  }
+
+  .destination-stop-header {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+  }
+
+  .board-feature__main {
+    grid-template-columns: minmax(0, 1.08fr) minmax(22rem, 0.92fr);
+    align-items: stretch;
+  }
+
+  .board-feature__scene .postcard-scene--hero {
+    height: 100%;
+  }
+
+  .board-feature__header {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+  }
+
+  .board-feature__dock {
+    grid-template-columns: minmax(0, 1.22fr) minmax(22rem, 0.78fr);
+    align-items: start;
+  }
+
+  .collection-layout {
+    grid-template-columns: minmax(0, 1.28fr) minmax(20rem, 0.72fr);
+    align-items: start;
+  }
+
+  .passport-cover {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+  }
+
+  .recipe-shelf__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .reward-card__prize {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .reward-card__board {
+    grid-template-columns: minmax(0, 1.15fr) minmax(18rem, 0.85fr);
+    align-items: start;
+  }
+
+  .reward-card__actions {
+    align-content: start;
+  }
+
+  .board-route-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 980px) {
+  .destination-hero-panel {
+    min-height: auto;
+  }
+
+  .destination-hero-panel__copy h3 {
+    max-width: 100%;
+  }
+
+  .destination-hero-panel__stats,
+  .destination-stop-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .destination-pack-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .board-feature__metrics,
+  .reward-card__stats {
+    grid-template-columns: 1fr;
+  }
+
+  .start-landing__hero {
+    max-width: min(40rem, 66vw);
+  }
+
+  .destination-stop-card {
+    grid-template-columns: 1fr;
+  }
+
+  .destination-stop-card__state {
+    justify-self: start;
+  }
+
+  .board-route-card,
+  .daypack-choice,
+  .kit-item {
+    grid-template-columns: 1fr;
+    justify-items: start;
+  }
+
+  .daypack-panel__list--dock {
+    grid-template-columns: 1fr;
+  }
+
+  .daypack-choice__meta,
+  .kit-item__actions {
+    justify-items: start;
+  }
+
+  .reward-card__prize--recipe {
+    grid-template-columns: 1fr;
+  }
+
+  .reward-card__prize-art {
+    width: 100%;
+    justify-self: start;
+  }
+}
+
+@media (max-width: 700px) {
+  .screen {
+    padding: 1rem 0.95rem 1.25rem;
+  }
+
+  .start-landing__topbar {
+    inset: 1rem 1rem auto;
+  }
+
+  .start-landing__brand,
+  .start-landing__menu-button {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .start-landing__hero {
+    left: 1rem;
+    right: 1rem;
+    bottom: 2rem;
+    max-width: none;
+    gap: 1.1rem;
+  }
+
+  .start-landing__hero h1 {
+    font-size: clamp(4.2rem, 19vw, 6rem);
+  }
+
+  .start-landing__subtitle {
+    max-width: 23rem;
+    font-size: 1.18rem;
+  }
+
+  .start-landing__lede {
+    max-width: 22rem;
+    font-size: 0.94rem;
+  }
+
+  .start-landing__actions,
+  .reward-card__actions,
+  .topbar__actions,
+  .board-feature__actions,
+  .passport-summary {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .start-menu-drawer {
+    width: 100vw;
+    padding: 1rem;
+  }
+
+  .start-photo-modal__card {
+    width: calc(100vw - 1rem);
+    padding: 0.8rem;
+  }
+
+  .run-topbar,
+  .run-bottombar {
+    flex-direction: column;
+  }
+
+  .run-popups {
+    bottom: 10rem;
+  }
+
+  .run-hud,
+  .run-hud__panel--score,
+  .run-hud__panel--route {
+    width: 100%;
+  }
+}
+
+@keyframes landing-photo-drift {
+  from {
+    transform: scale(1.02) translate3d(-1%, -0.5%, 0);
+  }
+
+  to {
+    transform: scale(1.07) translate3d(1.5%, -1.5%, 0);
+  }
+}
+
+@keyframes landing-glow-one {
+  from {
+    transform: translate3d(-2%, 0, 0) scale(1);
+    opacity: 0.18;
+  }
+
+  to {
+    transform: translate3d(2%, -1%, 0) scale(1.08);
+    opacity: 0.3;
+  }
+}
+
+@keyframes landing-glow-two {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.14;
+  }
+
+  to {
+    transform: translate3d(-2%, 2%, 0) scale(1.12);
+    opacity: 0.24;
+  }
+}
+
+@keyframes landing-beam-drift {
+  from {
+    transform: translateX(-14%);
+    opacity: 0.22;
+  }
+
+  to {
+    transform: translateX(10%);
+    opacity: 0.4;
+  }
+}
+
+@keyframes landing-hero-float {
+  from {
+    transform: translate(-50%, -50%) translateY(-4px);
+  }
+
+  to {
+    transform: translate(-50%, -50%) translateY(5px);
+  }
+}
+
+@keyframes landing-rail-float {
+  from {
+    transform: translateY(0);
+  }
+
+  to {
+    transform: translateY(-4px);
+  }
+}
