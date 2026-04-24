@@ -15,6 +15,10 @@ test('homepage loads and opens the destination board', async ({ page }) => {
     page.getByRole('heading', { name: 'Choose the next trailhead.' }),
   ).toBeVisible();
   await expect(page.getByRole('button', { name: /play route/i })).toBeVisible();
+  await expect(
+    page.locator('.destination-hero-panel').getByText('Level 1: Open Lanes'),
+  ).toBeVisible();
+  await expect(page.getByText('Open center lane')).toBeVisible();
 });
 
 test('route book navigation respects browser back', async ({ page }) => {
@@ -58,8 +62,10 @@ test('route run loads the canvas and HUD without crashing', async ({ page }) => 
   await expect(page.locator('canvas.run-screen__canvas')).toBeVisible();
   await expect(page.getByText('Loading the trail ahead...')).toHaveCount(0);
   await expect(page.getByRole('button', { name: /exit run/i })).toBeVisible();
-  await expect(page.getByText('Tandborste')).toBeVisible();
+  await expect(page.getByText('Tandborste', { exact: true })).toBeVisible();
   await expect(page.getByText('Trail Notes')).toBeVisible();
+  await expect(page.getByText('Level 1')).toBeVisible();
+  await expect(page.getByText('Open Lanes')).toBeVisible();
 
   await page.getByRole('button', { name: /exit run/i }).click();
   await expect(page).toHaveURL(/view=destinations/);

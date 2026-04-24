@@ -34,6 +34,7 @@ export type ObstacleSpec = {
 
 type RoutePatternSet = {
   styleBias: RouteStyleBias;
+  selectionMode: 'random' | 'cycle';
   spawnRanges: Record<RoutePhase, [number, number]>;
   patterns: Record<RoutePhase, RunnerPattern[]>;
 };
@@ -77,67 +78,67 @@ export function getRoutePhase(progress: number): RoutePhase {
   return 'final';
 }
 
-const calmPatterns: Record<RoutePhase, RunnerPattern[]> = {
+const boardwalkPatterns: Record<RoutePhase, RunnerPattern[]> = {
   warmup: [
+    {
+      obstacles: [],
+      tandborste: [{ lane: 0 }, { lane: 1, z: -0.24 }],
+    },
+    {
+      obstacles: [{ lane: -1, kind: 'crate' }],
+      tandborste: [{ lane: 0 }, { lane: 1, z: -0.26 }],
+    },
+    {
+      obstacles: [],
+      tandborste: [{ lane: -1, z: -0.28 }, { lane: 0 }, { lane: 1, z: -0.28 }],
+    },
+    {
+      obstacles: [{ lane: 1, kind: 'hurdle' }],
+      tandborste: [{ lane: 0 }, { lane: 1, y: 1.08 }],
+    },
+    {
+      obstacles: [{ lane: 1, kind: 'crate' }],
+      tandborste: [{ lane: -1, z: -0.24 }, { lane: 0 }],
+    },
+  ],
+  middle: [
     {
       obstacles: [{ lane: -1, kind: 'hurdle' }],
       tandborste: [{ lane: 0 }, { lane: 1 }],
     },
     {
       obstacles: [{ lane: 1, kind: 'crate' }],
-      tandborste: [{ lane: 0 }],
+      tandborste: [{ lane: -1 }, { lane: 0, z: -0.28 }],
     },
-    {
-      obstacles: [],
-      tandborste: [{ lane: -1, z: -0.28 }, { lane: 1, z: -0.28 }],
-    },
-    {
-      obstacles: [{ lane: -1, kind: 'crate' }],
-      tandborste: [{ lane: 0, y: 1.02 }],
-    },
-    {
-      obstacles: [{ lane: 1, kind: 'hurdle' }],
-      tandborste: [{ lane: 0, y: 1.08 }],
-    },
-  ],
-  middle: [
     {
       obstacles: [{ lane: 0, kind: 'hurdle' }],
-      tandborste: [{ lane: 0, y: 1.28 }, { lane: -1 }],
-    },
-    {
-      obstacles: [{ lane: -1, kind: 'crate' }],
-      tandborste: [{ lane: 0 }],
-    },
-    {
-      obstacles: [{ lane: 1, kind: 'bench' }],
-      tandborste: [{ lane: -1, y: 1.04 }],
+      tandborste: [{ lane: 0, y: 1.24 }, { lane: 1, z: -0.3 }],
     },
     {
       obstacles: [{ lane: 0, kind: 'crate' }],
-      tandborste: [{ lane: 1 }],
+      tandborste: [{ lane: -1 }, { lane: 1 }],
     },
     {
-      obstacles: [{ lane: -1, kind: 'hurdle' }],
-      tandborste: [{ lane: 1, y: 1.22 }],
+      obstacles: [{ lane: -1, kind: 'bench' }],
+      tandborste: [{ lane: 0 }, { lane: 1 }],
     },
   ],
   final: [
     {
       obstacles: [{ lane: -1, kind: 'crate' }, { lane: 1, kind: 'hurdle' }],
-      tandborste: [{ lane: 0, y: 1.1 }],
+      tandborste: [{ lane: 0 }, { lane: 1, y: 1.14 }],
     },
     {
       obstacles: [{ lane: 0, kind: 'bench' }],
       tandborste: [{ lane: -1, y: 1.06 }, { lane: 1, y: 1.06 }],
     },
     {
-      obstacles: [{ lane: -1, kind: 'hurdle' }, { lane: 1, kind: 'crate' }],
-      tandborste: [{ lane: 0, y: 1.14 }],
+      obstacles: [{ lane: 1, kind: 'crate' }],
+      tandborste: [{ lane: -1 }, { lane: 0, z: -0.28 }],
     },
     {
-      obstacles: [{ lane: 0, kind: 'hurdle' }, { lane: 1, kind: 'bench' }],
-      tandborste: [{ lane: -1, y: 1.14 }],
+      obstacles: [{ lane: -1, kind: 'hurdle' }],
+      tandborste: [{ lane: 0 }, { lane: 1, y: 1.12 }],
     },
   ],
 };
@@ -264,36 +265,162 @@ const mountainPatterns: Record<RoutePhase, RunnerPattern[]> = {
   ],
 };
 
-const breezyPatterns: Record<RoutePhase, RunnerPattern[]> = {
+const islandStepPatterns: Record<RoutePhase, RunnerPattern[]> = {
   warmup: [
     {
-      obstacles: [],
-      tandborste: [{ lane: -1, z: -0.38 }, { lane: 1, z: -0.38 }],
-    },
-    {
-      obstacles: [{ lane: 1, kind: 'crate' }],
-      tandborste: [{ lane: -1 }, { lane: 0, y: 1.1, z: -0.28 }],
-    },
-    {
-      obstacles: [{ lane: -1, kind: 'crate' }],
-      tandborste: [{ lane: 1 }, { lane: 1, y: 1.1, z: -0.28 }],
-    },
-    {
-      obstacles: [{ lane: 1, kind: 'hurdle' }],
-      tandborste: [{ lane: 0, y: 1.06 }],
+      obstacles: [{ lane: 0, kind: 'hurdle' }],
+      tandborste: [{ lane: 0, y: 1.26 }, { lane: -1 }],
     },
     {
       obstacles: [{ lane: -1, kind: 'hurdle' }],
-      tandborste: [{ lane: 0, y: 1.06 }],
+      tandborste: [{ lane: -1, y: 1.16 }, { lane: 1 }],
+    },
+    {
+      obstacles: [{ lane: 1, kind: 'crate' }],
+      tandborste: [{ lane: 0 }, { lane: -1, z: -0.32 }],
+    },
+    {
+      obstacles: [],
+      tandborste: [{ lane: -1 }, { lane: 0, y: 1.1, z: -0.3 }, { lane: 1 }],
     },
   ],
   middle: [
     {
       obstacles: [{ lane: -1, kind: 'hurdle' }],
-      tandborste: [{ lane: 1 }, { lane: 1, y: 1.18, z: -0.28 }],
+      tandborste: [{ lane: -1, y: 1.24 }, { lane: 1, z: -0.34 }],
     },
     {
       obstacles: [{ lane: 1, kind: 'hurdle' }],
+      tandborste: [{ lane: 1, y: 1.24 }, { lane: -1, z: -0.34 }],
+    },
+    {
+      obstacles: [{ lane: 0, kind: 'crate' }],
+      tandborste: [{ lane: -1, y: 1.06 }, { lane: 1, y: 1.06 }],
+    },
+    {
+      obstacles: [{ lane: 0, kind: 'hurdle' }],
+      tandborste: [{ lane: 0, y: 1.3 }, { lane: -1, z: -0.3 }],
+    },
+    {
+      obstacles: [{ lane: -1, kind: 'bench' }],
+      tandborste: [{ lane: 0, y: 1.14 }, { lane: 1 }],
+    },
+  ],
+  final: [
+    {
+      obstacles: [{ lane: -1, kind: 'hurdle' }, { lane: 1, kind: 'crate' }],
+      tandborste: [{ lane: -1, y: 1.22 }, { lane: 0 }],
+    },
+    {
+      obstacles: [{ lane: 1, kind: 'hurdle' }, { lane: -1, kind: 'crate' }],
+      tandborste: [{ lane: 1, y: 1.22 }, { lane: 0 }],
+    },
+    {
+      obstacles: [{ lane: 0, kind: 'bench' }],
+      tandborste: [{ lane: -1 }, { lane: 1, y: 1.16 }],
+    },
+    {
+      obstacles: [{ lane: 0, kind: 'hurdle' }, { lane: 1, kind: 'bench' }],
+      tandborste: [{ lane: 0, y: 1.3 }, { lane: -1, z: -0.34 }],
+    },
+  ],
+};
+
+const forestLoopPatterns: Record<RoutePhase, RunnerPattern[]> = {
+  warmup: [
+    {
+      obstacles: [{ lane: -1, kind: 'crate' }],
+      tandborste: [{ lane: 0 }],
+    },
+    {
+      obstacles: [{ lane: 1, kind: 'crate' }],
+      tandborste: [{ lane: 0 }],
+    },
+    {
+      obstacles: [{ lane: 0, kind: 'hurdle' }],
+      tandborste: [{ lane: 0, y: 1.18 }],
+    },
+    {
+      obstacles: [],
+      tandborste: [{ lane: -1, z: -0.32 }, { lane: 1, z: -0.32 }],
+    },
+  ],
+  middle: [
+    {
+      obstacles: [{ lane: -1, kind: 'bench' }],
+      tandborste: [{ lane: 1 }],
+    },
+    {
+      obstacles: [{ lane: 1, kind: 'bench' }],
+      tandborste: [{ lane: -1 }],
+    },
+    {
+      obstacles: [{ lane: 0, kind: 'crate' }],
+      tandborste: [{ lane: -1, z: -0.32 }, { lane: 1, z: -0.32 }],
+    },
+    {
+      obstacles: [{ lane: -1, kind: 'hurdle' }],
+      tandborste: [{ lane: 0 }, { lane: 1, y: 1.16 }],
+    },
+    {
+      obstacles: [{ lane: 1, kind: 'hurdle' }],
+      tandborste: [{ lane: 0 }, { lane: -1, y: 1.16 }],
+    },
+  ],
+  final: [
+    {
+      obstacles: [{ lane: -1, kind: 'bench' }, { lane: 1, kind: 'crate' }],
+      tandborste: [{ lane: 0 }],
+    },
+    {
+      obstacles: [{ lane: 1, kind: 'bench' }, { lane: -1, kind: 'crate' }],
+      tandborste: [{ lane: 0 }],
+    },
+    {
+      obstacles: [{ lane: 0, kind: 'bench' }],
+      tandborste: [{ lane: -1 }, { lane: 1 }],
+    },
+    {
+      obstacles: [{ lane: -1, kind: 'hurdle' }, { lane: 0, kind: 'crate' }],
+      tandborste: [{ lane: 1, y: 1.12 }],
+    },
+    {
+      obstacles: [{ lane: 1, kind: 'hurdle' }, { lane: 0, kind: 'crate' }],
+      tandborste: [{ lane: -1, y: 1.12 }],
+    },
+  ],
+};
+
+const breezyPatterns: Record<RoutePhase, RunnerPattern[]> = {
+  warmup: [
+    {
+      obstacles: [{ lane: 0, kind: 'crate' }],
+      tandborste: [{ lane: -1, z: -0.38 }, { lane: 1, z: -0.38 }],
+    },
+    {
+      obstacles: [{ lane: 0, kind: 'hurdle' }],
+      tandborste: [{ lane: 0, y: 1.18, z: -0.28 }, { lane: 1 }],
+    },
+    {
+      obstacles: [{ lane: -1, kind: 'crate' }, { lane: 1, kind: 'hurdle' }],
+      tandborste: [{ lane: 0 }, { lane: 1, y: 1.16, z: -0.28 }],
+    },
+    {
+      obstacles: [{ lane: 1, kind: 'crate' }],
+      tandborste: [{ lane: -1 }, { lane: 0, y: 1.08 }],
+    },
+    {
+      obstacles: [{ lane: -1, kind: 'hurdle' }],
+      tandborste: [{ lane: 0, y: 1.12 }, { lane: 1 }],
+    },
+  ],
+  middle: [
+    {
+      obstacles: [{ lane: -1, kind: 'hurdle' }, { lane: 0, kind: 'crate' }],
+      tandborste: [{ lane: 1 }, { lane: 1, y: 1.18, z: -0.28 }],
+    },
+    {
+      obstacles: [{ lane: 1, kind: 'hurdle' }, { lane: 0, kind: 'crate' }],
       tandborste: [{ lane: -1 }, { lane: -1, y: 1.18, z: -0.28 }],
     },
     {
@@ -301,11 +428,11 @@ const breezyPatterns: Record<RoutePhase, RunnerPattern[]> = {
       tandborste: [{ lane: -1, y: 1.02 }],
     },
     {
-      obstacles: [{ lane: -1, kind: 'crate' }],
+      obstacles: [{ lane: -1, kind: 'crate' }, { lane: 0, kind: 'hurdle' }],
       tandborste: [{ lane: 1, z: -0.34 }, { lane: 1, y: 1.18 }],
     },
     {
-      obstacles: [{ lane: 1, kind: 'crate' }],
+      obstacles: [{ lane: 1, kind: 'crate' }, { lane: 0, kind: 'hurdle' }],
       tandborste: [{ lane: -1, z: -0.34 }, { lane: -1, y: 1.18 }],
     },
   ],
@@ -336,55 +463,61 @@ const breezyPatterns: Record<RoutePhase, RunnerPattern[]> = {
 export const routePatternSets = {
   maryland: {
     styleBias: 'calm',
+    selectionMode: 'cycle',
     spawnRanges: {
-      warmup: [1.04, 1.18],
-      middle: [1.02, 1.16],
-      final: [1, 1.14],
+      warmup: [1.42, 1.62],
+      middle: [1.34, 1.52],
+      final: [1.24, 1.42],
     },
-    patterns: calmPatterns,
+    patterns: boardwalkPatterns,
   },
   'rhode-island': {
     styleBias: 'alternating',
+    selectionMode: 'cycle',
     spawnRanges: {
-      warmup: [1, 1.14],
-      middle: [0.98, 1.12],
-      final: [0.96, 1.1],
+      warmup: [1.04, 1.18],
+      middle: [1, 1.14],
+      final: [0.98, 1.12],
     },
     patterns: alternatingPatterns,
   },
   colorado: {
     styleBias: 'calm',
+    selectionMode: 'random',
     spawnRanges: {
-      warmup: [1.02, 1.14],
-      middle: [0.98, 1.1],
-      final: [0.96, 1.08],
+      warmup: [0.98, 1.1],
+      middle: [0.92, 1.04],
+      final: [0.88, 1],
     },
     patterns: mountainPatterns,
   },
   greece: {
     styleBias: 'alternating',
+    selectionMode: 'cycle',
     spawnRanges: {
-      warmup: [1.02, 1.14],
-      middle: [0.98, 1.1],
-      final: [0.96, 1.08],
+      warmup: [0.94, 1.06],
+      middle: [0.88, 1],
+      final: [0.84, 0.96],
     },
-    patterns: alternatingPatterns,
+    patterns: islandStepPatterns,
   },
   sweden: {
     styleBias: 'calm',
+    selectionMode: 'random',
     spawnRanges: {
-      warmup: [1.06, 1.2],
-      middle: [1.02, 1.16],
-      final: [1, 1.12],
+      warmup: [1.04, 1.16],
+      middle: [0.98, 1.08],
+      final: [0.9, 1],
     },
-    patterns: calmPatterns,
+    patterns: forestLoopPatterns,
   },
   vietnam: {
     styleBias: 'breezy',
+    selectionMode: 'cycle',
     spawnRanges: {
-      warmup: [0.98, 1.12],
-      middle: [0.96, 1.1],
-      final: [0.94, 1.08],
+      warmup: [0.86, 0.98],
+      middle: [0.78, 0.9],
+      final: [0.7, 0.82],
     },
     patterns: breezyPatterns,
   },

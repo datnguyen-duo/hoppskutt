@@ -207,12 +207,111 @@ function createObstacleMesh(kind: RunnerObstacleKind, destination: Destination) 
     opacity: 0.14,
     depthWrite: false,
   });
+  const routeId = destination.id;
+  const material = (color: string, glow = 0.06) =>
+    new THREE.MeshLambertMaterial({
+      color,
+      emissive: new THREE.Color(color).multiplyScalar(glow),
+    });
+  const shadow = (radius: number) => {
+    const mesh = new THREE.Mesh(new THREE.CircleGeometry(radius, 18), shadowMaterial.clone());
+    mesh.rotation.x = -Math.PI / 2;
+    mesh.position.y = 0.02;
+    return mesh;
+  };
 
   if (kind === 'crate') {
     const group = new THREE.Group();
-    const shadow = new THREE.Mesh(new THREE.CircleGeometry(0.7, 18), shadowMaterial.clone());
-    shadow.rotation.x = -Math.PI / 2;
-    shadow.position.y = 0.02;
+    group.add(shadow(0.7));
+
+    if (routeId === 'rhode-island') {
+      const bollard = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.42, 0.5, 0.74, 6),
+        material('#8f8a7d', 0.05),
+      );
+      const cap = createBox(0.78, 0.12, 0.68, '#d8cab7', {
+        emissive: new THREE.Color('#d8cab7').multiplyScalar(0.05),
+      });
+      const stripe = createBox(0.62, 0.08, 0.07, destination.theme.secondary, {
+        emissive: new THREE.Color(destination.theme.secondary).multiplyScalar(0.12),
+      });
+      bollard.position.y = 0.42;
+      cap.position.y = 0.82;
+      stripe.position.set(0, 0.5, 0.42);
+      group.add(bollard, cap, stripe);
+      return group;
+    }
+
+    if (routeId === 'colorado') {
+      const boulder = new THREE.Mesh(
+        new THREE.DodecahedronGeometry(0.56, 0),
+        material('#846d5a', 0.04),
+      );
+      const chip = new THREE.Mesh(
+        new THREE.DodecahedronGeometry(0.26, 0),
+        material('#b9956d', 0.04),
+      );
+      boulder.scale.set(1.05, 0.78, 0.86);
+      boulder.position.set(-0.08, 0.48, 0);
+      boulder.rotation.set(0.22, 0.38, -0.12);
+      chip.scale.set(1, 0.7, 0.8);
+      chip.position.set(0.38, 0.27, 0.2);
+      group.add(boulder, chip);
+      return group;
+    }
+
+    if (routeId === 'greece') {
+      const base = createBox(1.02, 0.42, 0.78, '#f6efe2', {
+        emissive: new THREE.Color('#f6efe2').multiplyScalar(0.08),
+      });
+      const step = createBox(0.78, 0.3, 0.64, '#fffaf0', {
+        emissive: new THREE.Color('#fffaf0').multiplyScalar(0.09),
+      });
+      const tile = createBox(0.76, 0.08, 0.08, destination.theme.accent, {
+        emissive: new THREE.Color(destination.theme.accent).multiplyScalar(0.16),
+      });
+      base.position.y = 0.3;
+      step.position.set(0.12, 0.66, -0.04);
+      tile.position.set(0.12, 0.53, 0.42);
+      group.add(base, step, tile);
+      return group;
+    }
+
+    if (routeId === 'sweden') {
+      const logMaterial = material('#7b513c', 0.04);
+      const logA = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.2, 1.04, 8), logMaterial);
+      const logB = logA.clone();
+      const cabinStripe = createBox(0.92, 0.1, 0.08, destination.theme.secondary, {
+        emissive: new THREE.Color(destination.theme.secondary).multiplyScalar(0.14),
+      });
+      logA.rotation.z = Math.PI / 2;
+      logB.rotation.z = Math.PI / 2;
+      logA.position.set(0, 0.36, -0.12);
+      logB.position.set(0, 0.6, 0.12);
+      cabinStripe.position.set(0, 0.5, 0.42);
+      group.add(logA, logB, cabinStripe);
+      return group;
+    }
+
+    if (routeId === 'vietnam') {
+      const basket = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.46, 0.52, 0.62, 8),
+        material('#8a5b38', 0.05),
+      );
+      const rim = createBox(0.92, 0.12, 0.78, destination.theme.secondary, {
+        emissive: new THREE.Color(destination.theme.secondary).multiplyScalar(0.18),
+      });
+      const glow = createBox(0.48, 0.16, 0.08, '#f5c46e', {
+        emissive: new THREE.Color('#f5c46e').multiplyScalar(0.28),
+      });
+      basket.scale.set(1.05, 1, 0.82);
+      basket.position.y = 0.42;
+      rim.position.y = 0.76;
+      glow.position.set(0, 0.48, 0.43);
+      group.add(basket, rim, glow);
+      return group;
+    }
+
     const cooler = createBox(0.98, 0.66, 0.76, destination.theme.obstacle, {
       emissive: new THREE.Color(destination.theme.obstacle).multiplyScalar(0.04),
     });
@@ -227,15 +326,102 @@ function createObstacleMesh(kind: RunnerObstacleKind, destination: Destination) 
       emissive: new THREE.Color(destination.theme.secondary).multiplyScalar(0.18),
     });
     stripe.position.set(0, 0.4, 0.41);
-    group.add(shadow, cooler, lid, latch, stripe);
+    group.add(cooler, lid, latch, stripe);
     return group;
   }
 
   if (kind === 'bench') {
     const group = new THREE.Group();
-    const shadow = new THREE.Mesh(new THREE.CircleGeometry(0.92, 18), shadowMaterial.clone());
-    shadow.rotation.x = -Math.PI / 2;
-    shadow.position.y = 0.02;
+    group.add(shadow(0.92));
+
+    if (routeId === 'rhode-island') {
+      const wall = createBox(1.24, 0.58, 0.44, '#8d877a', {
+        emissive: new THREE.Color('#8d877a').multiplyScalar(0.05),
+      });
+      const cap = createBox(1.32, 0.14, 0.5, '#d8cab7', {
+        emissive: new THREE.Color('#d8cab7').multiplyScalar(0.05),
+      });
+      const rail = createBox(1.1, 0.08, 0.08, destination.theme.secondary, {
+        emissive: new THREE.Color(destination.theme.secondary).multiplyScalar(0.12),
+      });
+      wall.position.y = 0.38;
+      cap.position.y = 0.74;
+      rail.position.set(0, 0.86, -0.22);
+      group.add(wall, cap, rail);
+      return group;
+    }
+
+    if (routeId === 'colorado') {
+      const log = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.22, 0.26, 1.28, 8),
+        material('#76503b', 0.04),
+      );
+      const rockA = new THREE.Mesh(
+        new THREE.DodecahedronGeometry(0.28, 0),
+        material('#9b8065', 0.04),
+      );
+      const rockB = rockA.clone();
+      log.rotation.z = Math.PI / 2;
+      log.position.y = 0.58;
+      rockA.position.set(-0.5, 0.28, 0.22);
+      rockB.position.set(0.5, 0.28, -0.18);
+      group.add(log, rockA, rockB);
+      return group;
+    }
+
+    if (routeId === 'greece') {
+      const wall = createBox(1.26, 0.62, 0.42, '#fff8ea', {
+        emissive: new THREE.Color('#fff8ea').multiplyScalar(0.09),
+      });
+      const blueCap = createBox(1.18, 0.14, 0.48, destination.theme.accent, {
+        emissive: new THREE.Color(destination.theme.accent).multiplyScalar(0.14),
+      });
+      const sunTile = createBox(0.18, 0.18, 0.06, destination.theme.secondary, {
+        emissive: new THREE.Color(destination.theme.secondary).multiplyScalar(0.18),
+      });
+      wall.position.y = 0.42;
+      blueCap.position.y = 0.82;
+      sunTile.position.set(0, 0.5, 0.25);
+      group.add(wall, blueCap, sunTile);
+      return group;
+    }
+
+    if (routeId === 'sweden') {
+      const body = createBox(1.22, 0.52, 0.42, destination.theme.secondary, {
+        emissive: new THREE.Color(destination.theme.secondary).multiplyScalar(0.08),
+      });
+      const roof = createBox(1.34, 0.16, 0.48, '#6a4535', {
+        emissive: new THREE.Color('#6a4535').multiplyScalar(0.04),
+      });
+      const timber = createBox(1.08, 0.08, 0.08, '#f1dcc5', {
+        emissive: new THREE.Color('#f1dcc5').multiplyScalar(0.06),
+      });
+      body.position.y = 0.42;
+      roof.position.y = 0.78;
+      timber.position.set(0, 0.5, 0.25);
+      group.add(body, roof, timber);
+      return group;
+    }
+
+    if (routeId === 'vietnam') {
+      const cart = createBox(1.24, 0.42, 0.48, '#815236', {
+        emissive: new THREE.Color('#815236').multiplyScalar(0.05),
+      });
+      const canopy = createBox(1.34, 0.16, 0.54, destination.theme.secondary, {
+        emissive: new THREE.Color(destination.theme.secondary).multiplyScalar(0.2),
+      });
+      const lanternA = createBox(0.16, 0.18, 0.12, '#f2bd62', {
+        emissive: new THREE.Color('#f2bd62').multiplyScalar(0.35),
+      });
+      const lanternB = lanternA.clone();
+      cart.position.y = 0.36;
+      canopy.position.y = 0.74;
+      lanternA.position.set(-0.38, 0.57, 0.29);
+      lanternB.position.set(0.38, 0.57, 0.29);
+      group.add(cart, canopy, lanternA, lanternB);
+      return group;
+    }
+
     const seatMaterial = {
       emissive: new THREE.Color(destination.theme.decoA).multiplyScalar(0.08),
     };
@@ -260,14 +446,102 @@ function createObstacleMesh(kind: RunnerObstacleKind, destination: Destination) 
     supportB.position.set(0.42, 0.22, 0.06);
     frontRail.position.set(0, 0.38, -0.06);
     stretcher.position.set(0, 0.06, 0.08);
-    group.add(shadow, seat, back, base, supportA, supportB, frontRail, stretcher);
+    group.add(seat, back, base, supportA, supportB, frontRail, stretcher);
     return group;
   }
 
   const group = new THREE.Group();
-  const shadow = new THREE.Mesh(new THREE.CircleGeometry(0.72, 18), shadowMaterial.clone());
-  shadow.rotation.x = -Math.PI / 2;
-  shadow.position.y = 0.02;
+  group.add(shadow(0.72));
+
+  if (routeId === 'rhode-island') {
+    const postA = createBox(0.12, 0.54, 0.12, '#d8cab7', {
+      emissive: new THREE.Color('#d8cab7').multiplyScalar(0.05),
+    });
+    const postB = postA.clone();
+    const rope = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.04, 0.04, 1.02, 8),
+      material(destination.theme.secondary, 0.14),
+    );
+    postA.position.set(-0.46, 0.28, 0);
+    postB.position.set(0.46, 0.28, 0);
+    rope.rotation.z = Math.PI / 2;
+    rope.position.y = 0.46;
+    group.add(postA, postB, rope);
+    return group;
+  }
+
+  if (routeId === 'colorado') {
+    const log = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.1, 0.12, 1.04, 8),
+      material('#7b513c', 0.04),
+    );
+    const postA = createBox(0.12, 0.36, 0.12, '#8d6a4d', {
+      emissive: new THREE.Color('#8d6a4d').multiplyScalar(0.05),
+    });
+    const postB = postA.clone();
+    log.rotation.z = Math.PI / 2;
+    log.position.y = 0.34;
+    postA.position.set(-0.42, 0.18, 0);
+    postB.position.set(0.42, 0.18, 0);
+    group.add(log, postA, postB);
+    return group;
+  }
+
+  if (routeId === 'greece') {
+    const lip = createBox(1.02, 0.18, 0.18, '#fff8ea', {
+      emissive: new THREE.Color('#fff8ea').multiplyScalar(0.09),
+    });
+    const stripe = createBox(0.82, 0.06, 0.06, destination.theme.accent, {
+      emissive: new THREE.Color(destination.theme.accent).multiplyScalar(0.14),
+    });
+    const postA = createBox(0.1, 0.3, 0.1, '#efe3d0', {
+      emissive: new THREE.Color('#efe3d0').multiplyScalar(0.06),
+    });
+    const postB = postA.clone();
+    lip.position.y = 0.26;
+    stripe.position.set(0, 0.35, 0.1);
+    postA.position.set(-0.42, 0.14, 0);
+    postB.position.set(0.42, 0.14, 0);
+    group.add(lip, stripe, postA, postB);
+    return group;
+  }
+
+  if (routeId === 'sweden') {
+    const log = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.11, 0.12, 1.02, 8),
+      material('#6d4b39', 0.04),
+    );
+    const capA = createBox(0.16, 0.16, 0.16, destination.theme.secondary, {
+      emissive: new THREE.Color(destination.theme.secondary).multiplyScalar(0.1),
+    });
+    const capB = capA.clone();
+    log.rotation.z = Math.PI / 2;
+    log.position.y = 0.32;
+    capA.position.set(-0.5, 0.32, 0);
+    capB.position.set(0.5, 0.32, 0);
+    group.add(log, capA, capB);
+    return group;
+  }
+
+  if (routeId === 'vietnam') {
+    const bar = createBox(1.02, 0.1, 0.12, destination.theme.secondary, {
+      emissive: new THREE.Color(destination.theme.secondary).multiplyScalar(0.22),
+    });
+    const postA = createBox(0.1, 0.42, 0.1, '#7a5238', {
+      emissive: new THREE.Color('#7a5238').multiplyScalar(0.06),
+    });
+    const postB = postA.clone();
+    const lantern = createBox(0.18, 0.2, 0.12, '#f4bf68', {
+      emissive: new THREE.Color('#f4bf68').multiplyScalar(0.34),
+    });
+    bar.position.y = 0.36;
+    postA.position.set(-0.46, 0.22, 0);
+    postB.position.set(0.46, 0.22, 0);
+    lantern.position.set(0, 0.55, 0.02);
+    group.add(bar, postA, postB, lantern);
+    return group;
+  }
+
   const braceMaterial = {
     emissive: new THREE.Color(destination.theme.obstacleAlt).multiplyScalar(0.08),
   };
@@ -295,7 +569,7 @@ function createObstacleMesh(kind: RunnerObstacleKind, destination: Destination) 
   braceRightA.rotation.z = -0.46;
   braceRightB.rotation.z = 0.46;
 
-  group.add(shadow, bar, stripeA, stripeB, braceLeftA, braceLeftB, braceRightA, braceRightB);
+  group.add(bar, stripeA, stripeB, braceLeftA, braceLeftB, braceRightA, braceRightB);
   return group;
 }
 
@@ -672,6 +946,11 @@ export function createRunnerGame({
   let landingCompression = 0;
   let stumbleTilt = 0;
   const baseYaw = 0.2;
+  const phasePatternCursors: Record<RoutePhase, number> = {
+    warmup: 0,
+    middle: 0,
+    final: 0,
+  };
 
   function resize() {
     const width = canvas.clientWidth || window.innerWidth;
@@ -802,7 +1081,10 @@ export function createRunnerGame({
     const progress = distanceTravelled / finishDistance;
     const phase = getRoutePhase(progress);
     const patternPool = routeConfig.patterns[phase] as RunnerPattern[];
-    const pattern = randomFrom(patternPool);
+    const pattern =
+      routeConfig.selectionMode === 'cycle'
+        ? patternPool[phasePatternCursors[phase]++ % patternPool.length]
+        : randomFrom(patternPool);
     const rowZ = SPAWN_Z;
 
     pattern.obstacles.forEach((obstacle) => {

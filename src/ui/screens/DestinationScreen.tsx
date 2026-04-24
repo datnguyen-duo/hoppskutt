@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import { Backpack, BookOpen, Map, Menu, Play, RotateCcw, Stamp } from 'lucide-react';
+import { Backpack, BookOpen, Gauge, Map, Menu, Play, RotateCcw, Stamp } from 'lucide-react';
 import { boosts, boostLookup } from '../../data/boosts';
 import { destinationLookup, destinations } from '../../data/destinations';
 import type { BoostId, DestinationId, ProgressState } from '../../state/types';
@@ -110,6 +110,11 @@ export function DestinationScreen({
                 <strong>{selected.run.targetScore} tandborste</strong>
               </div>
               <div className="summary-chip">
+                <Gauge />
+                <span>Skill</span>
+                <strong>Level {selected.run.difficulty}: {selected.run.skillFocus}</strong>
+              </div>
+              <div className="summary-chip">
                 <Stamp />
                 <span>Best</span>
                 <strong>{progress.bestScores[selected.id]} pts</strong>
@@ -160,6 +165,21 @@ export function DestinationScreen({
                       </button>
                     );
                   })}
+                </div>
+
+                <div className="destination-challenge-preview">
+                  <div className="destination-challenge-preview__header">
+                    <Gauge />
+                    <div>
+                      <span>Route Skill</span>
+                      <strong>{selected.run.challengeSummary}</strong>
+                    </div>
+                  </div>
+                  <div className="destination-challenge-preview__tips">
+                    {selected.run.challengeTips.map((tip) => (
+                      <span key={tip}>{tip}</span>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="destination-hero-panel__actions">
@@ -240,6 +260,9 @@ export function DestinationScreen({
                         <span className="destination-card__country">{destination.country}</span>
                         <strong>{destination.routeLabel}</strong>
                         <span className="destination-stop-card__name">{destination.name}</span>
+                        <span className="destination-card__challenge">
+                          Level {destination.run.difficulty}: {destination.run.skillFocus}
+                        </span>
                         <span className="destination-card__status">
                           {isFreshStop
                             ? 'Ready for the first stamp'

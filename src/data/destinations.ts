@@ -36,9 +36,14 @@ export type Destination = {
   overview: string;
   unlockHint: string;
   run: {
+    difficulty: number;
+    skillFocus: string;
     finishDistance: number;
     targetScore: number;
     baseSpeed: number;
+    trailNote: string;
+    challengeSummary: string;
+    challengeTips: string[];
   };
   recipe: DestinationRecipe;
   theme: DestinationTheme;
@@ -55,9 +60,14 @@ export const destinations: Destination[] = [
       'Maryland is the soft opener: plank textures, marsh greens, and dockside color that make the first route bright, coastal, and easy to read.',
     unlockHint: 'Start here.',
     run: {
-      finishDistance: 280,
-      targetScore: 17,
-      baseSpeed: 0.97,
+      difficulty: 1,
+      skillFocus: 'Open Lanes',
+      finishDistance: 250,
+      targetScore: 13,
+      baseSpeed: 0.9,
+      trailNote: 'Open boardwalk. Stay centered, breathe, and grab the easy tandborste.',
+      challengeSummary: 'Wide lanes, single hazards, and generous pickup lines.',
+      challengeTips: ['Open center lane', 'Single blockers', 'Easy pickup reads'],
     },
     recipe: {
       id: 'maryland-crab-cake',
@@ -96,9 +106,14 @@ export const destinations: Destination[] = [
       'Rhode Island leans into sea-glass blues and sandstone rails, keeping the route tidy while adding a little more side-to-side decision making.',
     unlockHint: 'Stamp Maryland first.',
     run: {
-      finishDistance: 304,
+      difficulty: 2,
+      skillFocus: 'Lane Rhythm',
+      finishDistance: 306,
       targetScore: 18,
-      baseSpeed: 0.99,
+      baseSpeed: 1.03,
+      trailNote: 'Cliff walk rhythm. Switch left and right early before the rail closes in.',
+      challengeSummary: 'Alternating cliff rails teach early left-right movement.',
+      challengeTips: ['Side-to-side rhythm', 'Early lane reads', 'Pickups mark safe lanes'],
     },
     recipe: {
       id: 'rhode-island-clam-cakes',
@@ -137,9 +152,14 @@ export const destinations: Destination[] = [
       'Colorado shifts the trip uphill with cooler greens, rock warmth, and broader horizon cues that make the trail feel open without getting muddy.',
     unlockHint: 'Stamp Rhode Island first.',
     run: {
-      finishDistance: 332,
+      difficulty: 3,
+      skillFocus: 'Rock Hops',
+      finishDistance: 342,
       targetScore: 20,
-      baseSpeed: 1.02,
+      baseSpeed: 1.09,
+      trailNote: 'Switchbacks and rocks. Time the jump, then land into the next lane.',
+      challengeSummary: 'Rock-hop timing with raised pickups after the jump.',
+      challengeTips: ['Jump timing', 'Rock blockers', 'Land into the lane'],
     },
     recipe: {
       id: 'colorado-burrito',
@@ -178,9 +198,14 @@ export const destinations: Destination[] = [
       'Greece turns the route into sun-washed steps and blue-window geometry, keeping everything bright, airy, and sharply readable.',
     unlockHint: 'Stamp Colorado first.',
     run: {
-      finishDistance: 356,
-      targetScore: 22,
-      baseSpeed: 1.04,
+      difficulty: 4,
+      skillFocus: 'Step Combos',
+      finishDistance: 370,
+      targetScore: 23,
+      baseSpeed: 1.15,
+      trailNote: 'Island steps. Hop cleanly, then slide fast to the sunlit lane.',
+      challengeSummary: 'Step combos mix hops with quick side moves.',
+      challengeTips: ['Hop then shift', 'Raised pickups', 'Short combo reads'],
     },
     recipe: {
       id: 'greece-spanakopita',
@@ -219,9 +244,14 @@ export const destinations: Destination[] = [
       'Sweden cools the palette down with forest greens, painted timber accents, and a quieter route rhythm that still feels playful.',
     unlockHint: 'Stamp Greece first.',
     run: {
-      finishDistance: 384,
-      targetScore: 24,
-      baseSpeed: 1.06,
+      difficulty: 5,
+      skillFocus: 'Endurance',
+      finishDistance: 430,
+      targetScore: 25,
+      baseSpeed: 1.2,
+      trailNote: 'Long forest loop. Fewer freebies, more patience. Protect the stride.',
+      challengeSummary: 'A longer forest loop with fewer free pickups.',
+      challengeTips: ['Endurance run', 'Paired blockers', 'Protect paws'],
     },
     recipe: {
       id: 'sweden-kanelbulle',
@@ -260,9 +290,14 @@ export const destinations: Destination[] = [
       'Vietnam closes the trip with lantern glow, painted shutters, and lively riverside color that still keeps the lane language clear.',
     unlockHint: 'Stamp Sweden first.',
     run: {
-      finishDistance: 412,
-      targetScore: 26,
-      baseSpeed: 1.08,
+      difficulty: 6,
+      skillFocus: 'Finale Mix',
+      finishDistance: 460,
+      targetScore: 30,
+      baseSpeed: 1.26,
+      trailNote: 'Lantern finale. Fast reads, quick recoveries, and bold pickups.',
+      challengeSummary: 'Finale mix: fast spawns, unsafe center lane, and recovery checks.',
+      challengeTips: ['Fast decisions', 'Mixed hazards', 'No autopilot lane'],
     },
     recipe: {
       id: 'vietnam-banh-mi',
@@ -296,4 +331,3 @@ export const destinations: Destination[] = [
 export const destinationLookup = Object.fromEntries(
   destinations.map((destination) => [destination.id, destination]),
 ) as Record<DestinationId, Destination>;
-

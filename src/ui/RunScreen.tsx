@@ -187,7 +187,11 @@ export function RunScreen({
         <div className="run-bottombar">
           <div className="run-tip">
             <span className="eyebrow">Trail Notes</span>
-            <strong>Weave around coolers and benches. Tap jump for trail signs.</strong>
+            <div className="run-focus">
+              <span>Level {destination.run.difficulty}</span>
+              <span>{destination.run.skillFocus}</span>
+            </div>
+            <strong>{destination.run.trailNote}</strong>
             <div className="run-controls">
               <span>A / Left</span>
               <span>D / Right</span>
