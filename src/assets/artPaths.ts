@@ -1,6 +1,6 @@
 import type { DestinationId, RecipeId } from '../state/types';
 
-export const heroArtPath = '/assets/generated/game-2d/chloe-hero-keyart-maryland.webp';
+export const heroArtPath = '/assets/generated/game-2d/chloe-hero-keyart-oil-canvas.webp';
 
 export const postcardArtPaths: Record<DestinationId, string> = {
   maryland: '/assets/generated/game-2d/maryland-postcard-oil-canvas.webp',

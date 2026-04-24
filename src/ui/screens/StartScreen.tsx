@@ -39,7 +39,7 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
         <div className="start-landing__scene">
           <img
             src={heroArtPath}
-            alt="Illustrated roadtrip portrait of Chloe as a copilot with a Maryland marsh trail backdrop"
+            alt="Oil-painted roadtrip portrait of Chloe as a copilot with a Maryland marsh trail backdrop"
             className="start-landing__photo"
           />
           <div className="start-landing__wash" aria-hidden="true" />

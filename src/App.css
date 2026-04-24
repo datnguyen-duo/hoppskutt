@@ -1942,6 +1942,10 @@ p {
 }
 
 @media (max-width: 980px) {
+  .start-landing__photo {
+    object-position: 74% 48%;
+  }
+
   .destination-hero-panel {
     min-height: auto;
   }
