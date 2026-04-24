@@ -237,6 +237,12 @@ function App() {
     navigateTo('collection');
   };
 
+  const openStartMenu = () => {
+    soundManager.playMenu();
+    setNotice(null);
+    navigateTo('start');
+  };
+
   const handleSelectDestination = (destinationId: DestinationId) => {
     setSelectedDestinationId(destinationId);
     setNavigationState(screen, destinationId, 'replace');
@@ -321,24 +327,43 @@ function App() {
   };
 
   const handleRewardContinue = () => {
+    const nextDestinationId =
+      rewardState?.unlockedDestinationId ??
+      rewardState?.destinationId ??
+      resolvedSelectedDestinationId;
+    const nextDestination = destinationLookup[nextDestinationId];
+
     setRewardState(null);
     setNotice({
       tone: 'success',
-      message: 'Route book updated. Pick the next trail stop.',
+      message: rewardState?.unlockedDestinationId
+        ? `${nextDestination.country} is open. Chloe is lined up for the next route.`
+        : 'Route book updated. Chloe is lined up for another route.',
     });
+    setSelectedDestinationId(nextDestinationId);
     soundManager.playMenu();
-    navigateTo('destinations');
+    navigateTo('destinations', {
+      selectedDestinationId: nextDestinationId,
+    });
   };
 
   const handleEquipRewardBoost = (boostId: BoostId) => {
+    const nextDestinationId =
+      rewardState?.unlockedDestinationId ??
+      rewardState?.destinationId ??
+      resolvedSelectedDestinationId;
+
     setProgress((current) => equipBoost(current, boostId));
     setRewardState(null);
     setNotice({
       tone: 'success',
       message: `${boostLookup[boostId].name} is packed for the next trail.`,
     });
+    setSelectedDestinationId(nextDestinationId);
     soundManager.playMenu();
-    navigateTo('destinations');
+    navigateTo('destinations', {
+      selectedDestinationId: nextDestinationId,
+    });
   };
 
   const resetProgress = () => {
@@ -361,7 +386,11 @@ function App() {
       <div className="app-shell__grain" />
 
       {screen === 'start' && (
-        <StartScreen onStart={openDestinations} />
+        <StartScreen
+          progress={progress}
+          onStart={openDestinations}
+          onOpenCollection={openCollection}
+        />
       )}
 
       {screen === 'destinations' && (
@@ -371,6 +400,7 @@ function App() {
           selectedDestinationId={resolvedSelectedDestinationId}
           onSelectDestination={handleSelectDestination}
           onPlay={beginRun}
+          onOpenMenu={openStartMenu}
           onOpenCollection={openCollection}
           onEquipBoost={handleEquipBoost}
           onClearBoost={handleClearBoost}
@@ -381,6 +411,7 @@ function App() {
       {screen === 'collection' && (
         <CollectionScreen
           progress={progress}
+          onOpenMenu={openStartMenu}
           onBack={openDestinations}
           onEquipBoost={handleEquipBoost}
           onClearBoost={handleClearBoost}

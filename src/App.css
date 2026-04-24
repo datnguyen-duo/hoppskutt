@@ -88,7 +88,7 @@
 
 .screen-card {
   border: 1px solid rgba(54, 73, 66, 0.1);
-  border-radius: 28px;
+  border-radius: 14px;
   background: rgba(251, 247, 240, 0.94);
   box-shadow:
     0 16px 34px rgba(78, 92, 86, 0.1),
@@ -160,6 +160,7 @@ p {
 .summary-chip svg,
 .loadout-chip svg,
 .run-hud__panel > svg,
+.start-menu-summary svg,
 .start-menu-item svg {
   width: 1rem;
   height: 1rem;
@@ -198,6 +199,13 @@ p {
   border: 1px solid rgba(54, 73, 66, 0.1);
 }
 
+.button--glass {
+  background: rgba(255, 253, 249, 0.2);
+  color: #fffaf2;
+  border-color: rgba(255, 250, 241, 0.22);
+  backdrop-filter: blur(10px);
+}
+
 .button--quiet {
   min-height: auto;
   padding: 0.2rem 0;
@@ -227,7 +235,7 @@ p {
   margin-bottom: 1rem;
   padding: 0.9rem 1rem;
   border: 1px solid rgba(54, 73, 66, 0.08);
-  border-radius: 18px;
+  border-radius: 10px;
   background: rgba(255, 252, 245, 0.92);
 }
 
@@ -246,9 +254,22 @@ p {
 .postcard-scene {
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(57, 76, 68, 0.1);
-  border-radius: 24px;
+  border: 1px solid rgba(57, 76, 68, 0.13);
+  border-radius: 12px;
   background: #f6f0e5;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 250, 241, 0.62),
+    0 12px 22px rgba(31, 49, 43, 0.09);
+}
+
+.postcard-scene::after {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: '';
+  background:
+    linear-gradient(180deg, rgba(255, 252, 244, 0.16), transparent 42%),
+    linear-gradient(0deg, rgba(22, 39, 35, 0.16), transparent 34%);
 }
 
 .postcard-scene svg {
@@ -262,7 +283,9 @@ p {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: saturate(1.02) contrast(1.01);
+  image-rendering: auto;
+  filter: saturate(1.03) contrast(1.03) brightness(0.99);
+  transform: scale(1.01);
 }
 
 .postcard-scene--hero {
@@ -313,7 +336,7 @@ p {
 .summary-chip,
 .loadout-chip {
   border: 1px solid rgba(54, 73, 66, 0.1);
-  border-radius: 18px;
+  border-radius: 10px;
   background: rgba(255, 252, 246, 0.88);
 }
 
@@ -415,7 +438,8 @@ p {
   height: 100%;
   object-fit: cover;
   object-position: 50% 46%;
-  filter: saturate(0.96) contrast(1.03) brightness(0.74);
+  filter: saturate(1.04) contrast(1.05) brightness(0.8);
+  image-rendering: auto;
   animation: landing-photo-drift 22s ease-in-out infinite alternate;
 }
 
@@ -424,8 +448,8 @@ p {
   inset: 0;
   background:
     radial-gradient(circle at 50% 38%, rgba(245, 241, 232, 0.12), transparent 25%),
-    linear-gradient(180deg, rgba(9, 18, 15, 0.18) 0%, rgba(9, 18, 15, 0.08) 28%, rgba(9, 18, 15, 0.36) 100%),
-    linear-gradient(90deg, rgba(10, 19, 17, 0.56) 0%, rgba(10, 19, 17, 0.18) 24%, rgba(10, 19, 17, 0.1) 50%, rgba(10, 19, 17, 0.2) 72%, rgba(10, 19, 17, 0.54) 100%);
+    linear-gradient(180deg, rgba(9, 18, 15, 0.16) 0%, rgba(9, 18, 15, 0.08) 28%, rgba(9, 18, 15, 0.38) 100%),
+    linear-gradient(90deg, rgba(10, 19, 17, 0.64) 0%, rgba(10, 19, 17, 0.22) 24%, rgba(10, 19, 17, 0.1) 50%, rgba(10, 19, 17, 0.18) 72%, rgba(10, 19, 17, 0.42) 100%);
 }
 
 .start-landing__ambient,
@@ -478,7 +502,7 @@ p {
   place-items: center;
   width: 3.25rem;
   height: 3.25rem;
-  border-radius: 20px;
+  border-radius: 12px;
   border: 1px solid rgba(255, 250, 241, 0.18);
   background: rgba(12, 22, 19, 0.3);
   backdrop-filter: blur(8px);
@@ -492,14 +516,19 @@ p {
 }
 
 .start-landing__menu-button {
-  display: grid;
-  place-items: center;
-  width: 3.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-width: 3.25rem;
   height: 3.25rem;
-  padding: 0;
+  padding: 0 1rem;
   border: 1px solid rgba(255, 250, 241, 0.18);
   border-radius: 20px;
   background: rgba(12, 22, 19, 0.3);
+  color: rgba(251, 247, 240, 0.92);
+  font: inherit;
+  font-weight: 800;
   backdrop-filter: blur(8px);
   cursor: pointer;
   box-shadow: 0 10px 22px rgba(8, 18, 16, 0.18);
@@ -508,7 +537,10 @@ p {
 .start-landing__menu-button svg {
   width: 1.15rem;
   height: 1.15rem;
-  color: rgba(251, 247, 240, 0.92);
+}
+
+.start-landing__menu-button span {
+  font-size: 0.9rem;
 }
 
 .start-landing__hero {
@@ -559,6 +591,10 @@ p {
   box-shadow: 0 14px 24px rgba(12, 28, 24, 0.26);
 }
 
+.start-landing__actions .button--glass {
+  min-height: 3.5rem;
+}
+
 .start-menu-overlay {
   position: fixed;
   inset: 0;
@@ -580,9 +616,9 @@ p {
   right: 0;
   z-index: 20;
   display: grid;
-  grid-template-rows: auto auto 1fr;
-  gap: 1rem;
-  width: min(27rem, 92vw);
+  grid-template-rows: auto auto auto auto 1fr;
+  gap: 0.85rem;
+  width: min(30rem, 94vw);
   height: 100vh;
   padding: 1.2rem;
   background: rgba(248, 244, 236, 0.98);
@@ -606,9 +642,47 @@ p {
   font-size: 2rem;
 }
 
+.start-menu-drawer__primary {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.65rem;
+}
+
+.start-menu-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.start-menu-summary div {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.72rem;
+  border: 1px solid rgba(54, 73, 66, 0.1);
+  border-radius: 10px;
+  background: rgba(255, 252, 246, 0.78);
+}
+
+.start-menu-summary svg {
+  color: rgba(32, 49, 43, 0.62);
+}
+
+.start-menu-summary span {
+  color: rgba(32, 49, 43, 0.56);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.start-menu-summary strong {
+  font-size: 1.05rem;
+}
+
 .start-menu-drawer__nav {
   display: grid;
-  gap: 0.7rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
 }
 
 .start-menu-item {
@@ -616,31 +690,97 @@ p {
   align-items: center;
   justify-content: flex-start;
   min-height: 3rem;
-  padding: 0.8rem 0;
-  border: 0;
-  border-bottom: 1px solid rgba(32, 49, 43, 0.1);
-  background: transparent;
+  padding: 0.72rem 0.78rem;
+  border: 1px solid rgba(32, 49, 43, 0.1);
+  border-radius: 18px;
+  background: rgba(255, 252, 246, 0.62);
   color: var(--brand-ink);
   font: inherit;
   font-weight: 700;
   cursor: pointer;
 }
 
+.start-menu-item.is-active {
+  border-color: rgba(79, 131, 109, 0.36);
+  background: rgba(236, 246, 239, 0.92);
+  color: var(--brand-accent-strong);
+}
+
 .start-menu-drawer__play {
-  margin-top: 0.4rem;
+  min-width: 0;
 }
 
 .start-menu-drawer__body {
   display: grid;
   align-content: start;
+  min-height: 0;
+  overflow: auto;
 }
 
 .start-menu-panel {
   display: grid;
   gap: 0.8rem;
-  padding: 1rem 0;
+  padding: 0.85rem;
+  border: 1px solid rgba(54, 73, 66, 0.1);
+  border-radius: 12px;
+  background: rgba(255, 252, 246, 0.62);
   color: var(--brand-muted);
   line-height: 1.55;
+}
+
+.start-journey-list,
+.start-progress-list {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.start-journey-list div,
+.start-progress-list div {
+  display: grid;
+  gap: 0.18rem;
+  padding: 0.72rem;
+  border: 1px solid rgba(54, 73, 66, 0.08);
+  border-radius: 10px;
+  background: rgba(255, 253, 248, 0.78);
+}
+
+.start-journey-list div {
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  column-gap: 0.65rem;
+}
+
+.start-journey-list span {
+  display: grid;
+  place-items: center;
+  width: 1.65rem;
+  height: 1.65rem;
+  border-radius: 999px;
+  background: var(--brand-accent);
+  color: #fffaf2;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.start-journey-list p {
+  grid-column: 2;
+}
+
+.start-progress-list div {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+}
+
+.start-progress-list span {
+  color: rgba(32, 49, 43, 0.58);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.start-progress-list strong {
+  color: var(--brand-ink);
 }
 
 .start-menu-resources {
@@ -671,7 +811,7 @@ p {
   z-index: 1;
   width: min(56rem, calc(100vw - 2rem));
   padding: 1rem;
-  border-radius: 28px;
+  border-radius: 14px;
   background: rgba(248, 244, 236, 0.98);
   box-shadow: 0 28px 46px rgba(8, 18, 16, 0.28);
 }
@@ -693,7 +833,7 @@ p {
   width: 100%;
   max-height: 70vh;
   object-fit: contain;
-  border-radius: 22px;
+  border-radius: 12px;
   background: #dfe7de;
 }
 
@@ -765,7 +905,7 @@ p {
   min-height: 100%;
   aspect-ratio: auto;
   border: 0;
-  border-radius: 28px 28px 0 0;
+  border-radius: 14px 14px 0 0;
 }
 
 .destination-hero-panel__shade {
@@ -871,7 +1011,7 @@ p {
 .destination-stop-list {
   display: grid;
   gap: 0.6rem;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
 }
 
 .destination-stop-card {
@@ -882,7 +1022,7 @@ p {
   width: 100%;
   padding: 0.62rem;
   border: 1px solid rgba(54, 73, 66, 0.1);
-  border-radius: 22px;
+  border-radius: 12px;
   background: rgba(255, 252, 246, 0.88);
   color: var(--brand-ink);
   text-align: left;
@@ -894,13 +1034,27 @@ p {
   box-shadow: 0 12px 20px rgba(73, 90, 84, 0.08);
 }
 
+.destination-stop-card.is-fresh {
+  border-color: color-mix(in srgb, var(--card-accent) 42%, rgba(54, 73, 66, 0.12));
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--card-accent) 12%, transparent), transparent 58%),
+    rgba(255, 252, 246, 0.92);
+}
+
+.destination-stop-card.is-selected .destination-stop-card__state,
+.destination-stop-card.is-fresh .destination-stop-card__state {
+  border-color: color-mix(in srgb, var(--card-accent) 36%, rgba(54, 73, 66, 0.12));
+  background: color-mix(in srgb, var(--card-accent) 16%, #fffdf8);
+  color: color-mix(in srgb, var(--card-accent) 72%, var(--brand-ink));
+}
+
 .destination-stop-card.is-locked {
   opacity: 0.58;
 }
 
 .destination-stop-card__art .postcard-scene--compact {
   aspect-ratio: 2.25 / 1;
-  border-radius: 18px;
+  border-radius: 10px;
 }
 
 .destination-stop-card__body {
@@ -956,13 +1110,18 @@ p {
   gap: 0.32rem;
   padding: 0.86rem 0.95rem;
   border: 1px solid rgba(54, 73, 66, 0.1);
-  border-radius: 20px;
+  border-radius: 12px;
   background: rgba(255, 252, 246, 0.84);
 }
 
 .destination-pack-summary__copy {
   display: grid;
   gap: 0.18rem;
+}
+
+.destination-pack-summary__copy small {
+  color: var(--brand-muted);
+  line-height: 1.35;
 }
 
 .destination-pack-summary .eyebrow {
@@ -988,7 +1147,7 @@ p {
   min-height: 100%;
   padding: 0.76rem;
   border: 1px solid rgba(54, 73, 66, 0.1);
-  border-radius: 22px;
+  border-radius: 12px;
   background: rgba(255, 252, 246, 0.88);
   color: var(--brand-ink);
   text-align: left;
@@ -1116,7 +1275,7 @@ p {
 .daypack-choice,
 .board-route-card {
   border: 1px solid rgba(54, 73, 66, 0.1);
-  border-radius: 22px;
+  border-radius: 12px;
   background: rgba(255, 252, 246, 0.88);
 }
 
@@ -1157,6 +1316,11 @@ p {
   align-items: start;
 }
 
+.section-heading.destination-stop-header {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
 .section-heading--compact h3,
 .daypack-panel__header h3 {
   font-size: 1.35rem;
@@ -1178,7 +1342,7 @@ p {
   display: grid;
   gap: 0.68rem;
   padding: 0.78rem;
-  border-radius: 22px;
+  border-radius: 12px;
   border: 1px solid rgba(54, 73, 66, 0.1);
   background: rgba(255, 252, 246, 0.84);
 }
@@ -1214,7 +1378,7 @@ p {
 
 .board-route-card__art .postcard-scene--compact,
 .recipe-shelf-card__scene .postcard-scene--compact {
-  aspect-ratio: 2.65 / 1;
+  aspect-ratio: 2.25 / 1;
 }
 
 .board-route-card__copy,
@@ -1325,13 +1489,28 @@ p {
 }
 
 .recipe-illustration {
+  position: relative;
   display: grid;
   place-items: center;
-  min-height: 5.7rem;
-  border-radius: 18px;
-  border: 1px solid rgba(54, 73, 66, 0.08);
+  min-height: 0;
+  aspect-ratio: 1 / 1;
+  border-radius: 10px;
+  border: 1px solid rgba(54, 73, 66, 0.12);
   background: color-mix(in srgb, var(--recipe-secondary, #ead5b2) 16%, white);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 250, 241, 0.64),
+    0 8px 16px rgba(31, 49, 43, 0.08);
   overflow: hidden;
+}
+
+.recipe-illustration::after {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: '';
+  background:
+    radial-gradient(circle at 35% 24%, rgba(255, 252, 244, 0.16), transparent 28%),
+    linear-gradient(0deg, rgba(28, 42, 38, 0.14), transparent 36%);
 }
 
 .recipe-illustration svg {
@@ -1341,13 +1520,15 @@ p {
 
 .recipe-illustration img {
   display: block;
-  width: min(100%, 9rem);
-  height: auto;
-  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  image-rendering: auto;
+  filter: saturate(1.03) contrast(1.03);
 }
 
 .recipe-illustration--mini {
-  min-height: 4.6rem;
+  min-height: 0;
 }
 
 .recipe-illustration.is-locked {
@@ -1359,7 +1540,7 @@ p {
   display: grid;
   place-items: center;
   min-height: 4.2rem;
-  border-radius: 18px;
+  border-radius: 10px;
   border: 1px dashed rgba(54, 73, 66, 0.14);
   background: rgba(247, 243, 236, 0.86);
   color: rgba(32, 49, 43, 0.52);
@@ -1431,7 +1612,7 @@ p {
 }
 
 .reward-card__prize--recipe .recipe-illustration img {
-  width: 8.5rem;
+  width: 100%;
 }
 
 .reward-illustration {
@@ -1497,7 +1678,7 @@ p {
 .run-status,
 .hud-pop {
   border: 1px solid rgba(54, 73, 66, 0.12);
-  border-radius: 20px;
+  border-radius: 10px;
   background: rgba(251, 247, 240, 0.92);
   box-shadow: 0 14px 24px rgba(66, 83, 76, 0.1);
   color: var(--brand-ink);
@@ -1584,12 +1765,12 @@ p {
 .run-popups {
   position: absolute;
   left: 50%;
-  bottom: 6.7rem;
+  bottom: 1rem;
   transform: translateX(-50%);
   display: grid;
   gap: 0.55rem;
   justify-items: center;
-  width: min(24rem, calc(100vw - 2rem));
+  width: min(25rem, calc(100vw - 2rem));
   pointer-events: none;
 }
 
@@ -1668,7 +1849,13 @@ p {
   }
 
   .destination-hub {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1.45fr) minmax(19.5rem, 0.72fr);
+    align-items: start;
+  }
+
+  .destination-sidebar {
+    position: sticky;
+    top: 1rem;
   }
 
   .destination-hero-panel__cta {
@@ -1681,8 +1868,26 @@ p {
   }
 
   .destination-stop-header {
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: 1fr;
     align-items: start;
+  }
+
+  .destination-stop-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .destination-stop-list {
+    grid-template-columns: 1fr;
+  }
+
+  .destination-stop-card {
+    grid-template-columns: minmax(5.5rem, 0.34fr) minmax(0, 1fr);
+    align-items: stretch;
+  }
+
+  .destination-stop-card__art .postcard-scene--compact {
+    height: 100%;
+    aspect-ratio: auto;
   }
 
   .board-feature__main {
@@ -1806,10 +2011,15 @@ p {
     inset: 1rem 1rem auto;
   }
 
-  .start-landing__brand,
-  .start-landing__menu-button {
+  .start-landing__brand {
     width: 3rem;
     height: 3rem;
+  }
+
+  .start-landing__menu-button {
+    min-width: 3rem;
+    height: 3rem;
+    padding: 0 0.85rem;
   }
 
   .start-landing__hero {

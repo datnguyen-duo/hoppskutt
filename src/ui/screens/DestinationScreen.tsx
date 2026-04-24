@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import { BookOpen, Map, Play, RotateCcw, Stamp, Backpack } from 'lucide-react';
+import { Backpack, BookOpen, Map, Menu, Play, RotateCcw, Stamp } from 'lucide-react';
 import { boosts, boostLookup } from '../../data/boosts';
 import { destinationLookup, destinations } from '../../data/destinations';
 import type { BoostId, DestinationId, ProgressState } from '../../state/types';
@@ -16,6 +16,7 @@ type DestinationScreenProps = {
   selectedDestinationId: DestinationId;
   onSelectDestination: (destinationId: DestinationId) => void;
   onPlay: () => void;
+  onOpenMenu: () => void;
   onOpenCollection: () => void;
   onEquipBoost: (boostId: BoostId) => void;
   onClearBoost: () => void;
@@ -28,6 +29,7 @@ export function DestinationScreen({
   selectedDestinationId,
   onSelectDestination,
   onPlay,
+  onOpenMenu,
   onOpenCollection,
   onEquipBoost,
   onClearBoost,
@@ -50,6 +52,10 @@ export function DestinationScreen({
         </div>
 
         <div className="topbar__actions">
+          <button type="button" className="button button--ghost" onClick={onOpenMenu}>
+            <Menu />
+            Main Menu
+          </button>
           <button type="button" className="button button--ghost" onClick={onOpenCollection}>
             <BookOpen />
             Route Book
@@ -85,7 +91,6 @@ export function DestinationScreen({
               <div className="destination-hero-panel__shade" aria-hidden="true" />
             </div>
             <div className="destination-hero-panel__copy">
-              <p className="eyebrow">Featured Route</p>
               <h3>{selected.name}</h3>
               <p className="destination-hero-panel__tagline">{selected.tagline}</p>
               <p className="destination-hero-panel__overview">{selected.overview}</p>
@@ -117,6 +122,7 @@ export function DestinationScreen({
                   <div className="destination-pack-summary__copy">
                     <span className="eyebrow">Day Pack</span>
                     <strong>{equippedBoost?.name ?? 'Packed light'}</strong>
+                    <small>{equippedBoost?.description ?? 'Optional helpers can be packed before the run.'}</small>
                   </div>
                   {progress.equippedBoostId && (
                     <button type="button" className="button button--quiet" onClick={onClearBoost}>
@@ -176,8 +182,8 @@ export function DestinationScreen({
           <section className="screen-card destination-sidebar__section">
             <div className="section-heading section-heading--compact destination-stop-header">
               <div>
-                <p className="eyebrow">Trail Stops</p>
-                <h3>{destinations.length} playable routes.</h3>
+                <p className="eyebrow">Route Map</p>
+                <h3>Pick an open stop.</h3>
               </div>
               <div className="destination-stop-summary">
                 <div className="summary-chip">
@@ -198,12 +204,22 @@ export function DestinationScreen({
                 const unlocked = progress.unlockedDestinations.includes(destination.id);
                 const wins = progress.winsByDestination[destination.id];
                 const isSelected = destination.id === selectedDestinationId;
+                const isFreshStop = unlocked && wins === 0 && destination.id !== 'maryland';
+                const stateLabel = isSelected
+                  ? isFreshStop
+                    ? 'Next'
+                    : 'Live'
+                  : isFreshStop
+                    ? 'New'
+                    : unlocked
+                      ? 'Open'
+                      : 'Locked';
 
                 return (
                   <button
                     key={destination.id}
                     type="button"
-                    className={`destination-stop-card${isSelected ? ' is-selected' : ''}${unlocked ? '' : ' is-locked'}`}
+                    className={`destination-stop-card${isSelected ? ' is-selected' : ''}${isFreshStop ? ' is-fresh' : ''}${unlocked ? '' : ' is-locked'}`}
                     style={
                       {
                         '--card-accent': destination.theme.accent,
@@ -225,14 +241,14 @@ export function DestinationScreen({
                         <strong>{destination.routeLabel}</strong>
                         <span className="destination-stop-card__name">{destination.name}</span>
                         <span className="destination-card__status">
-                          {unlocked
-                            ? `${wins} stamp${wins === 1 ? '' : 's'}`
-                            : destination.unlockHint}
+                          {isFreshStop
+                            ? 'Ready for the first stamp'
+                            : unlocked
+                              ? `${wins} stamp${wins === 1 ? '' : 's'}`
+                              : destination.unlockHint}
                         </span>
                       </div>
-                      <span className="destination-stop-card__state">
-                        {isSelected ? 'Live' : unlocked ? 'Open' : 'Locked'}
-                      </span>
+                      <span className="destination-stop-card__state">{stateLabel}</span>
                     </div>
                   </button>
                 );

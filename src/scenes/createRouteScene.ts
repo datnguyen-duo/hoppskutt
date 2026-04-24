@@ -1,18 +1,10 @@
 import * as THREE from 'three';
 import type { Destination } from '../data/destinations';
+import { postcardArtPaths } from '../assets/artPaths';
 
 type RouteSceneController = {
   update: (elapsed: number) => void;
   dispose: () => void;
-};
-
-const backdropTexturePaths: Record<Destination['id'], string> = {
-  maryland: '/assets/generated/maryland-postcard.png',
-  'rhode-island': '/assets/generated/rhode-island-postcard.png',
-  colorado: '/assets/generated/colorado-postcard.png',
-  greece: '/assets/generated/greece-postcard.png',
-  sweden: '/assets/generated/sweden-postcard.png',
-  vietnam: '/assets/generated/vietnam-postcard.png',
 };
 
 function makeMaterial(
@@ -159,8 +151,11 @@ export function createRouteScene(
   root.add(ambient, sun);
 
   const textureLoader = new THREE.TextureLoader();
-  const backdropTexture = textureLoader.load(backdropTexturePaths[destination.id]);
+  const backdropTexture = textureLoader.load(postcardArtPaths[destination.id]);
   backdropTexture.colorSpace = THREE.SRGBColorSpace;
+  backdropTexture.generateMipmaps = true;
+  backdropTexture.magFilter = THREE.LinearFilter;
+  backdropTexture.minFilter = THREE.LinearMipmapLinearFilter;
   disposableTextures.push(backdropTexture);
   scene.background = backdropTexture;
 

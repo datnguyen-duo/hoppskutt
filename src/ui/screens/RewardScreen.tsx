@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react';
+import { BookOpen, Map } from 'lucide-react';
 import { boostLookup } from '../../data/boosts';
 import { destinationLookup, type Destination } from '../../data/destinations';
 import type { BoostId, ProgressState, Reward, RunSummary } from '../../state/types';
@@ -132,10 +133,14 @@ export function RewardScreen({
 
             <div className="reward-card__actions">
               <button type="button" className="button button--ghost" onClick={onOpenCollection}>
+                <BookOpen />
                 Open Route Book
               </button>
               <button type="button" className="button button--primary" onClick={onContinue}>
-                Keep Rolling
+                <Map />
+                {unlockedDestination
+                  ? `Next Stop: ${unlockedDestination.routeLabel}`
+                  : 'Keep Rolling'}
               </button>
             </div>
           </div>

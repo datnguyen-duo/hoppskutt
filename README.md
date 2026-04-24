@@ -20,4 +20,5 @@ Hoppskutt is a stylized roadtrip game for Chloe, starting in Maryland and hoppin
 ## Notes
 
 - Destination postcard art and recipe illustrations live under `public/assets/generated`
+- Game-styled optimized runtime art lives under `public/assets/generated/game-2d`
 - The homepage hero art lives under `src/assets`

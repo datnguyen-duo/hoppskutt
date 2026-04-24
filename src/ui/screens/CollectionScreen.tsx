@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import { ArrowLeft, BookOpen, Backpack, RotateCcw, Stamp } from 'lucide-react';
+import { ArrowLeft, Backpack, BookOpen, Menu, RotateCcw, Stamp } from 'lucide-react';
 import { boosts, boostLookup } from '../../data/boosts';
 import { destinations } from '../../data/destinations';
 import type { BoostId, ProgressState } from '../../state/types';
@@ -8,6 +8,7 @@ import { RecipeIllustration } from '../RecipeIllustration';
 
 type CollectionScreenProps = {
   progress: ProgressState;
+  onOpenMenu: () => void;
   onBack: () => void;
   onEquipBoost: (boostId: BoostId) => void;
   onClearBoost: () => void;
@@ -15,6 +16,7 @@ type CollectionScreenProps = {
 
 export function CollectionScreen({
   progress,
+  onOpenMenu,
   onBack,
   onEquipBoost,
   onClearBoost,
@@ -30,10 +32,16 @@ export function CollectionScreen({
           <p className="eyebrow">Route Book</p>
           <h2>Chloe&apos;s route book.</h2>
         </div>
-        <button type="button" className="button button--ghost" onClick={onBack}>
-          <ArrowLeft />
-          Trail Board
-        </button>
+        <div className="topbar__actions">
+          <button type="button" className="button button--ghost" onClick={onOpenMenu}>
+            <Menu />
+            Main Menu
+          </button>
+          <button type="button" className="button button--ghost" onClick={onBack}>
+            <ArrowLeft />
+            Trail Board
+          </button>
+        </div>
       </header>
 
       <div className="collection-board">

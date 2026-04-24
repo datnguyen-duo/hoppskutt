@@ -1,18 +1,34 @@
 import { useState } from 'react';
-import { BookOpen, Camera, Info, Menu, Play, X } from 'lucide-react';
-import chloeHeroKeyart from '../../assets/chloe-hero-keyart-maryland.jpg';
+import { Backpack, BookOpen, Camera, Info, Map, Menu, Play, Stamp, X } from 'lucide-react';
+import { boosts } from '../../data/boosts';
+import { destinations } from '../../data/destinations';
+import { heroArtPath } from '../../assets/artPaths';
+import type { ProgressState } from '../../state/types';
 import chloeCopilot from '../../assets/chloe-copilot.jpg';
 
 type StartScreenProps = {
+  progress: ProgressState;
   onStart: () => void;
+  onOpenCollection: () => void;
 };
 
-export function StartScreen({ onStart }: StartScreenProps) {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [menuSection, setMenuSection] = useState<'about' | 'resources'>('about');
-  const [photoOpen, setPhotoOpen] = useState(false);
+type MenuSection = 'journey' | 'progress' | 'story' | 'credits';
 
-  const openSection = (section: 'about' | 'resources') => {
+export function StartScreen({ progress, onStart, onOpenCollection }: StartScreenProps) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuSection, setMenuSection] = useState<MenuSection>('journey');
+  const [photoOpen, setPhotoOpen] = useState(false);
+  const hasProgress =
+    progress.totalWins > 0 ||
+    progress.unlockedDestinations.length > 1 ||
+    progress.unlockedRecipes.length > 0;
+  const playLabel = hasProgress ? 'Continue Trip' : 'Play';
+  const packedBoostCount = boosts.reduce(
+    (total, boost) => total + progress.boostInventory[boost.id],
+    0,
+  );
+
+  const openSection = (section: MenuSection) => {
     setMenuSection(section);
     setMenuOpen(true);
   };
@@ -22,7 +38,7 @@ export function StartScreen({ onStart }: StartScreenProps) {
       <div className="start-landing">
         <div className="start-landing__scene">
           <img
-            src={chloeHeroKeyart}
+            src={heroArtPath}
             alt="Illustrated roadtrip portrait of Chloe as a copilot with a Maryland marsh trail backdrop"
             className="start-landing__photo"
           />
@@ -44,6 +60,7 @@ export function StartScreen({ onStart }: StartScreenProps) {
             onClick={() => setMenuOpen(true)}
           >
             <Menu />
+            <span>Menu</span>
           </button>
         </div>
 
@@ -60,7 +77,11 @@ export function StartScreen({ onStart }: StartScreenProps) {
           <div className="start-landing__actions">
             <button type="button" className="button button--primary" onClick={onStart}>
               <Play />
-              Play
+              {playLabel}
+            </button>
+            <button type="button" className="button button--ghost button--glass" onClick={onOpenCollection}>
+              <BookOpen />
+              Route Book
             </button>
           </div>
         </div>
@@ -74,8 +95,8 @@ export function StartScreen({ onStart }: StartScreenProps) {
       <aside className={`start-menu-drawer${menuOpen ? ' is-open' : ''}`} aria-hidden={!menuOpen}>
         <div className="start-menu-drawer__header">
           <div>
-            <p className="eyebrow">Menu</p>
-            <h2>Trailhead Chloe</h2>
+            <p className="eyebrow">Trip Menu</p>
+            <h2>Where to next?</h2>
           </div>
           <button
             type="button"
@@ -87,14 +108,75 @@ export function StartScreen({ onStart }: StartScreenProps) {
           </button>
         </div>
 
-        <div className="start-menu-drawer__nav">
-          <button type="button" className="start-menu-item" onClick={() => openSection('about')}>
-            <Info />
-            About
+        <div className="start-menu-drawer__primary">
+          <button
+            type="button"
+            className="button button--primary start-menu-drawer__play"
+            onClick={onStart}
+          >
+            <Play />
+            {playLabel}
           </button>
-          <button type="button" className="start-menu-item" onClick={() => openSection('resources')}>
+          <button type="button" className="button button--ghost" onClick={onOpenCollection}>
             <BookOpen />
-            Resources
+            Route Book
+          </button>
+        </div>
+
+        <div className="start-menu-summary" aria-label="Trip progress">
+          <div>
+            <Stamp />
+            <span>Stamps</span>
+            <strong>{progress.totalWins}</strong>
+          </div>
+          <div>
+            <Map />
+            <span>Stops</span>
+            <strong>{progress.unlockedDestinations.length}/{destinations.length}</strong>
+          </div>
+          <div>
+            <Backpack />
+            <span>Helpers</span>
+            <strong>{packedBoostCount}</strong>
+          </div>
+        </div>
+
+        <div className="start-menu-drawer__nav">
+          <button
+            type="button"
+            className={`start-menu-item${menuSection === 'journey' ? ' is-active' : ''}`}
+            aria-pressed={menuSection === 'journey'}
+            onClick={() => openSection('journey')}
+          >
+            <Map />
+            Journey
+          </button>
+          <button
+            type="button"
+            className={`start-menu-item${menuSection === 'progress' ? ' is-active' : ''}`}
+            aria-pressed={menuSection === 'progress'}
+            onClick={() => openSection('progress')}
+          >
+            <Stamp />
+            Progress
+          </button>
+          <button
+            type="button"
+            className={`start-menu-item${menuSection === 'story' ? ' is-active' : ''}`}
+            aria-pressed={menuSection === 'story'}
+            onClick={() => openSection('story')}
+          >
+            <Info />
+            Story
+          </button>
+          <button
+            type="button"
+            className={`start-menu-item${menuSection === 'credits' ? ' is-active' : ''}`}
+            aria-pressed={menuSection === 'credits'}
+            onClick={() => openSection('credits')}
+          >
+            <BookOpen />
+            Credits
           </button>
           <button
             type="button"
@@ -107,20 +189,59 @@ export function StartScreen({ onStart }: StartScreenProps) {
             <Camera />
             Photo
           </button>
-          <button
-            type="button"
-            className="button button--primary start-menu-drawer__play"
-            onClick={onStart}
-          >
-            <Play />
-            Play
-          </button>
         </div>
 
         <div className="start-menu-drawer__body">
-          {menuSection === 'about' && (
+          {menuSection === 'journey' && (
             <div className="start-menu-panel">
-              <p className="eyebrow">About</p>
+              <p className="eyebrow">Journey</p>
+              <div className="start-journey-list">
+                <div>
+                  <span>1</span>
+                  <strong>Choose a trailhead</strong>
+                  <p>Maryland opens the first run, then each clean stamp unlocks the next stop.</p>
+                </div>
+                <div>
+                  <span>2</span>
+                  <strong>Pack one helper</strong>
+                  <p>Helpers can sharpen movement, soften the route, or boost the pickup score.</p>
+                </div>
+                <div>
+                  <span>3</span>
+                  <strong>Fill the route book</strong>
+                  <p>Cross the finish with enough tandborste to file stamps and snack cards.</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {menuSection === 'progress' && (
+            <div className="start-menu-panel">
+              <p className="eyebrow">Progress</p>
+              <div className="start-progress-list">
+                <div>
+                  <span>Open stops</span>
+                  <strong>{progress.unlockedDestinations.length}/{destinations.length}</strong>
+                </div>
+                <div>
+                  <span>Snack cards</span>
+                  <strong>{progress.unlockedRecipes.length}/{destinations.length}</strong>
+                </div>
+                <div>
+                  <span>Trail stamps</span>
+                  <strong>{progress.totalWins}</strong>
+                </div>
+                <div>
+                  <span>Pack helpers</span>
+                  <strong>{packedBoostCount}</strong>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {menuSection === 'story' && (
+            <div className="start-menu-panel">
+              <p className="eyebrow">Story</p>
               <p>
                 Hoppskutt started as a small tribute project: part dog game, part travel keepsake,
                 and part experiment in turning a real companion into a playful arcade world.
@@ -132,9 +253,9 @@ export function StartScreen({ onStart }: StartScreenProps) {
             </div>
           )}
 
-          {menuSection === 'resources' && (
+          {menuSection === 'credits' && (
             <div className="start-menu-panel">
-              <p className="eyebrow">Resources</p>
+              <p className="eyebrow">Credits</p>
               <ul className="start-menu-resources">
                 <li>OpenAI Codex</li>
                 <li>OpenAI image generation</li>
