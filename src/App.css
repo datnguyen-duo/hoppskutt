@@ -428,9 +428,14 @@ p {
 }
 
 .start-landing__scene,
+.start-landing__scene picture,
 .start-landing__photo {
   position: absolute;
   inset: 0;
+}
+
+.start-landing__scene picture {
+  display: block;
 }
 
 .start-landing__photo {
@@ -2150,6 +2155,838 @@ p {
   .run-hud__panel--score,
   .run-hud__panel--route {
     width: 100%;
+  }
+}
+
+/* Sticker Arcade skin */
+.app-shell {
+  --brand-accent: #00a982;
+  --brand-accent-strong: #007f68;
+  --brand-ink: #101726;
+  --brand-muted: rgba(16, 23, 38, 0.72);
+  --brand-cream: #fff7d7;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.36) 25%, transparent 25%) 0 0 / 24px 24px,
+    linear-gradient(225deg, rgba(255, 255, 255, 0.22) 25%, transparent 25%) 0 0 / 24px 24px,
+    linear-gradient(180deg, color-mix(in srgb, var(--theme-background-alt) 84%, #fff36f 16%), var(--theme-background));
+}
+
+.app-shell__backdrop {
+  background:
+    linear-gradient(90deg, rgba(16, 23, 38, 0.06) 1px, transparent 1px),
+    linear-gradient(rgba(16, 23, 38, 0.06) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.app-shell__grain {
+  opacity: 0.34;
+  background-image:
+    radial-gradient(circle, rgba(16, 23, 38, 0.12) 1px, transparent 1.5px);
+  background-size: 18px 18px;
+  mask-image: none;
+}
+
+h1,
+h2,
+h3,
+.eyebrow,
+.summary-chip span,
+.loadout-chip span,
+.board-feature__metrics span,
+.reward-card__stats span,
+.recipe-card__country,
+.kit-item__actions span:first-child,
+.daypack-choice__meta span,
+.destination-strip__state,
+.start-hero__sign,
+.start-hero__stamp,
+.destination-hero__route-badge,
+.destination-hero__country-badge,
+.reward-card__hero-route,
+.reward-card__hero-stamp,
+.destination-strip__route-label,
+.recipe-card__stamp,
+.destination-pack-card__count,
+.destination-pack-card__state,
+.destination-card__challenge,
+.run-controls span {
+  letter-spacing: 0;
+}
+
+.screen-card,
+.summary-chip,
+.loadout-chip,
+.notice,
+.start-menu-summary div,
+.start-menu-panel,
+.start-journey-list div,
+.start-progress-list div,
+.destination-pack-summary,
+.destination-pack-card,
+.destination-challenge-preview,
+.board-mini-section,
+.board-route-card,
+.daypack-choice,
+.kit-item,
+.recipe-shelf-card,
+.recipe-illustration,
+.reward-card__prize,
+.unlock-banner,
+.run-hud__panel,
+.run-tip,
+.run-status,
+.hud-pop {
+  border: 3px solid rgba(16, 23, 38, 0.88);
+  border-radius: 8px;
+  background: rgba(255, 248, 221, 0.96);
+  box-shadow:
+    6px 6px 0 rgba(16, 23, 38, 0.16),
+    inset 0 2px 0 rgba(255, 255, 255, 0.78);
+}
+
+.button,
+.start-landing__menu-button,
+.start-menu-item {
+  min-height: 3.1rem;
+  border: 3px solid rgba(16, 23, 38, 0.9);
+  border-radius: 14px;
+  box-shadow: 4px 4px 0 rgba(16, 23, 38, 0.2);
+  font-weight: 900;
+}
+
+.button:hover,
+.start-landing__menu-button:hover,
+.start-menu-item:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 6px 6px 0 rgba(16, 23, 38, 0.2);
+}
+
+.button:active,
+.start-landing__menu-button:active,
+.start-menu-item:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 rgba(16, 23, 38, 0.2);
+}
+
+.button--primary,
+.destination-hero-panel__actions .button--primary {
+  background: linear-gradient(180deg, #ffe75a, #ffb933);
+  color: #101726;
+  box-shadow: 5px 5px 0 rgba(16, 23, 38, 0.24);
+}
+
+.button--primary:hover {
+  background: linear-gradient(180deg, #fff174, #ffbf32);
+}
+
+.button--ghost {
+  background: rgba(255, 251, 235, 0.96);
+  color: #101726;
+}
+
+.button--glass {
+  background: rgba(255, 248, 221, 0.86);
+  color: #101726;
+  backdrop-filter: blur(8px);
+}
+
+.button--quiet {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: rgba(16, 23, 38, 0.66);
+}
+
+.eyebrow {
+  color: color-mix(in srgb, var(--theme-accent) 72%, #101726);
+  font-size: 0.78rem;
+  font-weight: 950;
+}
+
+.start-landing__photo {
+  object-position: 50% 50%;
+  filter: saturate(1.16) contrast(1.08) brightness(0.94);
+}
+
+.start-landing__wash {
+  background:
+    linear-gradient(90deg, rgba(8, 12, 22, 0.78) 0%, rgba(8, 12, 22, 0.42) 28%, rgba(8, 12, 22, 0.08) 60%),
+    linear-gradient(180deg, rgba(8, 12, 22, 0.02) 0%, rgba(8, 12, 22, 0.12) 52%, rgba(8, 12, 22, 0.72) 100%);
+}
+
+.start-landing__ambient,
+.start-landing__beam {
+  display: none;
+}
+
+.start-landing__brand,
+.start-landing__menu-button {
+  background: rgba(255, 248, 221, 0.9);
+  color: #101726;
+}
+
+.start-landing__brand {
+  border: 3px solid rgba(16, 23, 38, 0.9);
+  border-radius: 14px;
+  box-shadow: 5px 5px 0 rgba(16, 23, 38, 0.22);
+}
+
+.start-landing__hero {
+  gap: 1.15rem;
+  max-width: min(43rem, 56vw);
+}
+
+.start-landing__hero .eyebrow {
+  display: inline-flex;
+  width: fit-content;
+  padding: 0.28rem 0.55rem;
+  border: 3px solid rgba(16, 23, 38, 0.9);
+  border-radius: 8px;
+  background: #7ff2c8;
+  color: #101726;
+  box-shadow: 4px 4px 0 rgba(16, 23, 38, 0.22);
+}
+
+.start-landing__hero h1 {
+  color: #fff8d9;
+  text-shadow:
+    4px 4px 0 #101726,
+    8px 8px 0 rgba(255, 95, 79, 0.88);
+  -webkit-text-stroke: 2px #101726;
+}
+
+.start-landing__subtitle {
+  color: #fff8d9;
+  text-shadow: 3px 3px 0 rgba(16, 23, 38, 0.9);
+}
+
+.start-landing__lede {
+  max-width: 34rem;
+  padding: 0.85rem 1rem;
+  border: 3px solid rgba(255, 248, 221, 0.86);
+  border-radius: 8px;
+  background: rgba(16, 23, 38, 0.66);
+  color: rgba(255, 248, 221, 0.92);
+  font-weight: 700;
+}
+
+.start-menu-drawer {
+  border-left: 4px solid rgba(16, 23, 38, 0.9);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.38) 25%, transparent 25%) 0 0 / 22px 22px,
+    #fff3c8;
+}
+
+.start-menu-item.is-active {
+  background: #7ff2c8;
+  color: #101726;
+}
+
+.postcard-scene {
+  border: 3px solid rgba(16, 23, 38, 0.88);
+  border-radius: 8px;
+  background: #fff0b6;
+  box-shadow: 5px 5px 0 rgba(16, 23, 38, 0.16);
+}
+
+.postcard-scene::after {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16), transparent 28%),
+    linear-gradient(0deg, rgba(16, 23, 38, 0.12), transparent 32%);
+}
+
+.postcard-scene img,
+.recipe-illustration img {
+  filter: saturate(1.16) contrast(1.08);
+}
+
+.destination-topbar__copy h2,
+.topbar h2,
+.collection-screen h2,
+.reward-card__intro h2 {
+  text-shadow: 2px 2px 0 rgba(255, 232, 85, 0.82);
+}
+
+.destination-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 12;
+  grid-template-columns: minmax(18rem, 1fr) minmax(0, 40rem);
+  gap: 1rem;
+  align-items: center;
+  padding: 0.75rem;
+  border: 3px solid rgba(16, 23, 38, 0.88);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.38) 25%, transparent 25%) 0 0 / 20px 20px,
+    rgba(239, 255, 221, 0.96);
+  box-shadow: 6px 6px 0 rgba(16, 23, 38, 0.14);
+  backdrop-filter: blur(8px);
+}
+
+.destination-topbar__copy h2 {
+  font-size: clamp(2.05rem, 4vw, 3.05rem);
+}
+
+.destination-topbar .topbar__actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.55rem;
+  align-items: stretch;
+  justify-self: end;
+  width: min(100%, 40rem);
+}
+
+.destination-topbar .topbar__actions .button {
+  min-width: 0;
+  justify-content: center;
+}
+
+.destination-topbar .topbar__actions .button--quiet {
+  grid-column: 1 / -1;
+  justify-self: end;
+  min-height: 2rem;
+  padding: 0.2rem 0.45rem;
+}
+
+.destination-topbar__play {
+  min-width: 9rem;
+}
+
+.destination-hero-panel {
+  overflow: visible;
+  background: #fff5cd;
+}
+
+.destination-hero-panel__scene .postcard-scene--hero {
+  border-radius: 8px 8px 0 0;
+}
+
+.destination-hero-panel__shade {
+  background:
+    linear-gradient(180deg, rgba(16, 23, 38, 0) 0%, rgba(16, 23, 38, 0.08) 36%, rgba(16, 23, 38, 0.66) 100%),
+    linear-gradient(90deg, rgba(16, 23, 38, 0.34) 0%, rgba(16, 23, 38, 0.04) 48%, rgba(16, 23, 38, 0.14) 100%);
+}
+
+.destination-hero-panel__copy h3,
+.board-feature__header h3 {
+  color: #fff8d9;
+  text-shadow:
+    3px 3px 0 #101726,
+    5px 5px 0 color-mix(in srgb, var(--screen-accent, var(--theme-accent)) 72%, #ff5f4f);
+}
+
+.destination-hero-panel__tagline {
+  color: #fff8d9;
+  font-weight: 900;
+}
+
+.destination-hero-panel__overview {
+  color: rgba(255, 248, 221, 0.9);
+  font-weight: 700;
+}
+
+.destination-hero__route-badge,
+.destination-hero__country-badge,
+.reward-card__hero-route,
+.reward-card__hero-stamp,
+.recipe-card__stamp {
+  border: 3px solid rgba(16, 23, 38, 0.9);
+  border-radius: 8px;
+  background: #fff36f;
+  box-shadow: 4px 4px 0 rgba(16, 23, 38, 0.18);
+  color: #101726;
+}
+
+.destination-hero-panel__footer {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.38) 25%, transparent 25%) 0 0 / 20px 20px,
+    #fff5cd;
+}
+
+.destination-hero-panel__stats {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.summary-chip {
+  min-width: 0;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: 0.62rem;
+  row-gap: 0.24rem;
+  align-items: start;
+}
+
+.summary-chip svg {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  margin-top: 0.08rem;
+}
+
+.summary-chip span,
+.summary-chip strong {
+  grid-column: 2;
+  justify-self: start;
+  min-width: 0;
+}
+
+.summary-chip strong {
+  margin-top: 0;
+  line-height: 1.22;
+  overflow-wrap: normal;
+  text-wrap: balance;
+}
+
+.summary-chip strong,
+.loadout-chip strong,
+.reward-card__stats strong,
+.destination-pack-summary strong {
+  font-weight: 950;
+}
+
+.summary-chip svg,
+.loadout-chip svg,
+.destination-challenge-preview svg,
+.run-hud__panel > svg {
+  color: color-mix(in srgb, var(--theme-accent) 78%, #101726);
+  stroke-width: 3;
+}
+
+.destination-challenge-preview {
+  gap: 0.68rem;
+  padding: 0.85rem 0.95rem;
+}
+
+.destination-challenge-preview__header {
+  align-items: center;
+}
+
+.destination-challenge-preview__header strong {
+  margin-top: 0.08rem;
+}
+
+.destination-challenge-preview__tips {
+  align-self: center;
+}
+
+@media (min-width: 760px) {
+  .destination-challenge-preview {
+    grid-template-columns: minmax(14rem, 0.8fr) minmax(0, 1fr);
+    align-items: center;
+  }
+}
+
+@media (max-width: 900px) {
+  .destination-topbar {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .destination-topbar .topbar__actions {
+    justify-self: stretch;
+    width: 100%;
+  }
+}
+
+@media (max-width: 760px) {
+  .destination-hero-panel__stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .destination-hero-panel__stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+.destination-pack-card:not(:disabled),
+.kit-item:not(:disabled),
+.daypack-choice:not(:disabled),
+.board-route-card:not(:disabled) {
+  cursor: pointer;
+}
+
+.destination-pack-card.is-active,
+.board-route-card.is-selected,
+.daypack-choice.is-active,
+.kit-item.is-active,
+.destination-stop-card.is-selected {
+  background: color-mix(in srgb, var(--card-accent, var(--boost-accent, #7ff2c8)) 24%, #fff5cd);
+  box-shadow: 6px 6px 0 rgba(16, 23, 38, 0.22);
+}
+
+.destination-stop-card,
+.destination-pack-card,
+.kit-item,
+.recipe-shelf-card {
+  transition:
+    transform 140ms ease,
+    box-shadow 140ms ease,
+    opacity 140ms ease;
+}
+
+.destination-stop-card:not(:disabled):hover,
+.destination-pack-card:not(:disabled):hover,
+.kit-item:not(:disabled):hover,
+.recipe-shelf-card:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 7px 7px 0 rgba(16, 23, 38, 0.18);
+}
+
+.destination-pack-card.is-empty,
+.board-route-card.is-locked,
+.daypack-choice.is-empty,
+.kit-item.is-empty,
+.recipe-shelf-card.is-locked {
+  filter: saturate(0.58);
+  opacity: 0.66;
+}
+
+.recipe-illustration {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.34) 25%, transparent 25%) 0 0 / 18px 18px,
+    color-mix(in srgb, var(--recipe-secondary, #ffd33f) 34%, #fff8dc);
+}
+
+.recipe-lock-plate {
+  border: 3px dashed rgba(16, 23, 38, 0.62);
+  border-radius: 8px;
+  background: rgba(255, 248, 221, 0.88);
+  color: rgba(16, 23, 38, 0.62);
+  letter-spacing: 0;
+}
+
+.reward-card {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.38) 25%, transparent 25%) 0 0 / 20px 20px,
+    #fff5cd;
+}
+
+.reward-card__hero {
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.reward-card__hero-clear {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 4;
+  transform: translate(-50%, -50%) rotate(-8deg);
+  padding: 0.18rem 0.75rem 0.32rem;
+  border: 4px solid #101726;
+  border-radius: 10px;
+  background: #fff36f;
+  color: #101726;
+  font-family: 'Bree Serif', serif;
+  font-size: clamp(3.3rem, 9vw, 6.3rem);
+  line-height: 0.9;
+  text-shadow:
+    3px 3px 0 #fff8dd,
+    6px 6px 0 rgba(255, 95, 79, 0.82);
+  box-shadow: 7px 7px 0 rgba(16, 23, 38, 0.28);
+  pointer-events: none;
+}
+
+.reward-quick-pack {
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.85rem;
+  border: 3px solid rgba(16, 23, 38, 0.88);
+  border-radius: 8px;
+  background: rgba(255, 248, 221, 0.96);
+  box-shadow: 5px 5px 0 rgba(16, 23, 38, 0.16);
+}
+
+.reward-quick-pack__header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.65rem;
+  align-items: center;
+}
+
+.reward-quick-pack__header svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  color: var(--brand-accent);
+  stroke-width: 3;
+}
+
+.reward-quick-pack__header strong {
+  display: block;
+  margin-top: 0.12rem;
+}
+
+.reward-quick-pack__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.reward-quick-pack__item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.42rem;
+  align-items: center;
+  min-height: 4.2rem;
+  padding: 0.58rem;
+  border: 2px solid rgba(16, 23, 38, 0.76);
+  border-radius: 8px;
+  background: #fff8dd;
+  color: #101726;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.reward-quick-pack__item strong,
+.reward-quick-pack__item span,
+.reward-quick-pack__item small {
+  min-width: 0;
+}
+
+.reward-quick-pack__item strong {
+  font-size: 0.9rem;
+}
+
+.reward-quick-pack__item small {
+  grid-column: 2 / -1;
+  color: rgba(16, 23, 38, 0.62);
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.reward-quick-pack__item.is-active {
+  background: color-mix(in srgb, var(--boost-accent) 26%, #fff8dd);
+  box-shadow: 3px 3px 0 rgba(16, 23, 38, 0.18);
+}
+
+.reward-quick-pack__item.is-empty {
+  cursor: not-allowed;
+  filter: saturate(0.5);
+  opacity: 0.62;
+}
+
+.run-overlay {
+  padding: 1.1rem;
+}
+
+.run-hud__panel,
+.run-tip,
+.hud-pop {
+  background: rgba(255, 248, 221, 0.94);
+  backdrop-filter: blur(7px);
+}
+
+.run-hud__panel {
+  min-width: 9rem;
+  padding: 0.78rem 0.9rem;
+}
+
+.run-hud__panel strong {
+  font-size: 1.24rem;
+  font-weight: 950;
+}
+
+.run-progress__track {
+  height: 0.75rem;
+  border: 2px solid rgba(16, 23, 38, 0.78);
+  border-radius: 8px;
+  background: rgba(16, 23, 38, 0.12);
+}
+
+.run-progress__fill {
+  border-radius: 5px;
+  background:
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.3) 0 8px, transparent 8px 16px),
+    linear-gradient(90deg, #00d18f, #ffe55c);
+}
+
+.run-progress__fill--route {
+  background:
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.3) 0 8px, transparent 8px 16px),
+    linear-gradient(90deg, var(--run-secondary), var(--run-accent));
+}
+
+.run-paws__dot {
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(16, 23, 38, 0.84);
+  background: rgba(16, 23, 38, 0.12);
+}
+
+.run-paws__dot.is-active {
+  background: #ff5f4f;
+}
+
+.hud-pop {
+  animation: arcade-pop 650ms cubic-bezier(0.2, 1.4, 0.3, 1);
+}
+
+.hud-pop--good {
+  background: #c9ffd9;
+}
+
+.hud-pop--bad {
+  background: #ffe0d6;
+}
+
+.hud-pop--boost {
+  background: #fff36f;
+}
+
+.run-controls span,
+.destination-challenge-preview__tips span {
+  border: 2px solid rgba(16, 23, 38, 0.82);
+  border-radius: 8px;
+  background: #fff8dd;
+  box-shadow: 2px 2px 0 rgba(16, 23, 38, 0.12);
+  font-weight: 900;
+}
+
+@media (max-width: 980px) {
+  .start-landing__hero {
+    max-width: min(38rem, 70vw);
+  }
+}
+
+@media (max-width: 700px) {
+  .start-screen {
+    padding: 0;
+  }
+
+  .start-landing__photo {
+    object-position: 62% 50%;
+  }
+
+  .start-landing__wash {
+    background:
+      linear-gradient(180deg, rgba(8, 12, 22, 0.04) 0%, rgba(8, 12, 22, 0.18) 38%, rgba(8, 12, 22, 0.78) 100%);
+  }
+
+  .start-landing__hero {
+    gap: 0.85rem;
+  }
+
+  .start-landing__hero h1 {
+    font-size: clamp(3.25rem, 15vw, 4.75rem);
+  }
+
+  .start-landing__subtitle {
+    max-width: 21rem;
+  }
+
+  .start-landing__lede {
+    max-width: 24rem;
+    font-size: 0.9rem;
+  }
+
+  .destination-topbar {
+    grid-template-columns: 1fr;
+    gap: 0.55rem;
+    padding: 0.62rem;
+  }
+
+  .destination-topbar__copy {
+    gap: 0.32rem;
+  }
+
+  .destination-topbar__copy h2 {
+    font-size: clamp(1.75rem, 9.8vw, 2.35rem);
+  }
+
+  .destination-topbar .topbar__actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .destination-topbar__play {
+    grid-column: 1 / -1;
+  }
+
+  .destination-topbar .topbar__actions .button--quiet {
+    grid-column: auto;
+    justify-self: center;
+  }
+
+  .run-overlay {
+    padding: 0.7rem;
+  }
+
+  .run-topbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.5rem;
+    align-items: start;
+  }
+
+  .run-hud {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .run-hud__panel {
+    min-width: 0;
+    padding: 0.62rem 0.72rem;
+  }
+
+  .run-hud__panel--score,
+  .run-hud__panel--route {
+    width: auto;
+  }
+
+  .run-hud__panel--run {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .run-hud__panel strong {
+    font-size: 1rem;
+  }
+
+  .run-hud__panel small {
+    display: none;
+  }
+
+  .run-progress {
+    margin-top: 0.42rem;
+  }
+
+  .run-progress__track {
+    height: 0.55rem;
+  }
+
+  .run-topbar .button {
+    min-height: 2.8rem;
+    padding: 0.58rem 0.72rem;
+  }
+
+  .run-tip {
+    max-width: 100%;
+    padding: 0.72rem;
+  }
+}
+
+@keyframes arcade-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.86);
+  }
+
+  18% {
+    opacity: 1;
+    transform: translateY(-4px) scale(1.04);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 

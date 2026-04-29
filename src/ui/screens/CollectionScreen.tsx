@@ -29,8 +29,8 @@ export function CollectionScreen({
     <section className="screen collection-screen">
       <header className="topbar topbar--collection">
         <div>
-          <p className="eyebrow">Route Book</p>
-          <h2>Chloe&apos;s route book.</h2>
+          <p className="eyebrow">Sticker Book</p>
+          <h2>Chloe&apos;s sticker book.</h2>
         </div>
         <div className="topbar__actions">
           <button type="button" className="button button--ghost" onClick={onOpenMenu}>
@@ -39,7 +39,7 @@ export function CollectionScreen({
           </button>
           <button type="button" className="button button--ghost" onClick={onBack}>
             <ArrowLeft />
-            Trail Board
+            Stage Board
           </button>
         </div>
       </header>
@@ -48,9 +48,9 @@ export function CollectionScreen({
         <section className="screen-card passport-cover">
           <span className="chloe-pin chloe-pin--passport" aria-hidden="true" />
           <div className="passport-cover__copy">
-            <p className="eyebrow">Passport Cover</p>
-            <h3>Stamps, snack cards, and route helpers all in one book.</h3>
-            <p>Keep the whole trip readable at a glance.</p>
+            <p className="eyebrow">Arcade Album</p>
+            <h3>Stamps, snack cards, and power helpers all in one bright book.</h3>
+            <p>Track every clear, snack drop, and clipped boost at a glance.</p>
           </div>
 
           <div className="passport-summary">
@@ -82,7 +82,7 @@ export function CollectionScreen({
             <div className="section-heading section-heading--compact">
               <div>
                 <p className="eyebrow">Snack Cards</p>
-                <h3>{destinations.length} keepsakes, one shelf.</h3>
+                <h3>{destinations.length} collectible rewards, one shelf.</h3>
               </div>
             </div>
 
@@ -118,7 +118,7 @@ export function CollectionScreen({
                       <p>
                         {unlocked
                           ? destination.recipe.flavorText
-                          : `Earn a clean stamp in ${destination.country} to unlock this keepsake.`}
+                          : `Clear ${destination.country} to unlock this snack sticker.`}
                       </p>
                     </div>
                   </article>
@@ -130,8 +130,8 @@ export function CollectionScreen({
           <aside className="screen-card kit-panel collection-pack">
             <div className="section-heading section-heading--compact">
               <div>
-                <p className="eyebrow">Day Pack Notes</p>
-                <h3>Pack helpers for the next route.</h3>
+                <p className="eyebrow">Power Pack</p>
+                <h3>Clip helpers for the next run.</h3>
               </div>
               {progress.equippedBoostId && (
                 <button type="button" className="button button--quiet" onClick={onClearBoost}>

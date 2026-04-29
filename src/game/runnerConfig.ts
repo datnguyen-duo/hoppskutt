@@ -460,6 +460,18 @@ const breezyPatterns: Record<RoutePhase, RunnerPattern[]> = {
   ],
 };
 
+const rockMixPatterns: Record<RoutePhase, RunnerPattern[]> = {
+  warmup: [...breezyPatterns.warmup, ...mountainPatterns.middle],
+  middle: [...breezyPatterns.middle, ...mountainPatterns.final],
+  final: [...breezyPatterns.final, ...islandStepPatterns.final],
+};
+
+const finaleRushPatterns: Record<RoutePhase, RunnerPattern[]> = {
+  warmup: [...breezyPatterns.middle, ...alternatingPatterns.final],
+  middle: [...breezyPatterns.final, ...islandStepPatterns.final],
+  final: [...breezyPatterns.final, ...forestLoopPatterns.final],
+};
+
 export const routePatternSets = {
   maryland: {
     styleBias: 'calm',
@@ -472,46 +484,6 @@ export const routePatternSets = {
     patterns: boardwalkPatterns,
   },
   'rhode-island': {
-    styleBias: 'alternating',
-    selectionMode: 'cycle',
-    spawnRanges: {
-      warmup: [1.04, 1.18],
-      middle: [1, 1.14],
-      final: [0.98, 1.12],
-    },
-    patterns: alternatingPatterns,
-  },
-  colorado: {
-    styleBias: 'calm',
-    selectionMode: 'random',
-    spawnRanges: {
-      warmup: [0.98, 1.1],
-      middle: [0.92, 1.04],
-      final: [0.88, 1],
-    },
-    patterns: mountainPatterns,
-  },
-  greece: {
-    styleBias: 'alternating',
-    selectionMode: 'cycle',
-    spawnRanges: {
-      warmup: [0.94, 1.06],
-      middle: [0.88, 1],
-      final: [0.84, 0.96],
-    },
-    patterns: islandStepPatterns,
-  },
-  sweden: {
-    styleBias: 'calm',
-    selectionMode: 'random',
-    spawnRanges: {
-      warmup: [1.04, 1.16],
-      middle: [0.98, 1.08],
-      final: [0.9, 1],
-    },
-    patterns: forestLoopPatterns,
-  },
-  vietnam: {
     styleBias: 'breezy',
     selectionMode: 'cycle',
     spawnRanges: {
@@ -520,5 +492,45 @@ export const routePatternSets = {
       final: [0.7, 0.82],
     },
     patterns: breezyPatterns,
+  },
+  colorado: {
+    styleBias: 'breezy',
+    selectionMode: 'random',
+    spawnRanges: {
+      warmup: [0.78, 0.9],
+      middle: [0.68, 0.8],
+      final: [0.6, 0.72],
+    },
+    patterns: rockMixPatterns,
+  },
+  greece: {
+    styleBias: 'alternating',
+    selectionMode: 'cycle',
+    spawnRanges: {
+      warmup: [0.86, 0.98],
+      middle: [0.76, 0.88],
+      final: [0.68, 0.8],
+    },
+    patterns: islandStepPatterns,
+  },
+  sweden: {
+    styleBias: 'calm',
+    selectionMode: 'random',
+    spawnRanges: {
+      warmup: [0.7, 0.82],
+      middle: [0.58, 0.7],
+      final: [0.5, 0.62],
+    },
+    patterns: forestLoopPatterns,
+  },
+  vietnam: {
+    styleBias: 'breezy',
+    selectionMode: 'random',
+    spawnRanges: {
+      warmup: [0.62, 0.74],
+      middle: [0.52, 0.64],
+      final: [0.46, 0.58],
+    },
+    patterns: finaleRushPatterns,
   },
 } satisfies Record<DestinationId, RoutePatternSet>;

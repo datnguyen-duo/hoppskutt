@@ -44,21 +44,29 @@ export function DestinationScreen({
     <section className="screen destination-screen destination-screen--hub">
       <header className="topbar topbar--destination destination-topbar">
         <div className="destination-topbar__copy">
-          <p className="eyebrow">Trail Select</p>
-          <h2>Choose the next trailhead.</h2>
+          <p className="eyebrow">Route Select</p>
+          <h2>Pick Chloe&apos;s next stage.</h2>
           <p>
-            Pick one stop, pack one helper, and send Chloe straight for the finish gate.
+            Choose a sticker stop, clip one helper, and launch Chloe toward the finish gate.
           </p>
         </div>
 
         <div className="topbar__actions">
+          <button
+            type="button"
+            className="button button--primary destination-topbar__play"
+            onClick={onPlay}
+          >
+            <Play />
+            Start Run
+          </button>
           <button type="button" className="button button--ghost" onClick={onOpenMenu}>
             <Menu />
             Main Menu
           </button>
           <button type="button" className="button button--ghost" onClick={onOpenCollection}>
             <BookOpen />
-            Route Book
+            Sticker Book
           </button>
           <button type="button" className="button button--quiet" onClick={onResetProgress}>
             <RotateCcw />
@@ -106,12 +114,12 @@ export function DestinationScreen({
               </div>
               <div className="summary-chip">
                 <Stamp />
-                <span>Goal</span>
+                <span>Tandborste</span>
                 <strong>{selected.run.targetScore} tandborste</strong>
               </div>
               <div className="summary-chip">
                 <Gauge />
-                <span>Skill</span>
+                <span>Stage</span>
                 <strong>Level {selected.run.difficulty}: {selected.run.skillFocus}</strong>
               </div>
               <div className="summary-chip">
@@ -125,9 +133,9 @@ export function DestinationScreen({
               <div className="destination-hero-panel__playbox">
                 <div className="destination-pack-summary destination-pack-summary--hero">
                   <div className="destination-pack-summary__copy">
-                    <span className="eyebrow">Day Pack</span>
+                    <span className="eyebrow">Power Pack</span>
                     <strong>{equippedBoost?.name ?? 'Packed light'}</strong>
-                    <small>{equippedBoost?.description ?? 'Optional helpers can be packed before the run.'}</small>
+                    <small>{equippedBoost?.description ?? 'Optional helpers can be clipped before the run.'}</small>
                   </div>
                   {progress.equippedBoostId && (
                     <button type="button" className="button button--quiet" onClick={onClearBoost}>
@@ -171,7 +179,7 @@ export function DestinationScreen({
                   <div className="destination-challenge-preview__header">
                     <Gauge />
                     <div>
-                      <span>Route Skill</span>
+                      <span>Stage Skill</span>
                       <strong>{selected.run.challengeSummary}</strong>
                     </div>
                   </div>
@@ -190,7 +198,7 @@ export function DestinationScreen({
                   </div>
                   <button type="button" className="button button--primary" onClick={onPlay}>
                     <Play />
-                    Play Route
+                    Start Run
                   </button>
                 </div>
               </div>
@@ -202,8 +210,8 @@ export function DestinationScreen({
           <section className="screen-card destination-sidebar__section">
             <div className="section-heading section-heading--compact destination-stop-header">
               <div>
-                <p className="eyebrow">Route Map</p>
-                <h3>Pick an open stop.</h3>
+                <p className="eyebrow">Stage Map</p>
+                <h3>Pick an open sticker stop.</h3>
               </div>
               <div className="destination-stop-summary">
                 <div className="summary-chip">
@@ -213,7 +221,7 @@ export function DestinationScreen({
                 </div>
                 <div className="summary-chip">
                   <BookOpen />
-                  <span>Recipe Cards</span>
+                  <span>Snack Cards</span>
                   <strong>{progress.unlockedRecipes.length}/{destinations.length}</strong>
                 </div>
               </div>

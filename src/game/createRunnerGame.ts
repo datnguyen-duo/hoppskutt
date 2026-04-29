@@ -95,6 +95,14 @@ const LANE_X: Record<LaneIndex, number> = {
 const PLAYER_Z = 5.2;
 const BASE_ROUTE_SPEED = 9;
 const GRAVITY = 17.5;
+const JUMP_BUFFER_WINDOW = 0.14;
+const GROUNDED_GRACE_WINDOW = 0.08;
+const HURDLE_BODY_CLEARANCE = 0.78;
+const HURDLE_CLEARANCE_GRACE = 0.1;
+const DEFAULT_PICKUP_Y = 0.98;
+const DEFAULT_PICKUP_Z_OFFSET = -0.2;
+const HURDLE_PICKUP_MIN_Y = 1.38;
+const HURDLE_PICKUP_Z_WINDOW = 0.48;
 const SPAWN_Z = -44;
 const FINISH_TRIGGER_Z = PLAYER_Z - 0.45;
 const SPAWN_LOOKAHEAD = PLAYER_Z - SPAWN_Z;
@@ -844,6 +852,12 @@ export function createRunnerGame({
   const routeSpeed = BASE_ROUTE_SPEED * destination.run.baseSpeed * boost.routeSpeedMultiplier;
   const activeBoostLabel = activeBoostId ? boostLookup[activeBoostId].shortLabel : null;
   const finishDistance = destination.run.finishDistance;
+  const difficultyPressure = Math.max(0, destination.run.difficulty - 1);
+  const pickupHitScaleX = Math.max(0.3, 0.42 - difficultyPressure * 0.024);
+  const pickupHitScaleZ = Math.max(0.38, 0.5 - difficultyPressure * 0.022);
+  const pickupXMargin = Math.max(0.12, 0.28 - difficultyPressure * 0.032);
+  const pickupZMargin = Math.max(0.16, 0.28 - difficultyPressure * 0.024);
+  const pickupHeightTolerance = Math.max(0.56, 0.82 - difficultyPressure * 0.052);
   const gaitAmplitude =
     routeConfig.styleBias === 'calm'
       ? 0.34
@@ -936,6 +950,8 @@ export function createRunnerGame({
   let playerX = 0;
   let jumpY = 0;
   let jumpVelocity = 0;
+  let jumpBufferTimer = 0;
+  let groundedGraceTimer = GROUNDED_GRACE_WINDOW;
   let invulnerableTimer = 0;
   let finishCountdown = -1;
   let finishWon = false;
@@ -1077,6 +1093,84 @@ export function createRunnerGame({
     return entity;
   }
 
+  function getPickupLimit(phase: RoutePhase) {
+    if (destination.run.difficulty <= 1) {
+      return Number.POSITIVE_INFINITY;
+    }
+
+    if (destination.run.difficulty === 2) {
+      return phase === 'final' ? 1 : 2;
+    }
+
+    if (destination.run.difficulty === 3) {
+      return phase === 'warmup' ? 2 : 1;
+    }
+
+    if (destination.id === 'greece') {
+      return phase === 'final' ? 1 : 2;
+    }
+
+    return 1;
+  }
+
+  function pickupY(pickup: RunnerPattern['tandborste'][number]) {
+    return pickup.y ?? DEFAULT_PICKUP_Y;
+  }
+
+  function pickupZOffset(pickup: RunnerPattern['tandborste'][number]) {
+    return pickup.z ?? DEFAULT_PICKUP_Z_OFFSET;
+  }
+
+  function liftFencePickups(pattern: RunnerPattern): RunnerPattern['tandborste'] {
+    const hurdles = pattern.obstacles.filter((obstacle) => obstacle.kind === 'hurdle');
+    if (hurdles.length === 0) {
+      return pattern.tandborste;
+    }
+
+    return pattern.tandborste.map((pickup) => {
+      const pairedHurdle = hurdles.find((hurdle) => {
+        const hurdleZ = hurdle.z ?? 0;
+        return (
+          hurdle.lane === pickup.lane &&
+          Math.abs(hurdleZ - pickupZOffset(pickup)) <= HURDLE_PICKUP_Z_WINDOW
+        );
+      });
+
+      if (!pairedHurdle) {
+        return pickup;
+      }
+
+      return {
+        ...pickup,
+        y: Math.max(pickupY(pickup), HURDLE_PICKUP_MIN_Y),
+        z: pairedHurdle.z ?? 0,
+      };
+    });
+  }
+
+  function choosePickups(pickups: RunnerPattern['tandborste'], phase: RoutePhase) {
+    const limit = getPickupLimit(phase);
+    if (pickups.length <= limit) {
+      return pickups;
+    }
+
+    return [...pickups]
+      .sort((a, b) => {
+        const heightDelta = pickupY(b) - pickupY(a);
+        if (heightDelta !== 0) {
+          return heightDelta;
+        }
+
+        const laneDelta = Math.abs(b.lane) - Math.abs(a.lane);
+        if (laneDelta !== 0) {
+          return laneDelta;
+        }
+
+        return pickupZOffset(a) - pickupZOffset(b);
+      })
+      .slice(0, limit);
+  }
+
   function addPattern(): RoutePhase {
     const progress = distanceTravelled / finishDistance;
     const phase = getRoutePhase(progress);
@@ -1102,12 +1196,12 @@ export function createRunnerGame({
       );
     });
 
-    pattern.tandborste.forEach((pickup) => {
+    choosePickups(liftFencePickups(pattern), phase).forEach((pickup) => {
       makeEntity(
         'pickup',
         pickup.lane,
-        rowZ + (pickup.z ?? -0.2),
-        pickup.y ?? 0.98,
+        rowZ + pickupZOffset(pickup),
+        pickupY(pickup),
         0.64,
         0.48,
         0.52,
@@ -1119,11 +1213,17 @@ export function createRunnerGame({
     return phase;
   }
 
-  function jump() {
-    if (jumpY > 0.02 || finishCountdown >= 0) {
-      return;
-    }
+  function isGrounded() {
+    return jumpY <= 0.04 && jumpVelocity <= 0.01;
+  }
 
+  function canStartJump() {
+    return finishCountdown < 0 && (isGrounded() || groundedGraceTimer > 0);
+  }
+
+  function performJump() {
+    jumpBufferTimer = 0;
+    groundedGraceTimer = 0;
     jumpVelocity = 6.65 * boost.jumpBoost;
     soundManager.playJump();
     onScoreEvent({
@@ -1132,6 +1232,19 @@ export function createRunnerGame({
       chain,
       tone: 'boost',
     });
+  }
+
+  function requestJump() {
+    if (finishCountdown >= 0) {
+      return;
+    }
+
+    if (canStartJump()) {
+      performJump();
+      return;
+    }
+
+    jumpBufferTimer = JUMP_BUFFER_WINDOW;
   }
 
   function collect(entity: RunnerEntity) {
@@ -1211,12 +1324,12 @@ export function createRunnerGame({
 
       const xClose =
         Math.abs(playerX - entity.x) <
-        entity.width * (entity.kind === 'pickup' ? 0.42 : 0.48) +
-          (entity.kind === 'pickup' ? 0.28 : 0.18);
+        entity.width * (entity.kind === 'pickup' ? pickupHitScaleX : 0.48) +
+          (entity.kind === 'pickup' ? pickupXMargin : 0.18);
       const zClose =
         Math.abs(PLAYER_Z - entity.z) <
-        entity.depth * (entity.kind === 'pickup' ? 0.5 : 0.44) +
-          (entity.kind === 'pickup' ? 0.28 : 0.2);
+        entity.depth * (entity.kind === 'pickup' ? pickupHitScaleZ : 0.44) +
+          (entity.kind === 'pickup' ? pickupZMargin : 0.2);
 
       if (!xClose || !zClose) {
         continue;
@@ -1224,16 +1337,18 @@ export function createRunnerGame({
 
       if (entity.kind === 'pickup') {
         const chestHeight = 1.1 + jumpY;
-        if (Math.abs(chestHeight - entity.mesh.position.y) < 0.82) {
+        if (Math.abs(chestHeight - entity.mesh.position.y) < pickupHeightTolerance) {
           collect(entity);
         }
         continue;
       }
 
       if (entity.response === 'jump') {
-        const clearance = jumpY + 0.76;
-        if (clearance < entity.clearHeight) {
+        const clearance = jumpY + HURDLE_BODY_CLEARANCE;
+        if (clearance < entity.clearHeight - HURDLE_CLEARANCE_GRACE) {
           stumble(entity);
+        } else {
+          deactivateEntity(entity);
         }
         continue;
       }
@@ -1243,6 +1358,13 @@ export function createRunnerGame({
   }
 
   function updatePlayer(delta: number, totalElapsed: number) {
+    if (jumpBufferTimer > 0) {
+      jumpBufferTimer = Math.max(0, jumpBufferTimer - delta);
+    }
+    if (!isGrounded()) {
+      groundedGraceTimer = Math.max(0, groundedGraceTimer - delta);
+    }
+
     const laneTarget = laneValue(targetLane);
     playerX = THREE.MathUtils.damp(playerX, laneTarget, 14.2 * boost.laneShiftMultiplier, delta);
     if (Math.abs(playerX - laneTarget) < 0.02) {
@@ -1261,6 +1383,13 @@ export function createRunnerGame({
       }
       if (jumpVelocity < 0) {
         jumpVelocity = 0;
+      }
+    }
+
+    if (isGrounded()) {
+      groundedGraceTimer = GROUNDED_GRACE_WINDOW;
+      if (jumpBufferTimer > 0) {
+        performJump();
       }
     }
 
@@ -1373,7 +1502,9 @@ export function createRunnerGame({
       event.code === 'Space'
     ) {
       event.preventDefault();
-      jump();
+      if (!event.repeat) {
+        requestJump();
+      }
     }
   }
 
@@ -1399,7 +1530,7 @@ export function createRunnerGame({
       targetLane = Math.min(1, (targetLane + 1) as LaneIndex) as LaneIndex;
       return;
     }
-    jump();
+    requestJump();
   }
 
   function step(now: number) {
@@ -1451,7 +1582,7 @@ export function createRunnerGame({
       reachedFinish = true;
       const won = score >= destination.run.targetScore && hearts > 0;
       onScoreEvent({
-        label: won ? 'Stamp secured' : 'Need more tandborste',
+        label: won ? 'Sticker secured' : 'Need more Tandborste',
         value: 0,
         chain,
         tone: won ? 'good' : 'bad',
