@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Backpack, BookOpen, Camera, Info, Map, Menu, Play, Stamp, X } from 'lucide-react';
 import { boosts } from '../../data/boosts';
 import { destinations } from '../../data/destinations';
-import { heroArtPath } from '../../assets/artPaths';
+import { heroArtPath, heroPortraitArtPath } from '../../assets/artPaths';
 import type { ProgressState } from '../../state/types';
 import chloeCopilot from '../../assets/chloe-copilot.jpg';
 
@@ -22,7 +22,7 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
     progress.totalWins > 0 ||
     progress.unlockedDestinations.length > 1 ||
     progress.unlockedRecipes.length > 0;
-  const playLabel = hasProgress ? 'Continue Trip' : 'Play';
+  const playLabel = hasProgress ? 'Continue Run' : 'Start Run';
   const packedBoostCount = boosts.reduce(
     (total, boost) => total + progress.boostInventory[boost.id],
     0,
@@ -37,11 +37,14 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
     <section className="screen start-screen">
       <div className="start-landing">
         <div className="start-landing__scene">
-          <img
-            src={heroArtPath}
-            alt="Oil-painted roadtrip portrait of Chloe as a copilot with a Maryland marsh trail backdrop"
-            className="start-landing__photo"
-          />
+          <picture>
+            <source srcSet={heroArtPath} media="(min-width: 960px)" />
+            <img
+              src={heroPortraitArtPath}
+              alt="Sticker-arcade portrait of Chloe as a roadtrip copilot with a Maryland marsh route outside"
+              className="start-landing__photo"
+            />
+          </picture>
           <div className="start-landing__wash" aria-hidden="true" />
           <div className="start-landing__ambient start-landing__ambient--one" aria-hidden="true" />
           <div className="start-landing__ambient start-landing__ambient--two" aria-hidden="true" />
@@ -65,14 +68,14 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
         </div>
 
         <div className="start-landing__hero">
-          <p className="eyebrow">A Roadtrip Game For Chloe</p>
+          <p className="eyebrow">Sticker Arcade For Chloe</p>
           <h1>Hoppskutt</h1>
           <p className="start-landing__subtitle">
-            Start in Maryland and keep rolling all the way to Vietnam.
+            Dash from Maryland to Vietnam, one Tandborste run at a time.
           </p>
           <p className="start-landing__lede">
-            Chesapeake marsh light kicks off Chloe&apos;s route book. Pick the next stop, weave
-            past route clutter, and cross the finish with enough tandborste to earn each stamp.
+            Pick a stage, clip a helper to Chloe&apos;s pack, weave through route clutter, and
+            cash in enough Tandborste to light up the next sticker stop.
           </p>
           <div className="start-landing__actions">
             <button type="button" className="button button--primary" onClick={onStart}>
@@ -81,7 +84,7 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
             </button>
             <button type="button" className="button button--ghost button--glass" onClick={onOpenCollection}>
               <BookOpen />
-              Route Book
+              Sticker Book
             </button>
           </div>
         </div>
@@ -119,7 +122,7 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
           </button>
           <button type="button" className="button button--ghost" onClick={onOpenCollection}>
             <BookOpen />
-            Route Book
+            Sticker Book
           </button>
         </div>
 
@@ -198,18 +201,18 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
               <div className="start-journey-list">
                 <div>
                   <span>1</span>
-                  <strong>Choose a trailhead</strong>
-                  <p>Maryland opens the first run, then each clean stamp unlocks the next stop.</p>
+                  <strong>Pick a stage</strong>
+                  <p>Maryland opens first, then each clean clear unlocks the next sticker stop.</p>
                 </div>
                 <div>
                   <span>2</span>
-                  <strong>Pack one helper</strong>
-                  <p>Helpers can sharpen movement, soften the route, or boost the pickup score.</p>
+                  <strong>Clip one helper</strong>
+                  <p>Helpers sharpen lane shifts, soften the route, or boost the Tandborste score.</p>
                 </div>
                 <div>
                   <span>3</span>
-                  <strong>Fill the route book</strong>
-                  <p>Cross the finish with enough tandborste to file stamps and snack cards.</p>
+                  <strong>Clear the finish gate</strong>
+                  <p>Cross with enough Tandborste to file stickers, snack cards, and bragging rights.</p>
                 </div>
               </div>
             </div>

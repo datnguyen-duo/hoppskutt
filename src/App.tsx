@@ -259,7 +259,7 @@ function App() {
       consumed.activeBoostId
         ? {
             tone: 'info',
-            message: `${boostLookup[consumed.activeBoostId].name} is clipped onto Chloe's day pack.`,
+            message: `${boostLookup[consumed.activeBoostId].name} is clipped onto Chloe's power pack.`,
           }
         : null,
     );
@@ -290,8 +290,8 @@ function App() {
     setNotice({
       tone: 'loss',
       message: summary.reachedFinish
-        ? `${destinationLookup[summary.destinationId].name} reached the finish, but Chloe only brought home ${summary.score}/${summary.target} tandborste.`
-        : `${destinationLookup[summary.destinationId].name} got a little scrappy before the finish. Chloe still brought home ${summary.score}/${summary.target} tandborste.`,
+        ? `${destinationLookup[summary.destinationId].name} reached the finish, but Chloe only banked ${summary.score}/${summary.target} Tandborste.`
+        : `${destinationLookup[summary.destinationId].name} got a little scrappy before the finish. Chloe still banked ${summary.score}/${summary.target} Tandborste.`,
     });
     navigateTo('destinations', {
       selectedDestinationId: summary.destinationId,
@@ -302,7 +302,7 @@ function App() {
     setRunSession(null);
     setNotice({
       tone: 'info',
-      message: 'Trail leg paused. Any packed helper was already used when the run began.',
+      message: 'Run paused. Any clipped helper was already used when the stage began.',
     });
     soundManager.playMenu();
     navigateTo('destinations');
@@ -312,7 +312,7 @@ function App() {
     setProgress((current) => equipBoost(current, boostId));
     setNotice({
       tone: 'success',
-      message: `${boostLookup[boostId].name} packed for the next stop.`,
+      message: `${boostLookup[boostId].name} clipped for the next run.`,
     });
     soundManager.playMenu();
   };
@@ -321,7 +321,7 @@ function App() {
     setProgress((current) => clearEquippedBoost(current));
     setNotice({
       tone: 'info',
-      message: 'Day pack cleared.',
+      message: 'Power pack cleared.',
     });
     soundManager.playMenu();
   };
@@ -337,8 +337,8 @@ function App() {
     setNotice({
       tone: 'success',
       message: rewardState?.unlockedDestinationId
-        ? `${nextDestination.country} is open. Chloe is lined up for the next route.`
-        : 'Route book updated. Chloe is lined up for another route.',
+        ? `${nextDestination.country} is open. Chloe is lined up for the next stage.`
+        : 'Sticker book updated. Chloe is lined up for another run.',
     });
     setSelectedDestinationId(nextDestinationId);
     soundManager.playMenu();
@@ -347,21 +347,38 @@ function App() {
     });
   };
 
-  const handleEquipRewardBoost = (boostId: BoostId) => {
+  const handleRewardEquipBoost = (boostId: BoostId) => {
+    setProgress((current) => equipBoost(current, boostId));
+    setNotice({
+      tone: 'success',
+      message: `${boostLookup[boostId].name} clipped for the next run.`,
+    });
+    soundManager.playMenu();
+  };
+
+  const handleRewardStartNextRun = () => {
     const nextDestinationId =
       rewardState?.unlockedDestinationId ??
       rewardState?.destinationId ??
       resolvedSelectedDestinationId;
+    const consumed = consumeEquippedBoost(progress);
 
-    setProgress((current) => equipBoost(current, boostId));
+    setProgress(consumed.progress);
+    setRunSession({
+      destinationId: nextDestinationId,
+      activeBoostId: consumed.activeBoostId,
+    });
     setRewardState(null);
     setNotice({
-      tone: 'success',
-      message: `${boostLookup[boostId].name} is packed for the next trail.`,
+      tone: consumed.activeBoostId ? 'info' : 'success',
+      message: consumed.activeBoostId
+        ? `${boostLookup[consumed.activeBoostId].name} is clipped onto Chloe's power pack.`
+        : `${destinationLookup[nextDestinationId].routeLabel} is queued. Go bank those Tandborste.`,
     });
     setSelectedDestinationId(nextDestinationId);
     soundManager.playMenu();
-    navigateTo('destinations', {
+    soundManager.startRunMusic(nextDestinationId);
+    navigateTo('run', {
       selectedDestinationId: nextDestinationId,
     });
   };
@@ -374,7 +391,7 @@ function App() {
     setSelectedDestinationId(fallbackDestinationId);
     setNotice({
       tone: 'info',
-      message: 'Fresh route book packed. Back to Maryland for the first clean stamp.',
+      message: 'Fresh sticker book packed. Back to Maryland for the first clean clear.',
     });
     soundManager.playMenu();
     navigateTo('start');
@@ -426,7 +443,7 @@ function App() {
                 <div className="run-popups" aria-live="polite">
                   <div className="hud-pop hud-pop--boost">
                     <strong>Chloe is already on the move.</strong>
-                    <span>Loading the trail ahead...</span>
+                    <span>Loading the stage ahead...</span>
                   </div>
                 </div>
               </div>
@@ -451,7 +468,8 @@ function App() {
           unlockedDestinationId={rewardState.unlockedDestinationId}
           summary={rewardState.summary}
           onContinue={handleRewardContinue}
-          onEquipRewardBoost={handleEquipRewardBoost}
+          onEquipBoost={handleRewardEquipBoost}
+          onStartNextRun={handleRewardStartNextRun}
           onOpenCollection={openCollection}
         />
       )}

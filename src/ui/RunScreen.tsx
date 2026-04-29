@@ -52,9 +52,9 @@ function getFinishLabel(finishProgress: number) {
     return 'Final stretch';
   }
   if (finishProgress >= 0.48) {
-    return 'Mid trail';
+        return 'Mid run';
   }
-  return 'Trail start';
+  return 'Starting line';
 }
 
 export function RunScreen({
@@ -155,7 +155,7 @@ export function RunScreen({
             </div>
             <div className="run-hud__panel run-hud__panel--run">
               <Backpack />
-              <span className="eyebrow">Stride</span>
+            <span className="eyebrow">Combo</span>
               <strong>x{hud.chain} stride</strong>
               <small>{hud.boostLabel ?? 'No pack clipped'}</small>
               <div className="run-paws" aria-label={`${hud.hearts} paws left`}>
@@ -186,7 +186,7 @@ export function RunScreen({
 
         <div className="run-bottombar">
           <div className="run-tip">
-            <span className="eyebrow">Trail Notes</span>
+            <span className="eyebrow">Stage Notes</span>
             <div className="run-focus">
               <span>Level {destination.run.difficulty}</span>
               <span>{destination.run.skillFocus}</span>

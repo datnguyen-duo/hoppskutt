@@ -1,104 +1,57 @@
 import type { DestinationId } from '../state/types';
 
-type SoundShape = 'sine' | 'triangle' | 'square';
+type SoundShape = 'sine' | 'triangle' | 'square' | 'sawtooth';
 
-type MusicEvent = {
-  delay: number;
-  from: number;
-  to?: number;
-  duration: number;
-  volume: number;
-  type: SoundShape;
+type DrillMusicProfile = {
+  bpm: number;
+  root: number;
+  lead: number[];
+  bass: number[];
+  hatRolls: number[];
 };
 
-type MusicPattern = {
-  length: number;
-  events: MusicEvent[];
-};
-
-const routeMusicPatterns: Record<DestinationId, MusicPattern> = {
+const routeMusicProfiles: Record<DestinationId, DrillMusicProfile> = {
   maryland: {
-    length: 3.2,
-    events: [
-      { delay: 0, from: 174.61, duration: 0.48, volume: 0.03, type: 'sine' },
-      { delay: 0.16, from: 349.23, to: 358, duration: 0.28, volume: 0.03, type: 'triangle' },
-      { delay: 0.66, from: 392, to: 404, duration: 0.22, volume: 0.026, type: 'triangle' },
-      { delay: 1.12, from: 261.63, duration: 0.34, volume: 0.024, type: 'sine' },
-      { delay: 1.34, from: 329.63, to: 338, duration: 0.24, volume: 0.028, type: 'triangle' },
-      { delay: 1.82, from: 440, to: 450, duration: 0.22, volume: 0.026, type: 'triangle' },
-      { delay: 2.32, from: 293.66, duration: 0.32, volume: 0.024, type: 'sine' },
-      { delay: 2.52, from: 349.23, to: 360, duration: 0.24, volume: 0.028, type: 'triangle' },
-    ],
+    bpm: 138,
+    root: 146.83,
+    lead: [12, 15, 10, 7, 12, 19, 15, 10],
+    bass: [0, -5, -2, -7],
+    hatRolls: [7],
   },
   'rhode-island': {
-    length: 3.2,
-    events: [
-      { delay: 0, from: 196, duration: 0.42, volume: 0.026, type: 'sine' },
-      { delay: 0.12, from: 392, to: 406, duration: 0.24, volume: 0.03, type: 'triangle' },
-      { delay: 0.52, from: 523.25, to: 538, duration: 0.2, volume: 0.026, type: 'triangle' },
-      { delay: 0.94, from: 329.63, duration: 0.3, volume: 0.024, type: 'sine' },
-      { delay: 1.18, from: 440, to: 452, duration: 0.22, volume: 0.028, type: 'triangle' },
-      { delay: 1.56, from: 587.33, to: 600, duration: 0.2, volume: 0.026, type: 'triangle' },
-      { delay: 2.02, from: 349.23, duration: 0.28, volume: 0.022, type: 'sine' },
-      { delay: 2.24, from: 493.88, to: 504, duration: 0.22, volume: 0.026, type: 'triangle' },
-      { delay: 2.64, from: 392, duration: 0.26, volume: 0.024, type: 'triangle' },
-    ],
+    bpm: 142,
+    root: 155.56,
+    lead: [12, 10, 15, 7, 3, 10, 15, 19],
+    bass: [0, -2, -7, -5],
+    hatRolls: [3.5, 7],
   },
   colorado: {
-    length: 3.4,
-    events: [
-      { delay: 0, from: 146.83, duration: 0.5, volume: 0.028, type: 'sine' },
-      { delay: 0.18, from: 293.66, to: 300, duration: 0.28, volume: 0.028, type: 'triangle' },
-      { delay: 0.74, from: 369.99, to: 382, duration: 0.24, volume: 0.026, type: 'triangle' },
-      { delay: 1.24, from: 246.94, duration: 0.34, volume: 0.022, type: 'sine' },
-      { delay: 1.48, from: 329.63, to: 338, duration: 0.24, volume: 0.028, type: 'triangle' },
-      { delay: 1.96, from: 440, to: 450, duration: 0.22, volume: 0.026, type: 'triangle' },
-      { delay: 2.44, from: 293.66, duration: 0.34, volume: 0.022, type: 'sine' },
-      { delay: 2.7, from: 392, to: 406, duration: 0.24, volume: 0.028, type: 'triangle' },
-    ],
+    bpm: 144,
+    root: 164.81,
+    lead: [12, 15, 17, 10, 7, 10, 15, 22],
+    bass: [0, -7, -5, -2],
+    hatRolls: [3, 6.5, 7],
   },
   greece: {
-    length: 3.2,
-    events: [
-      { delay: 0, from: 220, duration: 0.38, volume: 0.026, type: 'sine' },
-      { delay: 0.08, from: 440, to: 452, duration: 0.26, volume: 0.032, type: 'triangle' },
-      { delay: 0.5, from: 554.37, to: 566, duration: 0.22, volume: 0.028, type: 'triangle' },
-      { delay: 0.92, from: 659.25, to: 672, duration: 0.22, volume: 0.026, type: 'triangle' },
-      { delay: 1.34, from: 329.63, duration: 0.3, volume: 0.022, type: 'sine' },
-      { delay: 1.54, from: 493.88, to: 506, duration: 0.24, volume: 0.028, type: 'triangle' },
-      { delay: 1.98, from: 587.33, to: 600, duration: 0.22, volume: 0.026, type: 'triangle' },
-      { delay: 2.38, from: 440, duration: 0.28, volume: 0.024, type: 'triangle' },
-      { delay: 2.72, from: 523.25, to: 536, duration: 0.22, volume: 0.026, type: 'triangle' },
-    ],
+    bpm: 146,
+    root: 174.61,
+    lead: [12, 10, 7, 15, 19, 15, 10, 3],
+    bass: [0, -5, -8, -2],
+    hatRolls: [2.75, 5.5, 7],
   },
   sweden: {
-    length: 3.4,
-    events: [
-      { delay: 0, from: 164.81, duration: 0.44, volume: 0.026, type: 'sine' },
-      { delay: 0.18, from: 329.63, to: 338, duration: 0.24, volume: 0.028, type: 'triangle' },
-      { delay: 0.68, from: 392, to: 404, duration: 0.2, volume: 0.024, type: 'triangle' },
-      { delay: 1.14, from: 246.94, duration: 0.32, volume: 0.022, type: 'sine' },
-      { delay: 1.36, from: 349.23, to: 360, duration: 0.22, volume: 0.026, type: 'triangle' },
-      { delay: 1.84, from: 440, to: 448, duration: 0.22, volume: 0.024, type: 'triangle' },
-      { delay: 2.3, from: 293.66, duration: 0.3, volume: 0.022, type: 'sine' },
-      { delay: 2.56, from: 392, to: 402, duration: 0.22, volume: 0.026, type: 'triangle' },
-      { delay: 2.96, from: 493.88, to: 504, duration: 0.18, volume: 0.022, type: 'triangle' },
-    ],
+    bpm: 148,
+    root: 185,
+    lead: [12, 15, 10, 3, 7, 10, 15, 22],
+    bass: [0, -2, -5, -10],
+    hatRolls: [2.5, 4.5, 7],
   },
   vietnam: {
-    length: 2.8,
-    events: [
-      { delay: 0, from: 174.61, duration: 0.3, volume: 0.024, type: 'sine' },
-      { delay: 0.12, from: 349.23, to: 362, duration: 0.18, volume: 0.03, type: 'square' },
-      { delay: 0.38, from: 440, to: 454, duration: 0.18, volume: 0.03, type: 'square' },
-      { delay: 0.68, from: 523.25, to: 540, duration: 0.2, volume: 0.028, type: 'triangle' },
-      { delay: 1.02, from: 220, duration: 0.26, volume: 0.022, type: 'sine' },
-      { delay: 1.18, from: 392, to: 406, duration: 0.18, volume: 0.03, type: 'square' },
-      { delay: 1.48, from: 493.88, to: 507, duration: 0.18, volume: 0.03, type: 'square' },
-      { delay: 1.78, from: 587.33, to: 604, duration: 0.2, volume: 0.028, type: 'triangle' },
-      { delay: 2.12, from: 261.63, duration: 0.26, volume: 0.022, type: 'sine' },
-      { delay: 2.28, from: 440, to: 454, duration: 0.18, volume: 0.03, type: 'square' },
-    ],
+    bpm: 150,
+    root: 196,
+    lead: [12, 10, 15, 22, 19, 15, 10, 7],
+    bass: [0, -7, -2, -12],
+    hatRolls: [1.75, 3.5, 5.5, 7],
   },
 };
 
@@ -109,6 +62,14 @@ class SoundManager {
   private musicTimer: number | null = null;
   private activeRouteMusic: DestinationId | null = null;
 
+  private getLoopLength(routeId: DestinationId) {
+    return (60 / routeMusicProfiles[routeId].bpm) * 8;
+  }
+
+  private note(root: number, semitones: number) {
+    return root * 2 ** (semitones / 12);
+  }
+
   private ensureContext() {
     if (typeof window === 'undefined') {
       return null;
@@ -117,10 +78,10 @@ class SoundManager {
     if (!this.context) {
       this.context = new window.AudioContext();
       this.master = this.context.createGain();
-      this.master.gain.value = 0.15;
+      this.master.gain.value = 0.48;
       this.master.connect(this.context.destination);
       this.musicGain = this.context.createGain();
-      this.musicGain.gain.value = 1.65;
+      this.musicGain.gain.value = 1.18;
       this.musicGain.connect(this.master);
     }
 
@@ -164,23 +125,164 @@ class SoundManager {
     oscillator.stop(stop);
   }
 
-  private scheduleRouteMusic(routeId: DestinationId) {
-    const pattern = routeMusicPatterns[routeId];
-    if (!pattern || !this.musicGain) {
+  private noiseBurst(
+    duration: number,
+    volume: number,
+    delay = 0,
+    output: GainNode | null = this.master,
+    cutoff = 3800,
+  ) {
+    const context = this.ensureContext();
+    if (!context || !output) {
       return;
     }
 
-    pattern.events.forEach((event) => {
-      this.pulse(
-        event.from,
-        event.to ?? event.from * 1.015,
-        event.duration,
-        event.volume,
-        event.type,
-        event.delay,
-        this.musicGain,
-      );
+    const frameCount = Math.max(1, Math.floor(context.sampleRate * duration));
+    const buffer = context.createBuffer(1, frameCount, context.sampleRate);
+    const samples = buffer.getChannelData(0);
+
+    for (let index = 0; index < frameCount; index += 1) {
+      const fade = 1 - index / frameCount;
+      samples[index] = (Math.random() * 2 - 1) * fade;
+    }
+
+    const source = context.createBufferSource();
+    const filter = context.createBiquadFilter();
+    const gain = context.createGain();
+    const start = context.currentTime + delay;
+    const stop = start + duration;
+
+    filter.type = 'highpass';
+    filter.frequency.setValueAtTime(cutoff, start);
+    gain.gain.setValueAtTime(volume, start);
+    gain.gain.exponentialRampToValueAtTime(0.0001, stop);
+
+    source.buffer = buffer;
+    source.connect(filter);
+    filter.connect(gain);
+    gain.connect(output);
+    source.start(start);
+    source.stop(stop);
+  }
+
+  private pluck(
+    frequency: number,
+    duration: number,
+    volume: number,
+    type: SoundShape,
+    delay = 0,
+    output: GainNode | null = this.master,
+  ) {
+    const context = this.ensureContext();
+    if (!context || !output) {
+      return;
+    }
+
+    const oscillator = context.createOscillator();
+    const filter = context.createBiquadFilter();
+    const gain = context.createGain();
+    const start = context.currentTime + delay;
+    const stop = start + duration;
+
+    oscillator.type = type;
+    oscillator.frequency.setValueAtTime(frequency, start);
+    oscillator.frequency.exponentialRampToValueAtTime(frequency * 0.985, stop);
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(2800, start);
+    filter.frequency.exponentialRampToValueAtTime(620, stop);
+    gain.gain.setValueAtTime(0.0001, start);
+    gain.gain.exponentialRampToValueAtTime(volume, start + 0.018);
+    gain.gain.exponentialRampToValueAtTime(0.0001, stop);
+
+    oscillator.connect(filter);
+    filter.connect(gain);
+    gain.connect(output);
+    oscillator.start(start);
+    oscillator.stop(stop);
+  }
+
+  private bass808(frequency: number, duration: number, volume: number, delay = 0) {
+    const context = this.ensureContext();
+    if (!context || !this.musicGain) {
+      return;
+    }
+
+    const sine = context.createOscillator();
+    const bite = context.createOscillator();
+    const lowpass = context.createBiquadFilter();
+    const gain = context.createGain();
+    const start = context.currentTime + delay;
+    const stop = start + duration;
+
+    sine.type = 'sine';
+    bite.type = 'square';
+    sine.frequency.setValueAtTime(frequency * 1.45, start);
+    sine.frequency.exponentialRampToValueAtTime(frequency, start + 0.08);
+    bite.frequency.setValueAtTime(frequency * 2, start);
+    lowpass.type = 'lowpass';
+    lowpass.frequency.setValueAtTime(240, start);
+    gain.gain.setValueAtTime(0.0001, start);
+    gain.gain.exponentialRampToValueAtTime(volume, start + 0.024);
+    gain.gain.exponentialRampToValueAtTime(volume * 0.34, start + duration * 0.5);
+    gain.gain.exponentialRampToValueAtTime(0.0001, stop);
+
+    sine.connect(lowpass);
+    bite.connect(lowpass);
+    lowpass.connect(gain);
+    gain.connect(this.musicGain);
+    sine.start(start);
+    bite.start(start);
+    sine.stop(stop);
+    bite.stop(stop);
+  }
+
+  private snare(delay = 0) {
+    this.noiseBurst(0.12, 0.1, delay, this.musicGain, 1800);
+    this.pulse(180, 126, 0.1, 0.045, 'triangle', delay, this.musicGain);
+  }
+
+  private hiHat(delay = 0, accented = false) {
+    this.noiseBurst(accented ? 0.052 : 0.032, accented ? 0.05 : 0.034, delay, this.musicGain, 5200);
+  }
+
+  private scheduleDrillLoop(routeId: DestinationId) {
+    const profile = routeMusicProfiles[routeId];
+    if (!profile || !this.musicGain) {
+      return;
+    }
+
+    const beat = 60 / profile.bpm;
+    const halfBeat = beat / 2;
+    const quarterBeat = beat / 4;
+    const bassSteps = [0, 1.5, 3, 4.5, 6.25];
+    const leadSteps = [0.25, 1.25, 2.75, 3.5, 4.25, 5.25, 6.75, 7.25];
+
+    bassSteps.forEach((step, index) => {
+      const interval = profile.bass[index % profile.bass.length];
+      this.bass808(this.note(profile.root / 2, interval), beat * 0.88, 0.34, step * beat);
     });
+
+    for (let step = 0; step < 16; step += 1) {
+      this.hiHat(step * halfBeat, step % 4 === 0);
+    }
+
+    profile.hatRolls.forEach((step) => {
+      this.hiHat(step * beat, true);
+      this.hiHat(step * beat + quarterBeat, false);
+      this.hiHat(step * beat + quarterBeat * 2, false);
+    });
+
+    this.snare(beat * 2);
+    this.snare(beat * 6);
+
+    leadSteps.forEach((step, index) => {
+      const interval = profile.lead[index % profile.lead.length];
+      const frequency = this.note(profile.root * 2, interval);
+      this.pluck(frequency, beat * 0.42, 0.09, index % 3 === 0 ? 'square' : 'triangle', step * beat, this.musicGain);
+    });
+
+    this.pluck(this.note(profile.root * 4, 3), beat * 0.32, 0.045, 'sawtooth', beat * 3.75, this.musicGain);
+    this.pluck(this.note(profile.root * 4, 10), beat * 0.28, 0.04, 'triangle', beat * 7.5, this.musicGain);
   }
 
   startRunMusic(routeId: DestinationId) {
@@ -195,10 +297,10 @@ class SoundManager {
 
     this.stopRunMusic();
     this.activeRouteMusic = routeId;
-    this.scheduleRouteMusic(routeId);
-    const intervalMs = routeMusicPatterns[routeId].length * 1000;
+    this.scheduleDrillLoop(routeId);
+    const intervalMs = this.getLoopLength(routeId) * 1000;
     this.musicTimer = window.setInterval(() => {
-      this.scheduleRouteMusic(routeId);
+      this.scheduleDrillLoop(routeId);
     }, intervalMs);
   }
 
@@ -211,35 +313,35 @@ class SoundManager {
   }
 
   playMenu() {
-    this.pulse(420, 680, 0.08, 0.026, 'triangle');
+    this.pulse(420, 760, 0.08, 0.05, 'square');
   }
 
   playJump() {
-    this.pulse(320, 540, 0.09, 0.02, 'triangle');
+    this.pulse(320, 620, 0.09, 0.05, 'triangle');
   }
 
   playPickup(strong: boolean) {
-    this.pulse(strong ? 620 : 500, strong ? 980 : 760, strong ? 0.11 : 0.08, 0.03, 'square');
+    this.pulse(strong ? 640 : 520, strong ? 1180 : 860, strong ? 0.12 : 0.08, 0.07, 'square');
   }
 
   playBump() {
-    this.pulse(220, 120, 0.12, 0.022, 'sine');
+    this.pulse(220, 96, 0.14, 0.065, 'sawtooth');
   }
 
   playFinishApproach() {
-    this.pulse(300, 520, 0.09, 0.018, 'triangle');
-    this.pulse(520, 760, 0.12, 0.014, 'triangle', 0.08);
+    this.pulse(300, 520, 0.09, 0.05, 'triangle');
+    this.pulse(520, 760, 0.12, 0.04, 'triangle', 0.08);
   }
 
   playWin() {
-    this.pulse(420, 720, 0.12, 0.028, 'triangle');
-    this.pulse(620, 980, 0.14, 0.024, 'triangle', 0.09);
-    this.pulse(820, 1240, 0.18, 0.018, 'triangle', 0.18);
+    this.pulse(420, 720, 0.12, 0.07, 'triangle');
+    this.pulse(620, 980, 0.14, 0.06, 'triangle', 0.09);
+    this.pulse(820, 1240, 0.18, 0.05, 'triangle', 0.18);
   }
 
   playLose() {
-    this.pulse(240, 150, 0.14, 0.022, 'sine');
-    this.pulse(180, 100, 0.18, 0.016, 'triangle', 0.08);
+    this.pulse(240, 120, 0.16, 0.065, 'sawtooth');
+    this.pulse(180, 84, 0.2, 0.04, 'triangle', 0.08);
   }
 }
 
