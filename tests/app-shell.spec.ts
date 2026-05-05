@@ -5,7 +5,7 @@ test('homepage loads and opens the destination board', async ({ page }) => {
 
   await expect(page.getByRole('heading', { name: 'Hoppskutt' })).toBeVisible();
   await expect(
-    page.getByText('Dash from Maryland to Vietnam, one Tandborste run at a time.'),
+    page.getByText('Dash from Maryland to Rainbow Bridge, one bright Chloe run at a time.'),
   ).toBeVisible();
 
   await page.getByRole('button', { name: /start run/i }).click();

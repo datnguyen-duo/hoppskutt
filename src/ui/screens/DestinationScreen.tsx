@@ -36,6 +36,7 @@ export function DestinationScreen({
   onResetProgress,
 }: DestinationScreenProps) {
   const selected = destinationLookup[selectedDestinationId];
+  const selectedCannotLose = selected.run.cannotLose ?? false;
   const equippedBoost = progress.equippedBoostId
     ? boostLookup[progress.equippedBoostId]
     : null;
@@ -114,8 +115,12 @@ export function DestinationScreen({
               </div>
               <div className="summary-chip">
                 <Stamp />
-                <span>Tandborste</span>
-                <strong>{selected.run.targetScore} tandborste</strong>
+                <span>{selectedCannotLose ? 'Memory' : 'Tandborste'}</span>
+                <strong>
+                  {selectedCannotLose
+                    ? 'No fail state'
+                    : `${selected.run.targetScore} tandborste`}
+                </strong>
               </div>
               <div className="summary-chip">
                 <Gauge />

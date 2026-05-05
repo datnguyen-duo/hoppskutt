@@ -361,6 +361,7 @@ function App() {
       rewardState?.unlockedDestinationId ??
       rewardState?.destinationId ??
       resolvedSelectedDestinationId;
+    const nextDestination = destinationLookup[nextDestinationId];
     const consumed = consumeEquippedBoost(progress);
 
     setProgress(consumed.progress);
@@ -373,7 +374,9 @@ function App() {
       tone: consumed.activeBoostId ? 'info' : 'success',
       message: consumed.activeBoostId
         ? `${boostLookup[consumed.activeBoostId].name} is clipped onto Chloe's power pack.`
-        : `${destinationLookup[nextDestinationId].routeLabel} is queued. Go bank those Tandborste.`,
+        : nextDestination.run.cannotLose
+          ? `${nextDestination.routeLabel} is queued. Chloe can only shine here.`
+          : `${nextDestination.routeLabel} is queued. Go bank those Tandborste.`,
     });
     setSelectedDestinationId(nextDestinationId);
     soundManager.playMenu();

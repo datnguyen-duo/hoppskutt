@@ -41,6 +41,7 @@ export type Destination = {
     finishDistance: number;
     targetScore: number;
     baseSpeed: number;
+    cannotLose?: boolean;
     trailNote: string;
     challengeSummary: string;
     challengeTips: string[];
@@ -324,6 +325,54 @@ export const destinations: Destination[] = [
       obstacleAlt: '#ffd28b',
       pickup: '#ffd33f',
       spark: '#fff67a',
+    },
+  },
+  {
+    id: 'rainbow-bridge',
+    country: 'Rainbow Bridge',
+    name: 'Rainbow Bridge',
+    routeLabel: 'Forever Road',
+    tagline: 'A bright final crossing for Chloe, where the road is gentle and she cannot lose.',
+    overview:
+      'Rainbow Bridge is a no-loss victory lap: glowing rainbow tiles, soft clouds, memory lights, and a finish that is already waiting with warmth.',
+    unlockHint: 'Stamp Vietnam first.',
+    run: {
+      difficulty: 7,
+      skillFocus: 'Forever Run',
+      finishDistance: 560,
+      targetScore: 24,
+      baseSpeed: 1.08,
+      cannotLose: true,
+      trailNote:
+        'Rainbow Bridge is Chloe\'s gentle final road. Drift anywhere, gather what glows, and know this clear is already hers.',
+      challengeSummary: 'No fail state, open lanes, soft scenery, and memory lights all the way home.',
+      challengeTips: ['Cannot lose', 'Open rainbow lanes', 'Memory lights'],
+    },
+    recipe: {
+      id: 'rainbow-bridge-sunbeam',
+      name: 'Sunbeam Picnic',
+      country: 'Rainbow Bridge',
+      flavorText:
+        'A tiny forever picnic of warm grass, soft light, and one more favorite treat tucked into Chloe\'s sticker book.',
+    },
+    theme: {
+      accent: '#ff5f9f',
+      secondary: '#ffe45c',
+      background: '#d8f5ff',
+      backgroundAlt: '#ffdff2',
+      fog: '#e7fbff',
+      lightA: '#fff9f0',
+      lightB: '#ffe08f',
+      surface: '#7ff2e1',
+      surfaceEdge: '#ff9fc6',
+      laneGlow: '#fff7a8',
+      decoA: '#79d8ff',
+      decoB: '#b88cff',
+      glow: '#fff36f',
+      obstacle: '#ffa8c9',
+      obstacleAlt: '#fff0a8',
+      pickup: '#fff36f',
+      spark: '#ffffff',
     },
   },
 ];

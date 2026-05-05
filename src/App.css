@@ -56,6 +56,13 @@
   --theme-background-alt: #dfe9df;
 }
 
+.theme-rainbow-bridge {
+  --theme-accent: #ff5f9f;
+  --theme-secondary: #ffe45c;
+  --theme-background: #d8f5ff;
+  --theme-background-alt: #ffdff2;
+}
+
 .app-shell__backdrop,
 .app-shell__grain {
   pointer-events: none;
@@ -1830,6 +1837,18 @@ p {
   background: var(--brand-accent);
 }
 
+.run-paws__forever {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.55rem;
+  padding: 0.18rem 0.5rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--run-accent) 18%, #fffdf8);
+  color: var(--brand-ink);
+  font-size: 0.76rem;
+  font-weight: 900;
+}
+
 .run-popups {
   position: absolute;
   left: 50%;
@@ -2819,6 +2838,15 @@ h3,
 
 .run-paws__dot.is-active {
   background: #ff5f4f;
+}
+
+.run-paws__forever {
+  border: 2px solid rgba(16, 23, 38, 0.84);
+  border-radius: 8px;
+  background:
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.42) 0 8px, transparent 8px 16px),
+    linear-gradient(90deg, #fff36f, #ff9fc6, #7ff2e1);
+  box-shadow: 2px 2px 0 rgba(16, 23, 38, 0.12);
 }
 
 .hud-pop {

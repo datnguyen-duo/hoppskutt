@@ -472,6 +472,59 @@ const finaleRushPatterns: Record<RoutePhase, RunnerPattern[]> = {
   final: [...breezyPatterns.final, ...forestLoopPatterns.final],
 };
 
+const rainbowBridgePatterns: Record<RoutePhase, RunnerPattern[]> = {
+  warmup: [
+    {
+      obstacles: [],
+      tandborste: [{ lane: -1 }, { lane: 0, z: -0.26 }, { lane: 1 }],
+    },
+    {
+      obstacles: [{ lane: 0, kind: 'hurdle' }],
+      tandborste: [{ lane: -1 }, { lane: 0, y: 1.2 }, { lane: 1 }],
+    },
+    {
+      obstacles: [{ lane: -1, kind: 'crate' }, { lane: 1, kind: 'crate' }],
+      tandborste: [{ lane: -1, z: -0.32 }, { lane: 0 }, { lane: 1, z: -0.32 }],
+    },
+  ],
+  middle: [
+    {
+      obstacles: [{ lane: -1, kind: 'bench' }],
+      tandborste: [{ lane: -1, y: 1.08 }, { lane: 0 }, { lane: 1, z: -0.24 }],
+    },
+    {
+      obstacles: [{ lane: 1, kind: 'bench' }],
+      tandborste: [{ lane: -1, z: -0.24 }, { lane: 0 }, { lane: 1, y: 1.08 }],
+    },
+    {
+      obstacles: [{ lane: 0, kind: 'crate' }],
+      tandborste: [{ lane: -1 }, { lane: 0, y: 1.18 }, { lane: 1 }],
+    },
+    {
+      obstacles: [{ lane: -1, kind: 'hurdle' }, { lane: 1, kind: 'hurdle' }],
+      tandborste: [{ lane: -1, y: 1.16 }, { lane: 0, z: -0.28 }, { lane: 1, y: 1.16 }],
+    },
+  ],
+  final: [
+    {
+      obstacles: [{ lane: 0, kind: 'bench' }],
+      tandborste: [{ lane: -1 }, { lane: 0, y: 1.12 }, { lane: 1 }],
+    },
+    {
+      obstacles: [{ lane: -1, kind: 'crate' }, { lane: 1, kind: 'bench' }],
+      tandborste: [{ lane: -1, y: 1.12 }, { lane: 0 }, { lane: 1, y: 1.12 }],
+    },
+    {
+      obstacles: [],
+      tandborste: [
+        { lane: -1, z: -0.34 },
+        { lane: 0, z: -0.18 },
+        { lane: 1, z: -0.34 },
+      ],
+    },
+  ],
+};
+
 export const routePatternSets = {
   maryland: {
     styleBias: 'calm',
@@ -532,5 +585,15 @@ export const routePatternSets = {
       final: [0.46, 0.58],
     },
     patterns: finaleRushPatterns,
+  },
+  'rainbow-bridge': {
+    styleBias: 'calm',
+    selectionMode: 'cycle',
+    spawnRanges: {
+      warmup: [1.18, 1.36],
+      middle: [1.04, 1.24],
+      final: [0.94, 1.14],
+    },
+    patterns: rainbowBridgePatterns,
   },
 } satisfies Record<DestinationId, RoutePatternSet>;

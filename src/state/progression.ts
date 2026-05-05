@@ -43,7 +43,7 @@ function sanitizeProgress(raw: unknown): ProgressState {
 
   const candidate = raw as Partial<ProgressState>;
 
-  const unlockedDestinations = Array.isArray(candidate.unlockedDestinations)
+  const storedUnlockedDestinations = Array.isArray(candidate.unlockedDestinations)
     ? candidate.unlockedDestinations.filter((id): id is DestinationId =>
         destinationIds.includes(id as DestinationId),
       )
@@ -79,9 +79,25 @@ function sanitizeProgress(raw: unknown): ProgressState {
     }
   }
 
+  const unlockedDestinationSet = new Set<DestinationId>(
+    storedUnlockedDestinations.length > 0
+      ? storedUnlockedDestinations
+      : initial.unlockedDestinations,
+  );
+  unlockedDestinationSet.add('maryland');
+  for (let index = 1; index < destinations.length; index += 1) {
+    const previousDestinationId = destinations[index - 1].id;
+    const nextDestinationId = destinations[index].id;
+    if (winsByDestination[previousDestinationId] > 0) {
+      unlockedDestinationSet.add(nextDestinationId);
+    }
+  }
+  const unlockedDestinations = destinations
+    .map((destination) => destination.id)
+    .filter((destinationId) => unlockedDestinationSet.has(destinationId));
+
   return {
-    unlockedDestinations:
-      unlockedDestinations.length > 0 ? unlockedDestinations : ['maryland'],
+    unlockedDestinations,
     unlockedRecipes,
     boostInventory,
     equippedBoostId:

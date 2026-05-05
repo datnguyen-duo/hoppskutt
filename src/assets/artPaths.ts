@@ -12,6 +12,7 @@ export const postcardArtPaths: Record<DestinationId, string> = {
   greece: `${stickerArcadeBasePath}/greece-postcard-sticker-arcade.png`,
   sweden: `${stickerArcadeBasePath}/sweden-postcard-sticker-arcade.png`,
   vietnam: `${stickerArcadeBasePath}/vietnam-postcard-sticker-arcade.png`,
+  'rainbow-bridge': `${stickerArcadeBasePath}/rainbow-bridge-postcard-sticker-arcade.png`,
 };
 
 export const recipeArtPaths: Record<RecipeId, string> = {
@@ -21,4 +22,5 @@ export const recipeArtPaths: Record<RecipeId, string> = {
   'greece-spanakopita': `${stickerArcadeBasePath}/greece-spanakopita-sticker-arcade.png`,
   'sweden-kanelbulle': `${stickerArcadeBasePath}/sweden-kanelbulle-sticker-arcade.png`,
   'vietnam-banh-mi': `${stickerArcadeBasePath}/vietnam-banh-mi-sticker-arcade.png`,
+  'rainbow-bridge-sunbeam': `${stickerArcadeBasePath}/rainbow-bridge-postcard-sticker-arcade.png`,
 };

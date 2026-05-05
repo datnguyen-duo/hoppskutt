@@ -53,6 +53,13 @@ const routeMusicProfiles: Record<DestinationId, DrillMusicProfile> = {
     bass: [0, -7, -2, -12],
     hatRolls: [1.75, 3.5, 5.5, 7],
   },
+  'rainbow-bridge': {
+    bpm: 132,
+    root: 220,
+    lead: [12, 16, 19, 24, 19, 16, 14, 12],
+    bass: [0, 7, 5, 12],
+    hatRolls: [4, 7],
+  },
 };
 
 class SoundManager {

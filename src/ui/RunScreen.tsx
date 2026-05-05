@@ -44,7 +44,20 @@ function createInitialHud(
   };
 }
 
-function getFinishLabel(finishProgress: number) {
+function getFinishLabel(finishProgress: number, cannotLose: boolean) {
+  if (cannotLose) {
+    if (finishProgress >= 1) {
+      return 'Bridge crossed';
+    }
+    if (finishProgress >= 0.82) {
+      return 'Warm lights ahead';
+    }
+    if (finishProgress >= 0.48) {
+      return 'Rainbow glide';
+    }
+    return 'Gentle start';
+  }
+
   if (finishProgress >= 1) {
     return 'Finish gate reached';
   }
@@ -68,7 +81,9 @@ export function RunScreen({
   const popupTimersRef = useRef<number[]>([]);
   const [hud, setHud] = useState(() => createInitialHud(destination, activeBoostId));
   const [popups, setPopups] = useState<Popup[]>([]);
-  const finishLabel = getFinishLabel(hud.finishProgress);
+  const cannotLose = destination.run.cannotLose ?? false;
+  const scoreLabel = cannotLose ? 'Memory Lights' : 'Tandborste';
+  const finishLabel = getFinishLabel(hud.finishProgress, cannotLose);
 
   const handleHudChange = useEffectEvent((nextHud: HudSnapshot) => {
     setHud(nextHud);
@@ -127,10 +142,8 @@ export function RunScreen({
           <div className="run-hud">
             <div className="run-hud__panel run-hud__panel--score">
               <Stamp />
-              <span className="eyebrow">Tandborste</span>
-              <strong>
-                {hud.score}/{hud.target}
-              </strong>
+              <span className="eyebrow">{scoreLabel}</span>
+              <strong>{cannotLose ? `${hud.score} found` : `${hud.score}/${hud.target}`}</strong>
               <div className="run-progress">
                 <div className="run-progress__track">
                   <div
@@ -157,15 +170,21 @@ export function RunScreen({
               <Backpack />
             <span className="eyebrow">Combo</span>
               <strong>x{hud.chain} stride</strong>
-              <small>{hud.boostLabel ?? 'No pack clipped'}</small>
-              <div className="run-paws" aria-label={`${hud.hearts} paws left`}>
-                {Array.from({ length: 3 }, (_, index) => (
-                  <span
-                    key={index}
-                    className={`run-paws__dot${index < hud.hearts ? ' is-active' : ''}`}
-                  />
-                ))}
-              </div>
+              <small>{cannotLose ? 'No losing here' : hud.boostLabel ?? 'No pack clipped'}</small>
+              {cannotLose ? (
+                <div className="run-paws run-paws--forever" aria-label="Forever clear">
+                  <span className="run-paws__forever">Forever clear</span>
+                </div>
+              ) : (
+                <div className="run-paws" aria-label={`${hud.hearts} paws left`}>
+                  {Array.from({ length: 3 }, (_, index) => (
+                    <span
+                      key={index}
+                      className={`run-paws__dot${index < hud.hearts ? ' is-active' : ''}`}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 

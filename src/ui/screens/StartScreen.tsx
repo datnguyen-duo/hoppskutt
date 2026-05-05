@@ -71,7 +71,7 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
           <p className="eyebrow">Sticker Arcade For Chloe</p>
           <h1>Hoppskutt</h1>
           <p className="start-landing__subtitle">
-            Dash from Maryland to Vietnam, one Tandborste run at a time.
+            Dash from Maryland to Rainbow Bridge, one bright Chloe run at a time.
           </p>
           <p className="start-landing__lede">
             Pick a stage, clip a helper to Chloe&apos;s pack, weave through route clutter, and
@@ -212,7 +212,7 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
                 <div>
                   <span>3</span>
                   <strong>Clear the finish gate</strong>
-                  <p>Cross with enough Tandborste to file stickers, snack cards, and bragging rights.</p>
+                  <p>Cross with enough Tandborste to file stickers, then reach a final road where Chloe cannot lose.</p>
                 </div>
               </div>
             </div>
@@ -251,7 +251,7 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
               </p>
               <p>
                 This space is a placeholder for your own story about Chloe, the roadtrip feeling,
-                and why this game mattered enough to build.
+                why this game mattered enough to build, and the final Rainbow Bridge run made for her.
               </p>
             </div>
           )}

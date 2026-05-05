@@ -5,6 +5,7 @@ export const destinationIds = [
   'greece',
   'sweden',
   'vietnam',
+  'rainbow-bridge',
 ] as const;
 
 export const recipeIds = [
@@ -14,6 +15,7 @@ export const recipeIds = [
   'greece-spanakopita',
   'sweden-kanelbulle',
   'vietnam-banh-mi',
+  'rainbow-bridge-sunbeam',
 ] as const;
 
 export const boostIds = [

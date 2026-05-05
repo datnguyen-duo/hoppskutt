@@ -128,6 +128,50 @@ function makeBuoy(color: string) {
   return buoy;
 }
 
+function makeCloudCluster(color: string) {
+  const cloud = new THREE.Group();
+  const material = makeMaterial(color, {
+    emissive: new THREE.Color(color).multiplyScalar(0.08),
+  });
+  const parts = [
+    { x: -0.36, y: 0.28, scale: [0.74, 0.42, 0.42] },
+    { x: 0, y: 0.42, scale: [0.92, 0.58, 0.5] },
+    { x: 0.4, y: 0.26, scale: [0.66, 0.38, 0.38] },
+  ] as const;
+
+  parts.forEach((part) => {
+    const puff = new THREE.Mesh(new THREE.SphereGeometry(0.5, 18, 12), material);
+    puff.scale.set(part.scale[0], part.scale[1], part.scale[2]);
+    puff.position.set(part.x, part.y, 0);
+    cloud.add(puff);
+  });
+
+  return cloud;
+}
+
+function makeMemoryLight(color: string) {
+  const group = new THREE.Group();
+  const glow = new THREE.Mesh(
+    new THREE.OctahedronGeometry(0.24, 0),
+    new THREE.MeshBasicMaterial({
+      color,
+      transparent: true,
+      opacity: 0.86,
+    }),
+  );
+  const halo = new THREE.Mesh(
+    new THREE.SphereGeometry(0.38, 16, 12),
+    new THREE.MeshBasicMaterial({
+      color,
+      transparent: true,
+      opacity: 0.16,
+      depthWrite: false,
+    }),
+  );
+  group.add(halo, glow);
+  return group;
+}
+
 export function createRouteScene(
   scene: THREE.Scene,
   destination: Destination,
@@ -174,6 +218,30 @@ export function createRouteScene(
   );
   track.position.set(0, 0.19, -10);
   root.add(track);
+
+  if (destination.id === 'rainbow-bridge') {
+    const rainbowColors = [
+      '#ff6868',
+      '#ffb84d',
+      '#fff36f',
+      '#68e082',
+      '#5fd9ff',
+      '#7994ff',
+      '#d681ff',
+    ];
+    const stripeWidth = 7.2 / rainbowColors.length;
+    rainbowColors.forEach((color, index) => {
+      const stripe = new THREE.Mesh(
+        new THREE.BoxGeometry(stripeWidth, 0.035, 52.2),
+        new THREE.MeshLambertMaterial({
+          color,
+          emissive: new THREE.Color(color).multiplyScalar(0.12),
+        }),
+      );
+      stripe.position.set(-3.6 + stripeWidth * (index + 0.5), 0.255, -10);
+      root.add(stripe);
+    });
+  }
 
   const shoulderMaterial = makeMaterial(destination.theme.decoA, {
     emissive: new THREE.Color(destination.theme.decoA).multiplyScalar(0.03),
@@ -306,6 +374,37 @@ export function createRouteScene(
       lanternRight.rotation.z = Math.sin(elapsed * 1.8 + 0.6) * -0.04;
     });
     context.add(lanternLeft, lanternRight, rail);
+  }
+
+  if (destination.id === 'rainbow-bridge') {
+    const clouds = [
+      { x: -7.1, z: -15.8, scale: 1 },
+      { x: 7.2, z: -20.8, scale: 0.9 },
+      { x: -6.7, z: -28.4, scale: 0.78 },
+      { x: 6.9, z: -34.2, scale: 1.08 },
+    ];
+    clouds.forEach((cloudSpec, index) => {
+      const cloud = makeCloudCluster(index % 2 === 0 ? '#fff8f1' : '#ffe8f6');
+      cloud.scale.setScalar(cloudSpec.scale);
+      cloud.position.set(cloudSpec.x, 0.6 + index * 0.08, cloudSpec.z);
+      animated.push((elapsed) => {
+        cloud.position.y = 0.6 + index * 0.08 + Math.sin(elapsed * 0.9 + index) * 0.08;
+      });
+      context.add(cloud);
+    });
+
+    const memoryColors = ['#fff36f', '#ff9fc6', '#7ff2e1', '#b88cff', '#ffffff'];
+    for (let index = 0; index < 12; index += 1) {
+      const light = makeMemoryLight(memoryColors[index % memoryColors.length]);
+      const side = index % 2 === 0 ? -1 : 1;
+      light.position.set(side * (5.4 + (index % 3) * 0.58), 1.5 + (index % 4) * 0.22, -10 - index * 3);
+      animated.push((elapsed) => {
+        light.rotation.y = elapsed * 0.8 + index;
+        light.rotation.z = Math.sin(elapsed * 1.2 + index) * 0.2;
+        light.position.y = 1.5 + (index % 4) * 0.22 + Math.sin(elapsed * 1.5 + index) * 0.12;
+      });
+      context.add(light);
+    }
   }
 
   root.add(context);

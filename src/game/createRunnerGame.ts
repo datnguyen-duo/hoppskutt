@@ -228,6 +228,72 @@ function createObstacleMesh(kind: RunnerObstacleKind, destination: Destination) 
     return mesh;
   };
 
+  if (routeId === 'rainbow-bridge') {
+    const group = new THREE.Group();
+    group.add(shadow(kind === 'bench' ? 0.94 : 0.72));
+
+    if (kind === 'crate') {
+      const halo = new THREE.Mesh(
+        new THREE.SphereGeometry(0.48, 18, 12),
+        new THREE.MeshLambertMaterial({
+          color: destination.theme.secondary,
+          emissive: new THREE.Color(destination.theme.secondary).multiplyScalar(0.24),
+          transparent: true,
+          opacity: 0.78,
+        }),
+      );
+      const core = new THREE.Mesh(
+        new THREE.OctahedronGeometry(0.34, 0),
+        material(destination.theme.glow, 0.34),
+      );
+      const ribbon = createBox(0.82, 0.08, 0.08, destination.theme.accent, {
+        emissive: new THREE.Color(destination.theme.accent).multiplyScalar(0.2),
+      });
+      halo.position.y = 0.52;
+      core.position.y = 0.52;
+      ribbon.position.set(0, 0.52, 0.42);
+      group.add(halo, core, ribbon);
+      return group;
+    }
+
+    if (kind === 'bench') {
+      const postA = createBox(0.16, 0.92, 0.16, destination.theme.decoB, {
+        emissive: new THREE.Color(destination.theme.decoB).multiplyScalar(0.18),
+      });
+      const postB = postA.clone();
+      const beam = createBox(1.3, 0.16, 0.18, destination.theme.secondary, {
+        emissive: new THREE.Color(destination.theme.secondary).multiplyScalar(0.24),
+      });
+      const glow = createBox(0.9, 0.08, 0.08, '#fff8ef', {
+        emissive: new THREE.Color('#fff8ef').multiplyScalar(0.28),
+      });
+      postA.position.set(-0.56, 0.46, 0);
+      postB.position.set(0.56, 0.46, 0);
+      beam.position.set(0, 0.92, 0);
+      glow.position.set(0, 0.7, 0.24);
+      group.add(postA, postB, beam, glow);
+      return group;
+    }
+
+    const bar = createBox(1.08, 0.12, 0.14, destination.theme.accent, {
+      emissive: new THREE.Color(destination.theme.accent).multiplyScalar(0.28),
+    });
+    const star = new THREE.Mesh(
+      new THREE.OctahedronGeometry(0.2, 0),
+      material(destination.theme.secondary, 0.3),
+    );
+    const postA = createBox(0.12, 0.42, 0.12, '#fff8ef', {
+      emissive: new THREE.Color('#fff8ef').multiplyScalar(0.18),
+    });
+    const postB = postA.clone();
+    bar.position.y = 0.42;
+    star.position.set(0, 0.64, 0.02);
+    postA.position.set(-0.48, 0.24, 0);
+    postB.position.set(0.48, 0.24, 0);
+    group.add(bar, star, postA, postB);
+    return group;
+  }
+
   if (kind === 'crate') {
     const group = new THREE.Group();
     group.add(shadow(0.7));
@@ -581,16 +647,21 @@ function createObstacleMesh(kind: RunnerObstacleKind, destination: Destination) 
   return group;
 }
 
-function createFinishGate(): FinishGateRig {
+function createFinishGate(destination: Destination): FinishGateRig {
   const root = new THREE.Group();
   const checkerGroup = new THREE.Group();
+  const finalRoad = destination.run.cannotLose ?? false;
   const checkerDark = new THREE.MeshLambertMaterial({
-    color: '#161616',
-    emissive: new THREE.Color('#161616').multiplyScalar(0.08),
+    color: finalRoad ? destination.theme.accent : '#161616',
+    emissive: new THREE.Color(finalRoad ? destination.theme.accent : '#161616').multiplyScalar(
+      finalRoad ? 0.24 : 0.08,
+    ),
   });
   const checkerLight = new THREE.MeshLambertMaterial({
-    color: '#fff7e7',
-    emissive: new THREE.Color('#fff7e7').multiplyScalar(0.12),
+    color: finalRoad ? '#fff8ef' : '#fff7e7',
+    emissive: new THREE.Color(finalRoad ? '#fff8ef' : '#fff7e7').multiplyScalar(
+      finalRoad ? 0.24 : 0.12,
+    ),
   });
   const checkerMaterials = [checkerLight, checkerDark];
   const tileWidth = 0.9;
@@ -852,6 +923,7 @@ export function createRunnerGame({
   const routeSpeed = BASE_ROUTE_SPEED * destination.run.baseSpeed * boost.routeSpeedMultiplier;
   const activeBoostLabel = activeBoostId ? boostLookup[activeBoostId].shortLabel : null;
   const finishDistance = destination.run.finishDistance;
+  const cannotLose = destination.run.cannotLose ?? false;
   const difficultyPressure = Math.max(0, destination.run.difficulty - 1);
   const pickupHitScaleX = Math.max(0.3, 0.42 - difficultyPressure * 0.024);
   const pickupHitScaleZ = Math.max(0.38, 0.5 - difficultyPressure * 0.022);
@@ -898,7 +970,7 @@ export function createRunnerGame({
     }
   }
 
-  const finishGate = createFinishGate();
+  const finishGate = createFinishGate(destination);
   finishGate.root.position.set(0, 0, PLAYER_Z - finishDistance);
   scene.add(finishGate.root);
 
@@ -1094,6 +1166,10 @@ export function createRunnerGame({
   }
 
   function getPickupLimit(phase: RoutePhase) {
+    if (cannotLose) {
+      return Number.POSITIVE_INFINITY;
+    }
+
     if (destination.run.difficulty <= 1) {
       return Number.POSITIVE_INFINITY;
     }
@@ -1256,12 +1332,30 @@ export function createRunnerGame({
     cameraKick = Math.max(cameraKick, 0.2);
     soundManager.playPickup(chain > 3);
     onScoreEvent({
-      label: `Tandborste +${value}`,
+      label: cannotLose ? `Memory light +${value}` : `Tandborste +${value}`,
       value,
       chain,
       tone: chain > 3 ? 'boost' : 'good',
     });
     spawnSparkBurst(new THREE.Vector3(entity.x, entity.mesh.position.y, entity.z), 'good');
+    publishHud(true);
+  }
+
+  function softTouch(entity: RunnerEntity) {
+    deactivateEntity(entity);
+    chain += 1;
+    bestChain = Math.max(bestChain, chain);
+    const value = Math.max(1, Math.round(1 * boost.scoreMultiplier));
+    score += value;
+    cameraKick = Math.max(cameraKick, 0.16);
+    soundManager.playPickup(true);
+    onScoreEvent({
+      label: `Gentle glow +${value}`,
+      value,
+      chain,
+      tone: 'boost',
+    });
+    spawnSparkBurst(new THREE.Vector3(entity.x, 0.9, entity.z), 'good');
     publishHud(true);
   }
 
@@ -1340,6 +1434,11 @@ export function createRunnerGame({
         if (Math.abs(chestHeight - entity.mesh.position.y) < pickupHeightTolerance) {
           collect(entity);
         }
+        continue;
+      }
+
+      if (cannotLose) {
+        softTouch(entity);
         continue;
       }
 
@@ -1565,7 +1664,7 @@ export function createRunnerGame({
       cameraKick = Math.max(cameraKick, 0.18);
       soundManager.playFinishApproach();
       onScoreEvent({
-        label: 'Finish gate ahead',
+        label: cannotLose ? 'Rainbow gate ahead' : 'Finish gate ahead',
         value: 0,
         chain,
         tone: 'boost',
@@ -1580,9 +1679,13 @@ export function createRunnerGame({
 
     if (!reachedFinish && finishCountdown < 0 && finishGate.root.position.z >= FINISH_TRIGGER_Z) {
       reachedFinish = true;
-      const won = score >= destination.run.targetScore && hearts > 0;
+      const won = cannotLose || (score >= destination.run.targetScore && hearts > 0);
       onScoreEvent({
-        label: won ? 'Sticker secured' : 'Need more Tandborste',
+        label: cannotLose
+          ? 'Rainbow Bridge crossed'
+          : won
+            ? 'Sticker secured'
+            : 'Need more Tandborste',
         value: 0,
         chain,
         tone: won ? 'good' : 'bad',

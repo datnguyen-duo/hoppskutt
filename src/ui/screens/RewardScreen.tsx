@@ -38,6 +38,7 @@ export function RewardScreen({
     : null;
   const recipeUnlocked = reward.kind === 'recipe' ? destination.recipe : null;
   const boostReward = reward.kind === 'boost' ? boostLookup[reward.boostId] : null;
+  const cannotLose = destination.run.cannotLose ?? false;
 
   return (
     <section className="screen reward-screen">
@@ -51,18 +52,25 @@ export function RewardScreen({
             } as CSSProperties
           }
         >
-          <span className="reward-card__hero-stamp">Stage Clear</span>
+          <span className="reward-card__hero-stamp">
+            {cannotLose ? 'Forever Clear' : 'Stage Clear'}
+          </span>
           <span className="reward-card__hero-route">{destination.routeLabel}</span>
-          <span className="reward-card__hero-clear">Clear!</span>
+          <span className="reward-card__hero-clear">{cannotLose ? 'Loved!' : 'Clear!'}</span>
           <PostcardScene destinationId={destination.id} className="postcard-scene--hero" />
         </div>
 
         <div className="reward-card__intro">
-          <p className="eyebrow">Stage Clear</p>
-          <h2>{destination.name} added to Chloe&apos;s sticker book.</h2>
+          <p className="eyebrow">{cannotLose ? 'Rainbow Bridge' : 'Stage Clear'}</p>
+          <h2>
+            {cannotLose
+              ? 'Rainbow Bridge glows in Chloe\'s sticker book.'
+              : `${destination.name} added to Chloe's sticker book.`}
+          </h2>
           <p>
-            {summary.score}/{summary.target} Tandborste, best chain x{summary.bestChain}, and{' '}
-            {summary.stumbles} stumble{summary.stumbles === 1 ? '' : 's'}.
+            {cannotLose
+              ? `${summary.score} memory lights, best stride x${summary.bestChain}, and no losing on this road.`
+              : `${summary.score}/${summary.target} Tandborste, best chain x${summary.bestChain}, and ${summary.stumbles} stumble${summary.stumbles === 1 ? '' : 's'}.`}
           </p>
         </div>
 
