@@ -2,8 +2,8 @@ import type { DestinationId, RecipeId } from '../state/types';
 
 const stickerArcadeBasePath = '/assets/generated/sticker-arcade';
 
-export const heroArtPath = `${stickerArcadeBasePath}/maryland-postcard-sticker-arcade.png`;
-export const heroPortraitArtPath = `${stickerArcadeBasePath}/maryland-postcard-sticker-arcade.png`;
+export const heroArtPath = `${stickerArcadeBasePath}/chloe-hero-sticker-arcade-wide-filled.png`;
+export const heroPortraitArtPath = `${stickerArcadeBasePath}/chloe-hero-sticker-arcade-portrait-padded.png`;
 
 export const postcardArtPaths: Record<DestinationId, string> = {
   maryland: `${stickerArcadeBasePath}/maryland-postcard-sticker-arcade.png`,

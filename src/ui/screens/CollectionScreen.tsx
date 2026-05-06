@@ -50,7 +50,6 @@ export function CollectionScreen({
 
       <div className="collection-board">
         <section className="screen-card passport-cover">
-          <span className="chloe-pin chloe-pin--passport" aria-hidden="true" />
           <div className="passport-cover__copy">
             <p className="eyebrow">Arcade Album</p>
             <h3>Chloe&apos;s clears, cards, and helpers.</h3>

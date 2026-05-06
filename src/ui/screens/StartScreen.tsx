@@ -41,10 +41,15 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
             <source srcSet={heroArtPath} media="(min-width: 960px)" />
             <img
               src={heroPortraitArtPath}
-              alt="Sticker-arcade Maryland marsh route with a bright boardwalk"
+              alt="Sticker-arcade portrait of Chloe as a roadtrip copilot with a Maryland marsh route outside"
               className="start-landing__photo"
             />
           </picture>
+          <div className="start-landing__collar" aria-hidden="true">
+            {Array.from({ length: 9 }, (_, index) => (
+              <span key={index} />
+            ))}
+          </div>
           <div className="start-landing__wash" aria-hidden="true" />
           <div className="start-landing__ambient start-landing__ambient--one" aria-hidden="true" />
           <div className="start-landing__ambient start-landing__ambient--two" aria-hidden="true" />

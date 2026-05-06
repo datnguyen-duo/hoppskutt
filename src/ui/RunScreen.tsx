@@ -213,8 +213,8 @@ export function RunScreen({
             <strong>{destination.run.trailNote}</strong>
             <div className="run-controls">
               <span>Left</span>
-              <span>Right</span>
               <span>Hop</span>
+              <span>Right</span>
             </div>
           </div>
         </div>

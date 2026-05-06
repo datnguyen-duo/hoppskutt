@@ -789,15 +789,56 @@ function createDog(destination: Destination): DogRig {
   tailTip.position.set(0, 0, 0.08);
   tail.add(tailTip);
 
-  const collar = new THREE.Mesh(
-    new THREE.BoxGeometry(0.56, 0.08, 0.56),
-    new THREE.MeshLambertMaterial({
-      color: destination.theme.accent,
-      emissive: new THREE.Color(destination.theme.accent).multiplyScalar(0.2),
-    }),
-  );
-  collar.position.set(0, 1.14, -0.88);
+  const collar = new THREE.Group();
+  const collarLeather = new THREE.MeshLambertMaterial({
+    color: '#08090d',
+    emissive: new THREE.Color(destination.run.cannotLose ? '#1b1130' : '#08090d').multiplyScalar(
+      0.08,
+    ),
+  });
+  const collarGold = new THREE.MeshLambertMaterial({
+    color: '#d9b95a',
+    emissive: new THREE.Color('#d9b95a').multiplyScalar(0.2),
+  });
+  const collarBand = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.12, 0.56), collarLeather);
+  const buckle = createBox(0.1, 0.13, 0.04, '#e3c76b', {
+    emissive: new THREE.Color('#e3c76b').multiplyScalar(0.18),
+  });
+  buckle.position.set(0.34, 0.01, -0.3);
+  collar.add(collarBand, buckle);
+
+  for (const z of [-0.305, 0.305]) {
+    for (let row = 0; row < 2; row += 1) {
+      for (let index = 0; index < 6; index += 1) {
+        const stud = new THREE.Mesh(new THREE.SphereGeometry(0.035, 10, 8), collarGold);
+        stud.scale.set(1, 0.62, 1);
+        stud.position.set(-0.28 + index * 0.112, row === 0 ? -0.032 : 0.038, z);
+        collar.add(stud);
+      }
+    }
+  }
+
+  for (let index = 0; index < 7; index += 1) {
+    const topStud = new THREE.Mesh(new THREE.SphereGeometry(0.045, 10, 8), collarGold);
+    topStud.scale.set(1, 0.5, 1);
+    topStud.position.set(-0.3 + index * 0.1, 0.075, 0);
+    collar.add(topStud);
+  }
+
+  collar.position.set(0, 1.18, -0.62);
   collar.rotation.x = -0.18;
+
+  const rearCollar = new THREE.Group();
+  const rearCollarBand = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.07, 0.14), collarLeather);
+  rearCollar.add(rearCollarBand);
+  for (let index = 0; index < 7; index += 1) {
+    const stud = new THREE.Mesh(new THREE.SphereGeometry(0.045, 10, 8), collarGold);
+    stud.scale.set(1, 0.55, 1);
+    stud.position.set(-0.3 + index * 0.1, 0.055, 0.012);
+    rearCollar.add(stud);
+  }
+  rearCollar.position.set(0, 1.34, -0.36);
+  rearCollar.rotation.x = -0.16;
 
   const legs: THREE.Group[] = [];
   const legPositions: Array<{ x: number; z: number; front: boolean }> = [
@@ -849,6 +890,7 @@ function createDog(destination: Destination): DogRig {
     head,
     tail,
     collar,
+    rearCollar,
   );
 
   root.add(shadow, model);
