@@ -71,10 +71,10 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
           <p className="eyebrow">For Chloe</p>
           <h1>Hoppskutt</h1>
           <p className="start-landing__subtitle">
-            Chloe&apos;s little arcade trip, from Maryland to Rainbow Bridge.
+            A game dedicated to Chloe&apos;s many adventures.
           </p>
           <p className="start-landing__lede">
-            Pick a route, collect Tandborste, and unlock the next postcard.
+            Pick a route, collect tandborste, and unlock the next postcard.
           </p>
           <div className="start-landing__actions">
             <button type="button" className="button button--primary" onClick={onStart}>
@@ -210,17 +210,17 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
                 <div>
                   <span>1</span>
                   <strong>Pick a route</strong>
-                  <p>Maryland starts open.</p>
+                  <p>Choose any open stop.</p>
                 </div>
                 <div>
                   <span>2</span>
-                  <strong>Run for Tandborste</strong>
-                  <p>Clear a route to open the next postcard.</p>
+                  <strong>Collect tandborste</strong>
+                  <p>Clear routes to fill Chloe&apos;s book.</p>
                 </div>
                 <div>
                   <span>3</span>
-                  <strong>Reach Rainbow Bridge</strong>
-                  <p>The final route is only love. Chloe cannot lose there.</p>
+                  <strong>Pack helpers</strong>
+                  <p>Helpers unlock as the trip grows.</p>
                 </div>
               </div>
             </div>
@@ -254,10 +254,8 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
             <div className="start-menu-panel">
               <p className="eyebrow">Story</p>
               <p>
-                Chloe gets a bright little road trip.
-              </p>
-              <p>
-                Maryland is home. Rainbow Bridge is the last route.
+                Chloe gets one more bright arcade trip, built from family places,
+                little jokes, and familiar details.
               </p>
             </div>
           )}

@@ -4,6 +4,7 @@ import { postcardArtPaths } from '../assets/artPaths';
 
 type RouteSceneController = {
   update: (elapsed: number) => void;
+  resize: (viewportAspect: number) => void;
   dispose: () => void;
 };
 
@@ -172,6 +173,32 @@ function makeMemoryLight(color: string) {
   return group;
 }
 
+function fitTextureToViewport(texture: THREE.Texture, viewportAspect: number) {
+  const image = texture.image as HTMLImageElement | ImageBitmap | undefined;
+  const imageWidth = image?.width ?? 0;
+  const imageHeight = image?.height ?? 0;
+
+  if (!imageWidth || !imageHeight || !Number.isFinite(viewportAspect) || viewportAspect <= 0) {
+    return;
+  }
+
+  const imageAspect = imageWidth / imageHeight;
+  texture.offset.set(0, 0);
+  texture.repeat.set(1, 1);
+
+  if (viewportAspect > imageAspect) {
+    const visibleHeight = imageAspect / viewportAspect;
+    texture.repeat.set(1, visibleHeight);
+    texture.offset.set(0, (1 - visibleHeight) / 2);
+  } else {
+    const visibleWidth = viewportAspect / imageAspect;
+    texture.repeat.set(visibleWidth, 1);
+    texture.offset.set((1 - visibleWidth) / 2, 0);
+  }
+
+  texture.needsUpdate = true;
+}
+
 export function createRouteScene(
   scene: THREE.Scene,
   destination: Destination,
@@ -179,6 +206,7 @@ export function createRouteScene(
   const root = new THREE.Group();
   const animated: Array<(elapsed: number) => void> = [];
   const disposableTextures: THREE.Texture[] = [];
+  let viewportAspect = 1;
 
   scene.background = new THREE.Color(destination.theme.background);
   scene.fog = new THREE.Fog(destination.theme.fog, 15, 48);
@@ -195,11 +223,15 @@ export function createRouteScene(
   root.add(ambient, sun);
 
   const textureLoader = new THREE.TextureLoader();
-  const backdropTexture = textureLoader.load(postcardArtPaths[destination.id]);
+  const backdropTexture = textureLoader.load(postcardArtPaths[destination.id], (texture) => {
+    fitTextureToViewport(texture, viewportAspect);
+  });
   backdropTexture.colorSpace = THREE.SRGBColorSpace;
   backdropTexture.generateMipmaps = true;
   backdropTexture.magFilter = THREE.LinearFilter;
   backdropTexture.minFilter = THREE.LinearMipmapLinearFilter;
+  backdropTexture.wrapS = THREE.ClampToEdgeWrapping;
+  backdropTexture.wrapT = THREE.ClampToEdgeWrapping;
   disposableTextures.push(backdropTexture);
   scene.background = backdropTexture;
 
@@ -412,6 +444,10 @@ export function createRouteScene(
   return {
     update(elapsed) {
       animated.forEach((animation) => animation(elapsed));
+    },
+    resize(nextViewportAspect) {
+      viewportAspect = nextViewportAspect;
+      fitTextureToViewport(backdropTexture, viewportAspect);
     },
     dispose() {
       scene.remove(root);

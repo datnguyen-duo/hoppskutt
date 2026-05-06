@@ -1,15 +1,8 @@
 <svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="128" height="128" rx="22" fill="#FFF36F"/>
-  <circle cx="64" cy="64" r="46" fill="#00A982"/>
-  <path d="M46 24L39 44L56 34L46 24Z" fill="#121418"/>
-  <path d="M82 24L72 34L89 44L82 24Z" fill="#121418"/>
-  <path
-    d="M31 87C41 74 51 67 62 62C73 57 82 49 88 38"
-    stroke="#FFF8DD"
-    stroke-width="12"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-  />
-  <circle cx="89" cy="39" r="7" fill="#FFF8DD"/>
-  <circle cx="58" cy="72" r="6" fill="#121418"/>
+  <rect x="6" y="6" width="116" height="116" rx="22" fill="#FFF36F" stroke="#101726" stroke-width="8"/>
+  <circle cx="64" cy="64" r="42" fill="#7FF2C8" stroke="#101726" stroke-width="6"/>
+  <path d="M47 34H59V55H73V34H85V94H73V69H59V94H47V34Z" fill="#FF5F4F" opacity="0.9"/>
+  <path d="M43 31H55V52H73V31H85V91H73V66H55V91H43V31Z" fill="#FFF8DD" stroke="#101726" stroke-width="5" stroke-linejoin="round"/>
+  <path d="M91 31L94.5 39.1L103 39.9L96.6 45.6L98.5 54L91 49.6L83.5 54L85.4 45.6L79 39.9L87.5 39.1L91 31Z" fill="#FFF36F" stroke="#101726" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M34 89C43 82 54 78 64 78C74 78 85 82 94 89" stroke="#101726" stroke-width="6" stroke-linecap="round"/>
 </svg>

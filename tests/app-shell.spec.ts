@@ -5,26 +5,38 @@ test('homepage loads and opens the destination board', async ({ page }) => {
 
   await expect(page.getByRole('heading', { name: 'Hoppskutt' })).toBeVisible();
   await expect(
-    page.getByText("Chloe's little arcade trip, from Maryland to Rainbow Bridge."),
+    page.getByText("A game dedicated to Chloe's many adventures."),
   ).toBeVisible();
 
   await page.getByRole('button', { name: /choose route/i }).click();
 
   await expect(page).toHaveURL(/view=destinations/);
   await expect(
-    page.getByRole('heading', { name: "Choose Chloe's route." }),
+    page.getByRole('heading', { name: 'Choose a route.' }),
   ).toBeVisible();
   await expect(
-    page.locator('.destination-topbar').getByRole('button', { name: /run route/i }),
+    page.locator('.destination-play-card').getByRole('button', { name: /run route/i }),
   ).toBeVisible();
+  await expect(page.locator('.destination-hero-panel').getByText('Lv. 1')).toBeVisible();
+  await expect(page.locator('.destination-hero-panel__copy p')).toHaveCount(1);
+  await expect(page.getByRole('heading', { name: 'All routes.' })).toBeVisible();
   await expect(
-    page.locator('.destination-hero-panel').getByText('Level 1'),
-  ).toBeVisible();
-  await expect(
-    page.locator('.destination-challenge-preview__tips').getByText('Easy lanes', {
+    page.locator('.destination-challenge-preview__tips').getByText('Path right', {
       exact: true,
     }),
   ).toBeVisible();
+});
+
+test('homepage menu keeps the trip guidance short', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: /menu/i }).click();
+
+  const tripPanel = page.locator('.start-menu-panel');
+  await expect(tripPanel.getByText('Choose any open stop.')).toBeVisible();
+  await expect(tripPanel.getByText("Clear routes to fill Chloe's book.")).toBeVisible();
+  await expect(tripPanel.getByText('Helpers unlock as the trip grows.')).toBeVisible();
+  await expect(tripPanel).not.toContainText('Maryland');
+  await expect(tripPanel).not.toContainText('Rainbow Bridge');
 });
 
 test('route book navigation respects browser back', async ({ page }) => {
@@ -39,7 +51,7 @@ test('route book navigation respects browser back', async ({ page }) => {
   await page.goBack();
   await expect(page).toHaveURL(/view=destinations/);
   await expect(
-    page.getByRole('heading', { name: "Choose Chloe's route." }),
+    page.getByRole('heading', { name: 'Choose a route.' }),
   ).toBeVisible();
 
   await page.goBack();
@@ -63,24 +75,24 @@ test('route run loads the canvas and HUD without crashing', async ({ page }) => 
   await page.getByRole('button', { name: /^choose route$/i }).click();
   await expect(page).toHaveURL(/view=destinations/);
 
-  await page.locator('.destination-topbar').getByRole('button', { name: /run route/i }).click();
+  await page.locator('.destination-play-card').getByRole('button', { name: /run route/i }).click();
 
   await expect(page.locator('canvas.run-screen__canvas')).toBeVisible();
   await expect(page.getByText('Loading the route...')).toHaveCount(0);
-  await expect(page.getByRole('button', { name: /^routes$/i })).toBeVisible();
+  await expect(page.getByRole('button', { name: /^exit$/i })).toBeVisible();
   await expect(page.getByText('Tandborste', { exact: true })).toBeVisible();
   await expect(page.getByText('Run Note')).toBeVisible();
   await expect(page.getByText('Lv. 1')).toBeVisible();
-  await expect(page.getByText('Open Lanes')).toBeVisible();
+  await expect(page.getByText('Home Greenway')).toBeVisible();
 
-  await page.getByRole('button', { name: /^routes$/i }).click();
+  await page.getByRole('button', { name: /^exit$/i }).click();
   await expect(page).toHaveURL(/view=destinations/);
-  await page.locator('.destination-topbar').getByRole('button', { name: /run route/i }).click();
+  await page.locator('.destination-play-card').getByRole('button', { name: /run route/i }).click();
   await expect(page.locator('canvas.run-screen__canvas')).toBeVisible();
-  await page.getByRole('button', { name: /^routes$/i }).click();
+  await page.getByRole('button', { name: /^exit$/i }).click();
   await expect(page).toHaveURL(/view=destinations/);
   await expect(
-    page.getByRole('heading', { name: "Choose Chloe's route." }),
+    page.getByRole('heading', { name: 'Choose a route.' }),
   ).toBeVisible();
   expect(pageErrors).toEqual([]);
   expect(consoleErrors).toEqual([]);

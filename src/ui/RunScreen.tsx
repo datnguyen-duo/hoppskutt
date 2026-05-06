@@ -190,7 +190,7 @@ export function RunScreen({
 
           <button type="button" className="button button--ghost" onClick={onAbort}>
             <DoorOpen />
-            Routes
+            Exit
           </button>
         </div>
 

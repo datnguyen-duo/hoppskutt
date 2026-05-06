@@ -44,25 +44,21 @@ export function DestinationScreen({
     (boost) => progress.boostInventory[boost.id] > 0 || progress.equippedBoostId === boost.id,
   );
   const hasHelperChoices = availableBoosts.length > 0;
+  const helperName = equippedBoost?.name ?? (hasHelperChoices ? 'No helper' : 'No helpers yet');
+  const helperNote =
+    equippedBoost?.description ??
+    (hasHelperChoices ? 'Run without one or pick a helper.' : 'Helpers show up after clears.');
 
   return (
     <section className="screen destination-screen destination-screen--hub">
       <header className="topbar topbar--destination destination-topbar">
         <div className="destination-topbar__copy">
           <p className="eyebrow">Routes</p>
-          <h2>Choose Chloe&apos;s route.</h2>
-          <p>Pick a route. Helpers are optional.</p>
+          <h2>Choose a route.</h2>
+          <p>Pick one, pack a helper, then run.</p>
         </div>
 
         <div className="topbar__actions">
-          <button
-            type="button"
-            className="button button--primary destination-topbar__play"
-            onClick={onPlay}
-          >
-            <Play />
-            Run Route
-          </button>
           <button type="button" className="button button--ghost" onClick={onOpenMenu}>
             <Menu />
             Home
@@ -104,32 +100,31 @@ export function DestinationScreen({
             <div className="destination-hero-panel__copy">
               <h3>{selected.name}</h3>
               <p className="destination-hero-panel__tagline">{selected.tagline}</p>
-              <p className="destination-hero-panel__overview">{selected.overview}</p>
             </div>
           </div>
 
           <div className="destination-hero-panel__footer">
-            <div className="destination-hero-panel__stats">
-              <div className="summary-chip">
+            <div className="destination-route-badges" aria-label="Selected route details">
+              <div className="destination-route-badge">
                 <Map />
                 <span>Distance</span>
                 <strong>{selected.run.finishDistance}m</strong>
               </div>
-              <div className="summary-chip">
+              <div className="destination-route-badge">
                 <Stamp />
                 <span>{selectedCannotLose ? 'Memory' : 'Goal'}</span>
                 <strong>
                   {selectedCannotLose
                     ? 'Cannot lose'
-                    : `${selected.run.targetScore} Tandborste`}
+                    : `${selected.run.targetScore} tandborste`}
                 </strong>
               </div>
-              <div className="summary-chip">
+              <div className="destination-route-badge">
                 <Gauge />
-                <span>Route</span>
-                <strong>Level {selected.run.difficulty}</strong>
+                <span>Level</span>
+                <strong>Lv. {selected.run.difficulty}</strong>
               </div>
-              <div className="summary-chip">
+              <div className="destination-route-badge">
                 <Stamp />
                 <span>Best</span>
                 <strong>{progress.bestScores[selected.id]} pts</strong>
@@ -138,26 +133,42 @@ export function DestinationScreen({
 
             <div className="destination-hero-panel__cta">
               <div className="destination-hero-panel__playbox">
-                <div className="destination-pack-summary destination-pack-summary--hero">
-                  <div className="destination-pack-summary__copy">
-                    <span className="eyebrow">Helper</span>
-                    <strong>
-                      {equippedBoost?.name ?? (hasHelperChoices ? 'None clipped' : 'No helpers yet')}
-                    </strong>
-                    <small>
-                      {equippedBoost?.description ??
-                        (hasHelperChoices
-                          ? 'Chloe can run without one.'
-                          : 'Run without one. Helpers show up after clears.')}
-                    </small>
+                <div className="destination-play-card">
+                  <div className="destination-loadout-slot">
+                    <Backpack />
+                    <div className="destination-loadout-slot__copy">
+                      <span className="eyebrow">Helper Slot</span>
+                      <strong>{helperName}</strong>
+                      <small>{helperNote}</small>
+                    </div>
+                    {progress.equippedBoostId && (
+                      <button type="button" className="button button--quiet" onClick={onClearBoost}>
+                        <RotateCcw />
+                        Clear
+                      </button>
+                    )}
                   </div>
-                  {progress.equippedBoostId && (
-                    <button type="button" className="button button--quiet" onClick={onClearBoost}>
-                      <RotateCcw />
-                      Clear
-                    </button>
-                  )}
+                  <button type="button" className="button button--primary" onClick={onPlay}>
+                    <Play />
+                    Run Route
+                  </button>
                 </div>
+
+                <div className="destination-challenge-preview">
+                  <div className="destination-challenge-preview__header">
+                    <Gauge />
+                    <div>
+                      <span>Run Feel</span>
+                      <strong>{selected.run.challengeSummary}</strong>
+                    </div>
+                  </div>
+                  <div className="destination-challenge-preview__tips">
+                    {selected.run.challengeTips.map((tip) => (
+                      <span key={tip}>{tip}</span>
+                    ))}
+                  </div>
+                </div>
+
                 {hasHelperChoices && (
                   <div className="destination-pack-grid destination-pack-grid--hero">
                     {availableBoosts.map((boost) => {
@@ -190,123 +201,94 @@ export function DestinationScreen({
                     })}
                   </div>
                 )}
-
-                <div className="destination-challenge-preview">
-                  <div className="destination-challenge-preview__header">
-                    <Gauge />
-                    <div>
-                      <span>Run Feel</span>
-                      <strong>{selected.run.challengeSummary}</strong>
-                    </div>
-                  </div>
-                  <div className="destination-challenge-preview__tips">
-                    {selected.run.challengeTips.map((tip) => (
-                      <span key={tip}>{tip}</span>
-                    ))}
-                  </div>
-                </div>
-
-                <div
-                  className={`destination-hero-panel__actions${hasHelperChoices ? '' : ' destination-hero-panel__actions--run-only'}`}
-                >
-                  {hasHelperChoices && (
-                    <div className="loadout-chip">
-                      <Backpack />
-                      <span>Helper</span>
-                      <strong>{equippedBoost?.shortLabel ?? 'None'}</strong>
-                    </div>
-                  )}
-                  <button type="button" className="button button--primary" onClick={onPlay}>
-                    <Play />
-                    Run Route
-                  </button>
-                </div>
               </div>
             </div>
           </div>
         </article>
 
-        <aside className="destination-sidebar">
-          <section className="screen-card destination-sidebar__section">
-            <div className="section-heading section-heading--compact destination-stop-header">
-              <div>
-                <p className="eyebrow">Route Board</p>
-                <h3>Choose a route.</h3>
+        <section className="screen-card destination-route-track">
+          <div className="section-heading section-heading--compact destination-stop-header">
+            <div>
+              <p className="eyebrow">Route Path</p>
+              <h3>All routes.</h3>
+            </div>
+            <div className="destination-stop-summary">
+              <div className="destination-route-badge">
+                <Stamp />
+                <span>Clears</span>
+                <strong>{progress.totalWins}</strong>
               </div>
-              <div className="destination-stop-summary">
-                <div className="summary-chip">
-                  <Stamp />
-                  <span>Clears</span>
-                  <strong>{progress.totalWins}</strong>
-                </div>
-                <div className="summary-chip">
-                  <BookOpen />
-                  <span>Cards</span>
-                  <strong>{progress.unlockedRecipes.length}/{destinations.length}</strong>
-                </div>
+              <div className="destination-route-badge">
+                <BookOpen />
+                <span>Cards</span>
+                <strong>{progress.unlockedRecipes.length}/{destinations.length}</strong>
               </div>
             </div>
+          </div>
 
-            <div className="destination-stop-list">
-              {destinations.map((destination) => {
-                const unlocked = progress.unlockedDestinations.includes(destination.id);
-                const wins = progress.winsByDestination[destination.id];
-                const isSelected = destination.id === selectedDestinationId;
-                const isFreshStop = unlocked && wins === 0 && destination.id !== 'maryland';
-                const stateLabel = isSelected
-                  ? isFreshStop
-                    ? 'Next'
-                    : 'Selected'
-                  : isFreshStop
-                    ? 'New'
-                    : unlocked
-                      ? 'Open'
-                      : 'Locked';
+          <div className="destination-stop-list">
+            {destinations.map((destination) => {
+              const unlocked = progress.unlockedDestinations.includes(destination.id);
+              const wins = progress.winsByDestination[destination.id];
+              const isSelected = destination.id === selectedDestinationId;
+              const isFreshStop = unlocked && wins === 0 && destination.id !== 'maryland';
+              const stateLabel = isSelected
+                ? isFreshStop
+                  ? 'Next'
+                  : 'Selected'
+                : isFreshStop
+                  ? 'New'
+                  : unlocked
+                    ? 'Open'
+                    : 'Locked';
 
-                return (
-                  <button
-                    key={destination.id}
-                    type="button"
-                    className={`destination-stop-card${isSelected ? ' is-selected' : ''}${isFreshStop ? ' is-fresh' : ''}${unlocked ? '' : ' is-locked'}`}
-                    style={
-                      {
-                        '--card-accent': destination.theme.accent,
-                        '--card-secondary': destination.theme.secondary,
-                      } as CSSProperties
-                    }
-                    onClick={() => unlocked && onSelectDestination(destination.id)}
-                    disabled={!unlocked}
-                  >
-                    <div className="destination-stop-card__art">
-                      <PostcardScene
-                        destinationId={destination.id}
-                        className="postcard-scene--compact"
-                      />
+              return (
+                <button
+                  key={destination.id}
+                  type="button"
+                  className={`destination-stop-card${isSelected ? ' is-selected' : ''}${isFreshStop ? ' is-fresh' : ''}${unlocked ? '' : ' is-locked'}`}
+                  style={
+                    {
+                      '--card-accent': destination.theme.accent,
+                      '--card-secondary': destination.theme.secondary,
+                    } as CSSProperties
+                  }
+                  onClick={() => unlocked && onSelectDestination(destination.id)}
+                  disabled={!unlocked}
+                  aria-current={isSelected ? 'true' : undefined}
+                >
+                  <span className="destination-stop-card__node">
+                    Lv. {destination.run.difficulty}
+                  </span>
+                  <div className="destination-stop-card__art">
+                    <PostcardScene
+                      destinationId={destination.id}
+                      className="postcard-scene--compact"
+                    />
+                  </div>
+                  <div className="destination-stop-card__body">
+                    <div className="destination-stop-card__copy">
+                      <span className="destination-card__country">{destination.country}</span>
+                      <strong>{destination.routeLabel}</strong>
+                      <span className="destination-stop-card__name">{destination.name}</span>
+                      <span className="destination-card__challenge">
+                        {destination.run.skillFocus}
+                      </span>
+                      <span className="destination-card__status">
+                        {isFreshStop
+                          ? 'First clear ready'
+                          : unlocked
+                            ? `${wins} clear${wins === 1 ? '' : 's'}`
+                            : destination.unlockHint}
+                      </span>
                     </div>
-                    <div className="destination-stop-card__body">
-                      <div className="destination-stop-card__copy">
-                        <span className="destination-card__country">{destination.country}</span>
-                        <strong>{destination.routeLabel}</strong>
-                        <span className="destination-stop-card__name">{destination.name}</span>
-                        <span className="destination-card__challenge">
-                          Level {destination.run.difficulty}: {destination.run.skillFocus}
-                        </span>
-                        <span className="destination-card__status">
-                          {isFreshStop
-                            ? 'First clear ready'
-                            : unlocked
-                              ? `${wins} clear${wins === 1 ? '' : 's'}`
-                              : destination.unlockHint}
-                        </span>
-                      </div>
-                      <span className="destination-stop-card__state">{stateLabel}</span>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </section>
-        </aside>
+                    <span className="destination-stop-card__state">{stateLabel}</span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </section>
       </div>
     </section>
   );

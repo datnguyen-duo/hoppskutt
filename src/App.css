@@ -864,14 +864,14 @@ p {
 .destination-hero-panel {
   display: grid;
   grid-template-rows: minmax(0, 1fr) auto;
-  min-height: min(38rem, calc(100vh - 11rem));
+  min-height: min(34rem, calc(100vh - 9.5rem));
   padding: 0;
   overflow: hidden;
 }
 
 .destination-hero-panel__art {
   position: relative;
-  min-height: 21rem;
+  min-height: 18.5rem;
 }
 
 .destination-hero-panel__scene,
@@ -929,6 +929,48 @@ p {
   background: rgba(251, 247, 240, 0.94);
 }
 
+.destination-route-badges {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+
+.destination-route-badge {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: 0.55rem;
+  row-gap: 0.14rem;
+  align-items: start;
+  min-width: 0;
+  padding: 0.7rem 0.74rem;
+  border: 1px solid rgba(54, 73, 66, 0.1);
+  border-radius: 10px;
+  background: rgba(255, 252, 246, 0.88);
+}
+
+.destination-route-badge svg {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  width: 0.95rem;
+  height: 0.95rem;
+  margin-top: 0.1rem;
+  color: rgba(32, 49, 43, 0.62);
+}
+
+.destination-route-badge span {
+  color: rgba(32, 49, 43, 0.58);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.destination-route-badge strong {
+  color: var(--brand-ink);
+  line-height: 1.2;
+}
+
 .destination-hero-panel__stats {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -959,6 +1001,50 @@ p {
 
 .destination-hero-panel__actions .button--primary {
   min-width: 11rem;
+}
+
+.destination-play-card,
+.destination-loadout-slot {
+  display: grid;
+  gap: 0.72rem;
+}
+
+.destination-play-card {
+  padding: 0.78rem;
+  border: 1px solid rgba(54, 73, 66, 0.1);
+  border-radius: 12px;
+  background: rgba(255, 252, 246, 0.84);
+}
+
+.destination-play-card .button--primary {
+  width: 100%;
+  justify-content: center;
+}
+
+.destination-loadout-slot {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+}
+
+.destination-loadout-slot > svg {
+  width: 1.15rem;
+  height: 1.15rem;
+  color: var(--screen-accent, var(--brand-accent));
+}
+
+.destination-loadout-slot__copy {
+  display: grid;
+  gap: 0.14rem;
+  min-width: 0;
+}
+
+.destination-loadout-slot__copy strong {
+  color: var(--brand-ink);
+}
+
+.destination-loadout-slot__copy small {
+  color: var(--brand-muted);
+  line-height: 1.35;
 }
 
 .destination-challenge-preview {
@@ -1048,6 +1134,22 @@ p {
   gap: 0.65rem;
 }
 
+.destination-route-track {
+  display: grid;
+  gap: 0.8rem;
+  padding: 0.88rem;
+  overflow: hidden;
+}
+
+.destination-route-track .destination-stop-header {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.destination-route-track .destination-stop-summary {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .destination-stop-list {
   display: grid;
   gap: 0.6rem;
@@ -1067,6 +1169,32 @@ p {
   color: var(--brand-ink);
   text-align: left;
   min-height: 100%;
+}
+
+.destination-route-track .destination-stop-list {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.75rem), 1fr));
+}
+
+.destination-route-track .destination-stop-card {
+  position: relative;
+  align-content: start;
+  padding-top: 2.35rem;
+  overflow: hidden;
+}
+
+.destination-stop-card__node {
+  position: absolute;
+  top: 0.58rem;
+  left: 0.58rem;
+  z-index: 2;
+  padding: 0.25rem 0.48rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--card-accent, var(--brand-accent)) 16%, #fffdf8);
+  color: color-mix(in srgb, var(--card-accent, var(--brand-accent)) 70%, var(--brand-ink));
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .destination-stop-card.is-selected {
@@ -1102,6 +1230,31 @@ p {
   justify-content: space-between;
   align-items: flex-start;
   gap: 0.5rem;
+}
+
+.destination-route-track .destination-stop-card__body {
+  display: grid;
+  gap: 0.46rem;
+}
+
+.destination-route-track .destination-card__country,
+.destination-route-track .destination-stop-card__name,
+.destination-route-track .destination-card__status {
+  display: none;
+}
+
+.destination-route-track .destination-stop-card__copy {
+  gap: 0.26rem;
+}
+
+.destination-route-track .destination-stop-card__copy strong {
+  font-size: 0.98rem;
+  line-height: 1.08;
+}
+
+.destination-route-track .destination-card__challenge {
+  font-size: 0.68rem;
+  line-height: 1.16;
 }
 
 .destination-stop-card__copy {
@@ -1147,6 +1300,10 @@ p {
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+.destination-route-track .destination-stop-card__state {
+  justify-self: start;
 }
 
 .destination-sidebar__section--pack {
@@ -2344,7 +2501,7 @@ h3,
 }
 
 .start-landing__hero {
-  gap: 1.15rem;
+  gap: 1.3rem;
   max-width: min(43rem, 56vw);
 }
 
@@ -2360,6 +2517,7 @@ h3,
 }
 
 .start-landing__hero h1 {
+  margin-bottom: 0.18rem;
   color: #fff8d9;
   text-shadow:
     4px 4px 0 #101726,
@@ -2380,6 +2538,11 @@ h3,
   background: rgba(16, 23, 38, 0.66);
   color: rgba(255, 248, 221, 0.92);
   font-weight: 700;
+}
+
+.recipe-shelf > .section-heading,
+.kit-panel > .section-heading {
+  margin-bottom: 0.9rem;
 }
 
 .start-menu-drawer {
@@ -2423,10 +2586,10 @@ h3,
   position: sticky;
   top: 0;
   z-index: 12;
-  grid-template-columns: minmax(18rem, 1fr) minmax(0, 40rem);
-  gap: 1rem;
+  grid-template-columns: minmax(14rem, 1fr) minmax(0, 26rem);
+  gap: 0.8rem;
   align-items: center;
-  padding: 0.75rem;
+  padding: 0.68rem;
   border: 3px solid rgba(16, 23, 38, 0.88);
   border-radius: 8px;
   background:
@@ -2446,7 +2609,7 @@ h3,
   gap: 0.55rem;
   align-items: stretch;
   justify-self: end;
-  width: min(100%, 40rem);
+  width: min(100%, 26rem);
 }
 
 .destination-topbar .topbar__actions .button {
@@ -2455,10 +2618,10 @@ h3,
 }
 
 .destination-topbar .topbar__actions .button--quiet {
-  grid-column: 1 / -1;
-  justify-self: end;
-  min-height: 2rem;
-  padding: 0.2rem 0.45rem;
+  grid-column: auto;
+  justify-self: stretch;
+  min-height: 3.1rem;
+  padding: 0.68rem 0.9rem;
 }
 
 .destination-topbar__play {
@@ -2514,6 +2677,25 @@ h3,
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.38) 25%, transparent 25%) 0 0 / 20px 20px,
     #fff5cd;
+}
+
+.destination-route-badge,
+.destination-play-card {
+  border: 3px solid rgba(16, 23, 38, 0.88);
+  border-radius: 8px;
+  background: rgba(255, 248, 221, 0.96);
+  box-shadow: 4px 4px 0 rgba(16, 23, 38, 0.14);
+}
+
+.destination-route-badge svg,
+.destination-loadout-slot > svg {
+  color: color-mix(in srgb, var(--screen-accent, var(--theme-accent)) 78%, #101726);
+  stroke-width: 3;
+}
+
+.destination-loadout-slot .button--quiet {
+  min-height: auto;
+  padding: 0.25rem 0.35rem;
 }
 
 .destination-hero-panel__stats {
@@ -2581,10 +2763,115 @@ h3,
   align-self: center;
 }
 
+.destination-route-track {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.38) 25%, transparent 25%) 0 0 / 20px 20px,
+    #fff5cd;
+}
+
+.destination-route-track .destination-stop-list {
+  position: relative;
+}
+
+.destination-route-track .destination-stop-list::before {
+  display: none;
+  position: absolute;
+  left: 0.5rem;
+  right: 0.5rem;
+  top: 3.46rem;
+  height: 0.3rem;
+  border: 2px solid rgba(16, 23, 38, 0.54);
+  border-radius: 999px;
+  background: #7ff2c8;
+  content: '';
+}
+
+.destination-route-track .destination-stop-card {
+  z-index: 1;
+  align-content: start;
+  background: rgba(255, 248, 221, 0.98);
+}
+
+.destination-stop-card__node {
+  border: 2px solid rgba(16, 23, 38, 0.82);
+  border-radius: 8px;
+  background: #fff36f;
+  color: #101726;
+  box-shadow: 2px 2px 0 rgba(16, 23, 38, 0.14);
+}
+
+.destination-route-track .destination-stop-card.is-locked .destination-stop-card__node {
+  background: #fff8dd;
+  color: rgba(16, 23, 38, 0.58);
+}
+
+.destination-route-track .destination-stop-card.is-locked {
+  opacity: 1;
+  filter: saturate(0.68);
+}
+
+.destination-route-track .destination-stop-card.is-locked .destination-stop-card__art,
+.destination-route-track .destination-stop-card.is-locked .destination-stop-card__copy,
+.destination-route-track .destination-stop-card.is-locked .destination-stop-card__state {
+  opacity: 0.58;
+}
+
 @media (min-width: 760px) {
   .destination-challenge-preview {
     grid-template-columns: minmax(14rem, 0.8fr) minmax(0, 1fr);
     align-items: center;
+  }
+}
+
+@media (min-width: 1200px) {
+  .destination-hub {
+    grid-template-columns: 1fr;
+  }
+
+  .destination-hero-panel {
+    grid-template-columns: minmax(0, 1.46fr) minmax(21rem, 0.54fr);
+    grid-template-rows: auto;
+    min-height: 0;
+  }
+
+  .destination-hero-panel__art {
+    min-height: clamp(25rem, 52vh, 35rem);
+  }
+
+  .destination-hero-panel__scene .postcard-scene--hero {
+    border-radius: 8px 0 0 8px;
+  }
+
+  .destination-hero-panel__footer {
+    align-content: start;
+    border-left: 3px solid rgba(16, 23, 38, 0.88);
+  }
+
+  .destination-hero-panel .destination-challenge-preview {
+    grid-template-columns: 1fr;
+  }
+
+  .destination-hero-panel .destination-challenge-preview__tips {
+    align-self: start;
+  }
+
+  .destination-route-track .destination-stop-header {
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.62fr);
+    align-items: end;
+  }
+
+  .destination-route-track .destination-stop-list {
+    grid-template-columns: repeat(7, minmax(9.4rem, 1fr));
+    padding-bottom: 0.35rem;
+  }
+
+  .destination-route-track .destination-stop-card {
+    grid-template-columns: 1fr;
+  }
+
+  .destination-route-track .destination-stop-card__art .postcard-scene--compact {
+    height: auto;
+    aspect-ratio: 2.05 / 1;
   }
 }
 
@@ -2879,7 +3166,7 @@ h3,
   }
 }
 
-@media (min-width: 701px) and (max-width: 1099px) {
+@media (min-width: 701px) and (max-width: 1199px) {
   .screen {
     padding: 1rem 1.15rem 1.4rem;
   }
@@ -2917,13 +3204,26 @@ h3,
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .destination-route-track .destination-stop-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
   .destination-stop-card {
     grid-template-columns: minmax(5.75rem, 0.34fr) minmax(0, 1fr);
+  }
+
+  .destination-route-track .destination-stop-card {
+    grid-template-columns: 1fr;
   }
 
   .destination-stop-card__art .postcard-scene--compact {
     height: 100%;
     aspect-ratio: auto;
+  }
+
+  .destination-route-track .destination-stop-card__art .postcard-scene--compact {
+    height: auto;
+    aspect-ratio: 2.05 / 1;
   }
 
   .passport-cover {

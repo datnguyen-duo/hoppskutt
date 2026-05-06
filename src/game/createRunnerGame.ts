@@ -1083,6 +1083,7 @@ export function createRunnerGame({
     renderer.setSize(width, height, false);
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
+    routeScene.resize(camera.aspect);
   }
 
   function publishHud(force = false) {
