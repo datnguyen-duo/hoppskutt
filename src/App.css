@@ -422,43 +422,6 @@ p {
   image-rendering: auto;
 }
 
-.start-landing__collar {
-  position: absolute;
-  left: 76%;
-  top: 45.5%;
-  z-index: 1;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  width: clamp(7rem, 11.5vw, 12.6rem);
-  height: clamp(0.9rem, 1.35vw, 1.45rem);
-  padding: 0 0.4rem;
-  border: 2px solid rgba(255, 240, 169, 0.32);
-  border-radius: 999px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.16), transparent 34%),
-    linear-gradient(90deg, #030407, #11131b 52%, #050609);
-  box-shadow:
-    0 0.16rem 0 rgba(0, 0, 0, 0.7),
-    inset 0 0.08rem 0 rgba(255, 255, 255, 0.18),
-    inset 0 -0.08rem 0 rgba(0, 0, 0, 0.72);
-  pointer-events: none;
-  transform: translate(-50%, -50%) rotate(7deg) skewX(-8deg);
-  transform-origin: center;
-}
-
-.start-landing__collar span {
-  width: clamp(0.42rem, 0.72vw, 0.78rem);
-  height: clamp(0.42rem, 0.72vw, 0.78rem);
-  border-radius: 999px;
-  background:
-    radial-gradient(circle at 34% 30%, rgba(255, 250, 206, 0.94), transparent 24%),
-    linear-gradient(145deg, #fff09a, #c29232 70%);
-  box-shadow:
-    0 0.05rem 0 rgba(76, 47, 8, 0.82),
-    inset 0 -0.08rem 0 rgba(96, 62, 12, 0.36);
-}
-
 .start-landing__wash {
   position: absolute;
   inset: 0;
@@ -2934,14 +2897,6 @@ h3,
     max-width: min(36rem, 66vw);
   }
 
-  .start-landing__collar {
-    left: 70%;
-    top: 50%;
-    width: clamp(7.8rem, 18vw, 11rem);
-    height: clamp(0.9rem, 2vw, 1.35rem);
-    transform: translate(-50%, -50%) rotate(5deg) skewX(-8deg);
-  }
-
   .destination-hub,
   .collection-layout,
   .reward-card__board {
@@ -3008,14 +2963,6 @@ h3,
   }
 }
 
-@media (min-width: 960px) and (max-width: 1099px) {
-  .start-landing__collar {
-    left: 72%;
-    top: 43.5%;
-    width: clamp(7.4rem, 14vw, 10rem);
-  }
-}
-
 @media (max-width: 700px) {
   .start-screen {
     padding: 0;
@@ -3023,14 +2970,6 @@ h3,
 
   .start-landing__photo {
     object-position: 62% 50%;
-  }
-
-  .start-landing__collar {
-    left: 70%;
-    top: 50%;
-    width: clamp(6.8rem, 30vw, 9rem);
-    height: clamp(0.8rem, 4.2vw, 1.05rem);
-    transform: translate(-50%, -50%) rotate(5deg) skewX(-8deg);
   }
 
   .start-landing__wash {

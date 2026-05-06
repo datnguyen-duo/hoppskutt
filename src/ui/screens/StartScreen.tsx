@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Backpack, BookOpen, Camera, Info, Map, Menu, Play, Stamp, X } from 'lucide-react';
+import { Backpack, BookOpen, Camera, Heart, Info, Map, Menu, Play, Stamp, X } from 'lucide-react';
 import { boosts } from '../../data/boosts';
 import { destinations } from '../../data/destinations';
 import { heroArtPath, heroPortraitArtPath } from '../../assets/artPaths';
@@ -12,7 +12,7 @@ type StartScreenProps = {
   onOpenCollection: () => void;
 };
 
-type MenuSection = 'journey' | 'progress' | 'story' | 'credits';
+type MenuSection = 'journey' | 'progress' | 'story' | 'memory' | 'credits';
 
 export function StartScreen({ progress, onStart, onOpenCollection }: StartScreenProps) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -45,11 +45,6 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
               className="start-landing__photo"
             />
           </picture>
-          <div className="start-landing__collar" aria-hidden="true">
-            {Array.from({ length: 9 }, (_, index) => (
-              <span key={index} />
-            ))}
-          </div>
           <div className="start-landing__wash" aria-hidden="true" />
           <div className="start-landing__ambient start-landing__ambient--one" aria-hidden="true" />
           <div className="start-landing__ambient start-landing__ambient--two" aria-hidden="true" />
@@ -178,6 +173,15 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
           </button>
           <button
             type="button"
+            className={`start-menu-item${menuSection === 'memory' ? ' is-active' : ''}`}
+            aria-pressed={menuSection === 'memory'}
+            onClick={() => openSection('memory')}
+          >
+            <Heart />
+            Chloe
+          </button>
+          <button
+            type="button"
             className={`start-menu-item${menuSection === 'credits' ? ' is-active' : ''}`}
             aria-pressed={menuSection === 'credits'}
             onClick={() => openSection('credits')}
@@ -250,11 +254,19 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
             <div className="start-menu-panel">
               <p className="eyebrow">Story</p>
               <p>
-                Hoppskutt is a little arcade trip for Chloe and the people who love her.
+                Chloe gets a bright little road trip.
               </p>
               <p>
-                It starts in Maryland, ends at Rainbow Bridge, and keeps the road bright.
+                Maryland is home. Rainbow Bridge is the last route.
               </p>
+            </div>
+          )}
+
+          {menuSection === 'memory' && (
+            <div className="start-menu-panel">
+              <p className="eyebrow">Chloe</p>
+              <p>Her seat, her collar, her road trip.</p>
+              <p>A small place for the details only the family knows.</p>
             </div>
           )}
 

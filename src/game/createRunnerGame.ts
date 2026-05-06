@@ -796,13 +796,13 @@ function createDog(destination: Destination): DogRig {
       0.08,
     ),
   });
-  const collarGold = new THREE.MeshLambertMaterial({
-    color: '#d9b95a',
-    emissive: new THREE.Color('#d9b95a').multiplyScalar(0.2),
+  const collarSilver = new THREE.MeshLambertMaterial({
+    color: '#e3ebf0',
+    emissive: new THREE.Color('#f8fcff').multiplyScalar(0.18),
   });
   const collarBand = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.12, 0.56), collarLeather);
-  const buckle = createBox(0.1, 0.13, 0.04, '#e3c76b', {
-    emissive: new THREE.Color('#e3c76b').multiplyScalar(0.18),
+  const buckle = createBox(0.1, 0.13, 0.04, '#dbe3e8', {
+    emissive: new THREE.Color('#f2f7fa').multiplyScalar(0.12),
   });
   buckle.position.set(0.34, 0.01, -0.3);
   collar.add(collarBand, buckle);
@@ -810,7 +810,7 @@ function createDog(destination: Destination): DogRig {
   for (const z of [-0.305, 0.305]) {
     for (let row = 0; row < 2; row += 1) {
       for (let index = 0; index < 6; index += 1) {
-        const stud = new THREE.Mesh(new THREE.SphereGeometry(0.035, 10, 8), collarGold);
+        const stud = new THREE.Mesh(new THREE.SphereGeometry(0.035, 10, 8), collarSilver);
         stud.scale.set(1, 0.62, 1);
         stud.position.set(-0.28 + index * 0.112, row === 0 ? -0.032 : 0.038, z);
         collar.add(stud);
@@ -818,24 +818,19 @@ function createDog(destination: Destination): DogRig {
     }
   }
 
-  for (let index = 0; index < 7; index += 1) {
-    const topStud = new THREE.Mesh(new THREE.SphereGeometry(0.045, 10, 8), collarGold);
-    topStud.scale.set(1, 0.5, 1);
-    topStud.position.set(-0.3 + index * 0.1, 0.075, 0);
-    collar.add(topStud);
-  }
-
   collar.position.set(0, 1.18, -0.62);
   collar.rotation.x = -0.18;
 
   const rearCollar = new THREE.Group();
-  const rearCollarBand = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.07, 0.14), collarLeather);
+  const rearCollarBand = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.13, 0.2), collarLeather);
   rearCollar.add(rearCollarBand);
-  for (let index = 0; index < 7; index += 1) {
-    const stud = new THREE.Mesh(new THREE.SphereGeometry(0.045, 10, 8), collarGold);
-    stud.scale.set(1, 0.55, 1);
-    stud.position.set(-0.3 + index * 0.1, 0.055, 0.012);
-    rearCollar.add(stud);
+  for (const z of [0.045, 0.12]) {
+    for (let index = 0; index < 7; index += 1) {
+      const stud = new THREE.Mesh(new THREE.SphereGeometry(0.046, 10, 8), collarSilver);
+      stud.scale.set(1, 0.55, 1);
+      stud.position.set(-0.3 + index * 0.1, 0.055, z);
+      rearCollar.add(stud);
+    }
   }
   rearCollar.position.set(0, 1.34, -0.36);
   rearCollar.rotation.x = -0.16;
