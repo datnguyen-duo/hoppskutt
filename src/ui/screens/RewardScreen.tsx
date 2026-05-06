@@ -39,6 +39,9 @@ export function RewardScreen({
   const recipeUnlocked = reward.kind === 'recipe' ? destination.recipe : null;
   const boostReward = reward.kind === 'boost' ? boostLookup[reward.boostId] : null;
   const cannotLose = destination.run.cannotLose ?? false;
+  const availableBoosts = boosts.filter(
+    (boost) => progress.boostInventory[boost.id] > 0 || progress.equippedBoostId === boost.id,
+  );
 
   return (
     <section className="screen reward-screen">
@@ -53,7 +56,7 @@ export function RewardScreen({
           }
         >
           <span className="reward-card__hero-stamp">
-            {cannotLose ? 'Forever Clear' : 'Stage Clear'}
+            {cannotLose ? 'Forever Clear' : 'Clear'}
           </span>
           <span className="reward-card__hero-route">{destination.routeLabel}</span>
           <span className="reward-card__hero-clear">{cannotLose ? 'Loved!' : 'Clear!'}</span>
@@ -61,22 +64,22 @@ export function RewardScreen({
         </div>
 
         <div className="reward-card__intro">
-          <p className="eyebrow">{cannotLose ? 'Rainbow Bridge' : 'Stage Clear'}</p>
+          <p className="eyebrow">{cannotLose ? 'Rainbow Bridge' : 'Clear'}</p>
           <h2>
             {cannotLose
-              ? 'Rainbow Bridge glows in Chloe\'s sticker book.'
-              : `${destination.name} added to Chloe's sticker book.`}
+              ? 'Rainbow Bridge is in Chloe\'s book.'
+              : `${destination.routeLabel} cleared.`}
           </h2>
           <p>
             {cannotLose
-              ? `${summary.score} memory lights, best stride x${summary.bestChain}, and no losing on this road.`
-              : `${summary.score}/${summary.target} Tandborste, best chain x${summary.bestChain}, and ${summary.stumbles} stumble${summary.stumbles === 1 ? '' : 's'}.`}
+              ? `${summary.score} lights found. Chloe cannot lose here.`
+              : `${summary.score}/${summary.target} Tandborste. Best stride x${summary.bestChain}.`}
           </p>
         </div>
 
         <div className="reward-card__stats">
           <div>
-            <span>Tandborste</span>
+            <span>{cannotLose ? 'Lights' : 'Tandborste'}</span>
             <strong>{summary.score}</strong>
           </div>
           <div>
@@ -84,7 +87,7 @@ export function RewardScreen({
             <strong>x{summary.bestChain}</strong>
           </div>
           <div>
-            <span>Route Finish</span>
+            <span>Distance</span>
             <strong>{summary.distanceTravelled}/{summary.finishDistance}m</strong>
           </div>
         </div>
@@ -102,7 +105,7 @@ export function RewardScreen({
                 }
               >
                 <div className="reward-card__prize-copy">
-                  <span className="eyebrow">Snack Card</span>
+                  <span className="eyebrow">Card</span>
                   <h3>{recipeUnlocked.name}</h3>
                   <p>{recipeUnlocked.flavorText}</p>
                 </div>
@@ -118,12 +121,11 @@ export function RewardScreen({
                 style={{ '--reward-accent': boostReward.accent } as CSSProperties}
               >
                 <div className="reward-card__prize-copy">
-                  <span className="eyebrow">Power Drop</span>
+                  <span className="eyebrow">Helper</span>
                   <h3>{boostReward.name}</h3>
                   <p>{boostReward.description}</p>
                   <small>
-                    Inventory now: {progress.boostInventory[boostReward.id]} available charge
-                    {progress.boostInventory[boostReward.id] === 1 ? '' : 's'}.
+                    {progress.boostInventory[boostReward.id]} in Chloe&apos;s pack.
                   </small>
                 </div>
                 <button
@@ -131,7 +133,7 @@ export function RewardScreen({
                   className="button button--primary"
                   onClick={() => onEquipBoost(boostReward.id)}
                 >
-                  Clip For Next Run
+                  Clip Helper
                 </button>
               </div>
             )}
@@ -140,8 +142,8 @@ export function RewardScreen({
           <div className="reward-card__side">
             {unlockedDestination && (
               <div className="unlock-banner">
-                <span className="eyebrow">New Stage</span>
-                <strong>{unlockedDestination.country} unlocked</strong>
+                <span className="eyebrow">New Route</span>
+                <strong>{unlockedDestination.country} is open</strong>
                 <p>{unlockedDestination.tagline}</p>
               </div>
             )}
@@ -150,48 +152,55 @@ export function RewardScreen({
               <div className="reward-quick-pack__header">
                 <Backpack />
                 <div>
-                  <span className="eyebrow">Quick Equip</span>
-                  <strong>{equippedBoost?.name ?? 'No helper clipped'}</strong>
+                  <span className="eyebrow">Helpers</span>
+                  <strong>{equippedBoost?.name ?? 'None clipped'}</strong>
                 </div>
               </div>
-              <div className="reward-quick-pack__grid">
-                {boosts.map((boost) => {
-                  const amount = progress.boostInventory[boost.id];
-                  const active = progress.equippedBoostId === boost.id;
+              {availableBoosts.length > 0 ? (
+                <div className="reward-quick-pack__grid">
+                  {availableBoosts.map((boost) => {
+                    const amount = progress.boostInventory[boost.id];
+                    const active = progress.equippedBoostId === boost.id;
 
-                  return (
-                    <button
-                      key={boost.id}
-                      type="button"
-                      className={`reward-quick-pack__item${active ? ' is-active' : ''}${amount <= 0 ? ' is-empty' : ''}`}
-                      style={{ '--boost-accent': boost.accent } as CSSProperties}
-                      onClick={() => amount > 0 && onEquipBoost(boost.id)}
-                      disabled={amount <= 0}
-                    >
-                      <span className="daypack-choice__dot" aria-hidden="true" />
-                      <strong>{boost.shortLabel}</strong>
-                      <span>{amount}x</span>
-                      <small>{active ? 'Clipped' : amount > 0 ? 'Clip' : 'Empty'}</small>
-                    </button>
-                  );
-                })}
-              </div>
+                    return (
+                      <button
+                        key={boost.id}
+                        type="button"
+                        className={`reward-quick-pack__item${active ? ' is-active' : ''}${amount <= 0 ? ' is-empty' : ''}`}
+                        style={{ '--boost-accent': boost.accent } as CSSProperties}
+                        onClick={() => amount > 0 && onEquipBoost(boost.id)}
+                        disabled={amount <= 0}
+                      >
+                        <span className="daypack-choice__dot" aria-hidden="true" />
+                        <strong>{boost.shortLabel}</strong>
+                        <span>{amount}x</span>
+                        <small>{active ? 'Clipped' : amount > 0 ? 'Clip' : 'Empty'}</small>
+                      </button>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="empty-helper-note empty-helper-note--compact">
+                  <strong>No helpers yet.</strong>
+                  <span>Keep running routes to find some.</span>
+                </div>
+              )}
             </div>
 
             <div className="reward-card__actions">
               <button type="button" className="button button--primary" onClick={onStartNextRun}>
                 <Play />
                 {unlockedDestination
-                  ? `Start ${nextDestination.routeLabel}`
+                  ? `Run ${nextDestination.routeLabel}`
                   : 'Run Again'}
               </button>
               <button type="button" className="button button--ghost" onClick={onContinue}>
                 <Map />
-                Stage Board
+                Routes
               </button>
               <button type="button" className="button button--ghost" onClick={onOpenCollection}>
                 <BookOpen />
-                Open Sticker Book
+                Book
               </button>
             </div>
           </div>

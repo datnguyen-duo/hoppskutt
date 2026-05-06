@@ -259,7 +259,7 @@ function App() {
       consumed.activeBoostId
         ? {
             tone: 'info',
-            message: `${boostLookup[consumed.activeBoostId].name} is clipped onto Chloe's power pack.`,
+            message: `${boostLookup[consumed.activeBoostId].name} clipped.`,
           }
         : null,
     );
@@ -290,8 +290,8 @@ function App() {
     setNotice({
       tone: 'loss',
       message: summary.reachedFinish
-        ? `${destinationLookup[summary.destinationId].name} reached the finish, but Chloe only banked ${summary.score}/${summary.target} Tandborste.`
-        : `${destinationLookup[summary.destinationId].name} got a little scrappy before the finish. Chloe still banked ${summary.score}/${summary.target} Tandborste.`,
+        ? `Almost. Chloe found ${summary.score}/${summary.target} Tandborste.`
+        : `Try again. Chloe kept ${summary.score}/${summary.target} Tandborste.`,
     });
     navigateTo('destinations', {
       selectedDestinationId: summary.destinationId,
@@ -302,7 +302,7 @@ function App() {
     setRunSession(null);
     setNotice({
       tone: 'info',
-      message: 'Run paused. Any clipped helper was already used when the stage began.',
+      message: 'Back to routes. Any clipped helper was used.',
     });
     soundManager.playMenu();
     navigateTo('destinations');
@@ -312,7 +312,7 @@ function App() {
     setProgress((current) => equipBoost(current, boostId));
     setNotice({
       tone: 'success',
-      message: `${boostLookup[boostId].name} clipped for the next run.`,
+      message: `${boostLookup[boostId].name} clipped.`,
     });
     soundManager.playMenu();
   };
@@ -321,7 +321,7 @@ function App() {
     setProgress((current) => clearEquippedBoost(current));
     setNotice({
       tone: 'info',
-      message: 'Power pack cleared.',
+      message: 'Helper cleared.',
     });
     soundManager.playMenu();
   };
@@ -337,8 +337,8 @@ function App() {
     setNotice({
       tone: 'success',
       message: rewardState?.unlockedDestinationId
-        ? `${nextDestination.country} is open. Chloe is lined up for the next stage.`
-        : 'Sticker book updated. Chloe is lined up for another run.',
+        ? `${nextDestination.country} is open.`
+        : 'Book updated.',
     });
     setSelectedDestinationId(nextDestinationId);
     soundManager.playMenu();
@@ -351,7 +351,7 @@ function App() {
     setProgress((current) => equipBoost(current, boostId));
     setNotice({
       tone: 'success',
-      message: `${boostLookup[boostId].name} clipped for the next run.`,
+      message: `${boostLookup[boostId].name} clipped.`,
     });
     soundManager.playMenu();
   };
@@ -373,10 +373,8 @@ function App() {
     setNotice({
       tone: consumed.activeBoostId ? 'info' : 'success',
       message: consumed.activeBoostId
-        ? `${boostLookup[consumed.activeBoostId].name} is clipped onto Chloe's power pack.`
-        : nextDestination.run.cannotLose
-          ? `${nextDestination.routeLabel} is queued. Chloe can only shine here.`
-          : `${nextDestination.routeLabel} is queued. Go bank those Tandborste.`,
+        ? `${boostLookup[consumed.activeBoostId].name} clipped.`
+        : `${nextDestination.routeLabel} is ready.`,
     });
     setSelectedDestinationId(nextDestinationId);
     soundManager.playMenu();
@@ -394,7 +392,7 @@ function App() {
     setSelectedDestinationId(fallbackDestinationId);
     setNotice({
       tone: 'info',
-      message: 'Fresh sticker book packed. Back to Maryland for the first clean clear.',
+      message: 'Trip reset. Maryland is ready.',
     });
     soundManager.playMenu();
     navigateTo('start');
@@ -446,7 +444,7 @@ function App() {
                 <div className="run-popups" aria-live="polite">
                   <div className="hud-pop hud-pop--boost">
                     <strong>Chloe is already on the move.</strong>
-                    <span>Loading the stage ahead...</span>
+                    <span>Loading the route...</span>
                   </div>
                 </div>
               </div>

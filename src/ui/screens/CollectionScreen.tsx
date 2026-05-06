@@ -24,22 +24,26 @@ export function CollectionScreen({
   const equippedBoost = progress.equippedBoostId
     ? boostLookup[progress.equippedBoostId]
     : null;
+  const helperCount = boosts.reduce(
+    (total, boost) => total + progress.boostInventory[boost.id],
+    0,
+  );
 
   return (
     <section className="screen collection-screen">
       <header className="topbar topbar--collection">
         <div>
-          <p className="eyebrow">Sticker Book</p>
-          <h2>Chloe&apos;s sticker book.</h2>
+          <p className="eyebrow">Book</p>
+          <h2>Chloe&apos;s book.</h2>
         </div>
         <div className="topbar__actions">
           <button type="button" className="button button--ghost" onClick={onOpenMenu}>
             <Menu />
-            Main Menu
+            Home
           </button>
           <button type="button" className="button button--ghost" onClick={onBack}>
             <ArrowLeft />
-            Stage Board
+            Routes
           </button>
         </div>
       </header>
@@ -49,24 +53,24 @@ export function CollectionScreen({
           <span className="chloe-pin chloe-pin--passport" aria-hidden="true" />
           <div className="passport-cover__copy">
             <p className="eyebrow">Arcade Album</p>
-            <h3>Stamps, snack cards, and power helpers all in one bright book.</h3>
-            <p>Track every clear, snack drop, and clipped boost at a glance.</p>
+            <h3>Chloe&apos;s clears, cards, and helpers.</h3>
+            <p>A small book for the trip.</p>
           </div>
 
           <div className="passport-summary">
             <div className="summary-chip">
               <Stamp />
-              <span>Trail Stamps</span>
+              <span>Clears</span>
               <strong>{progress.totalWins}</strong>
             </div>
             <div className="summary-chip">
               <BookOpen />
-              <span>Stops</span>
+              <span>Routes</span>
               <strong>{progress.unlockedDestinations.length}/{destinations.length}</strong>
             </div>
             <div className="summary-chip">
               <BookOpen />
-              <span>Recipes</span>
+              <span>Cards</span>
               <strong>{progress.unlockedRecipes.length}/{destinations.length}</strong>
             </div>
             <div className="summary-chip">
@@ -81,8 +85,8 @@ export function CollectionScreen({
           <article className="screen-card recipe-shelf">
             <div className="section-heading section-heading--compact">
               <div>
-                <p className="eyebrow">Snack Cards</p>
-                <h3>{destinations.length} collectible rewards, one shelf.</h3>
+                <p className="eyebrow">Cards</p>
+                <h3>Cards Chloe has found.</h3>
               </div>
             </div>
 
@@ -109,7 +113,7 @@ export function CollectionScreen({
                     </div>
                     <div className="recipe-shelf-card__body">
                       <span className="recipe-card__country">{destination.recipe.country}</span>
-                      <strong>{unlocked ? destination.recipe.name : 'Hidden Snack Card'}</strong>
+                      <strong>{unlocked ? destination.recipe.name : 'Hidden Card'}</strong>
                       {unlocked ? (
                         <RecipeIllustration recipeId={destination.recipe.id} className="recipe-illustration--mini" />
                       ) : (
@@ -118,7 +122,7 @@ export function CollectionScreen({
                       <p>
                         {unlocked
                           ? destination.recipe.flavorText
-                          : `Clear ${destination.country} to unlock this snack sticker.`}
+                          : `Clear ${destination.country}.`}
                       </p>
                     </div>
                   </article>
@@ -130,8 +134,12 @@ export function CollectionScreen({
           <aside className="screen-card kit-panel collection-pack">
             <div className="section-heading section-heading--compact">
               <div>
-                <p className="eyebrow">Power Pack</p>
-                <h3>Clip helpers for the next run.</h3>
+                <p className="eyebrow">Helpers</p>
+                <h3>
+                  {helperCount > 0
+                    ? 'Clip one before a route.'
+                    : 'Helpers show up after clears.'}
+                </h3>
               </div>
               {progress.equippedBoostId && (
                 <button type="button" className="button button--quiet" onClick={onClearBoost}>
@@ -165,7 +173,7 @@ export function CollectionScreen({
                     </div>
                     <div className="kit-item__actions">
                       <span>{amount}x</span>
-                      <span>{active ? 'Packed' : 'Pack'}</span>
+                      <span>{active ? 'Clipped' : amount > 0 ? 'Clip' : 'Not found'}</span>
                     </div>
                   </button>
                 );

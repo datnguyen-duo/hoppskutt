@@ -984,6 +984,10 @@ p {
   align-items: center;
 }
 
+.destination-hero-panel__actions--run-only {
+  justify-content: flex-end;
+}
+
 .destination-hero-panel__actions .button--primary {
   min-width: 11rem;
 }
@@ -1213,6 +1217,24 @@ p {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 0.65rem;
+}
+
+.empty-helper-note {
+  display: grid;
+  gap: 0.14rem;
+  padding: 0.8rem 0.9rem;
+  border: 1px dashed rgba(54, 73, 66, 0.16);
+  border-radius: 10px;
+  background: rgba(255, 252, 246, 0.72);
+  color: var(--brand-muted);
+}
+
+.empty-helper-note strong {
+  color: var(--brand-ink);
+}
+
+.empty-helper-note--compact {
+  padding: 0.65rem 0.75rem;
 }
 
 .destination-pack-card {
@@ -2717,6 +2739,13 @@ h3,
   border-radius: 8px;
   background: rgba(255, 248, 221, 0.96);
   box-shadow: 5px 5px 0 rgba(16, 23, 38, 0.16);
+}
+
+.empty-helper-note {
+  border: 3px dashed rgba(16, 23, 38, 0.58);
+  border-radius: 8px;
+  background: #fff8dd;
+  color: rgba(16, 23, 38, 0.66);
 }
 
 .reward-quick-pack__header {

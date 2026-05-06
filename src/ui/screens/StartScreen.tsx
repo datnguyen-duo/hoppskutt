@@ -22,7 +22,7 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
     progress.totalWins > 0 ||
     progress.unlockedDestinations.length > 1 ||
     progress.unlockedRecipes.length > 0;
-  const playLabel = hasProgress ? 'Continue Run' : 'Start Run';
+  const playLabel = hasProgress ? 'Continue Trip' : 'Choose Route';
   const packedBoostCount = boosts.reduce(
     (total, boost) => total + progress.boostInventory[boost.id],
     0,
@@ -41,7 +41,7 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
             <source srcSet={heroArtPath} media="(min-width: 960px)" />
             <img
               src={heroPortraitArtPath}
-              alt="Sticker-arcade portrait of Chloe as a roadtrip copilot with a Maryland marsh route outside"
+              alt="Sticker-arcade Maryland marsh route with a bright boardwalk"
               className="start-landing__photo"
             />
           </picture>
@@ -68,14 +68,13 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
         </div>
 
         <div className="start-landing__hero">
-          <p className="eyebrow">Sticker Arcade For Chloe</p>
+          <p className="eyebrow">For Chloe</p>
           <h1>Hoppskutt</h1>
           <p className="start-landing__subtitle">
-            Dash from Maryland to Rainbow Bridge, one bright Chloe run at a time.
+            Chloe&apos;s little arcade trip, from Maryland to Rainbow Bridge.
           </p>
           <p className="start-landing__lede">
-            Pick a stage, clip a helper to Chloe&apos;s pack, weave through route clutter, and
-            cash in enough Tandborste to light up the next sticker stop.
+            Pick a route, collect Tandborste, and unlock the next postcard.
           </p>
           <div className="start-landing__actions">
             <button type="button" className="button button--primary" onClick={onStart}>
@@ -84,7 +83,7 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
             </button>
             <button type="button" className="button button--ghost button--glass" onClick={onOpenCollection}>
               <BookOpen />
-              Sticker Book
+              Chloe&apos;s Book
             </button>
           </div>
         </div>
@@ -98,8 +97,8 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
       <aside className={`start-menu-drawer${menuOpen ? ' is-open' : ''}`} aria-hidden={!menuOpen}>
         <div className="start-menu-drawer__header">
           <div>
-            <p className="eyebrow">Trip Menu</p>
-            <h2>Where to next?</h2>
+            <p className="eyebrow">Menu</p>
+            <h2>Hoppskutt</h2>
           </div>
           <button
             type="button"
@@ -122,7 +121,7 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
           </button>
           <button type="button" className="button button--ghost" onClick={onOpenCollection}>
             <BookOpen />
-            Sticker Book
+            Chloe&apos;s Book
           </button>
         </div>
 
@@ -134,7 +133,7 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
           </div>
           <div>
             <Map />
-            <span>Stops</span>
+            <span>Routes</span>
             <strong>{progress.unlockedDestinations.length}/{destinations.length}</strong>
           </div>
           <div>
@@ -152,7 +151,7 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
             onClick={() => openSection('journey')}
           >
             <Map />
-            Journey
+            Trip
           </button>
           <button
             type="button"
@@ -179,7 +178,7 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
             onClick={() => openSection('credits')}
           >
             <BookOpen />
-            Credits
+            About
           </button>
           <button
             type="button"
@@ -197,22 +196,22 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
         <div className="start-menu-drawer__body">
           {menuSection === 'journey' && (
             <div className="start-menu-panel">
-              <p className="eyebrow">Journey</p>
+              <p className="eyebrow">Trip</p>
               <div className="start-journey-list">
                 <div>
                   <span>1</span>
-                  <strong>Pick a stage</strong>
-                  <p>Maryland opens first, then each clean clear unlocks the next sticker stop.</p>
+                  <strong>Pick a route</strong>
+                  <p>Maryland starts open.</p>
                 </div>
                 <div>
                   <span>2</span>
-                  <strong>Clip one helper</strong>
-                  <p>Helpers sharpen lane shifts, soften the route, or boost the Tandborste score.</p>
+                  <strong>Run for Tandborste</strong>
+                  <p>Clear a route to open the next postcard.</p>
                 </div>
                 <div>
                   <span>3</span>
-                  <strong>Clear the finish gate</strong>
-                  <p>Cross with enough Tandborste to file stickers, then reach a final road where Chloe cannot lose.</p>
+                  <strong>Reach Rainbow Bridge</strong>
+                  <p>The final route is only love. Chloe cannot lose there.</p>
                 </div>
               </div>
             </div>
@@ -223,19 +222,19 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
               <p className="eyebrow">Progress</p>
               <div className="start-progress-list">
                 <div>
-                  <span>Open stops</span>
+                  <span>Open routes</span>
                   <strong>{progress.unlockedDestinations.length}/{destinations.length}</strong>
                 </div>
                 <div>
-                  <span>Snack cards</span>
+                  <span>Cards</span>
                   <strong>{progress.unlockedRecipes.length}/{destinations.length}</strong>
                 </div>
                 <div>
-                  <span>Trail stamps</span>
+                  <span>Clears</span>
                   <strong>{progress.totalWins}</strong>
                 </div>
                 <div>
-                  <span>Pack helpers</span>
+                  <span>Helpers</span>
                   <strong>{packedBoostCount}</strong>
                 </div>
               </div>
@@ -246,19 +245,17 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
             <div className="start-menu-panel">
               <p className="eyebrow">Story</p>
               <p>
-                Hoppskutt started as a small tribute project: part dog game, part travel keepsake,
-                and part experiment in turning a real companion into a playful arcade world.
+                Hoppskutt is a little arcade trip for Chloe and the people who love her.
               </p>
               <p>
-                This space is a placeholder for your own story about Chloe, the roadtrip feeling,
-                why this game mattered enough to build, and the final Rainbow Bridge run made for her.
+                It starts in Maryland, ends at Rainbow Bridge, and keeps the road bright.
               </p>
             </div>
           )}
 
           {menuSection === 'credits' && (
             <div className="start-menu-panel">
-              <p className="eyebrow">Credits</p>
+              <p className="eyebrow">About</p>
               <ul className="start-menu-resources">
                 <li>OpenAI Codex</li>
                 <li>OpenAI image generation</li>
@@ -306,7 +303,7 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
             <div className="start-photo-modal__actions">
               <button type="button" className="button button--primary" onClick={onStart}>
                 <Play />
-                Play
+                Choose Route
               </button>
             </div>
           </div>

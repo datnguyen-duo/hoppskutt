@@ -40,16 +40,18 @@ export function DestinationScreen({
   const equippedBoost = progress.equippedBoostId
     ? boostLookup[progress.equippedBoostId]
     : null;
+  const availableBoosts = boosts.filter(
+    (boost) => progress.boostInventory[boost.id] > 0 || progress.equippedBoostId === boost.id,
+  );
+  const hasHelperChoices = availableBoosts.length > 0;
 
   return (
     <section className="screen destination-screen destination-screen--hub">
       <header className="topbar topbar--destination destination-topbar">
         <div className="destination-topbar__copy">
-          <p className="eyebrow">Route Select</p>
-          <h2>Pick Chloe&apos;s next stage.</h2>
-          <p>
-            Choose a sticker stop, clip one helper, and launch Chloe toward the finish gate.
-          </p>
+          <p className="eyebrow">Routes</p>
+          <h2>Choose Chloe&apos;s route.</h2>
+          <p>Pick a route. Helpers are optional.</p>
         </div>
 
         <div className="topbar__actions">
@@ -59,19 +61,19 @@ export function DestinationScreen({
             onClick={onPlay}
           >
             <Play />
-            Start Run
+            Run Route
           </button>
           <button type="button" className="button button--ghost" onClick={onOpenMenu}>
             <Menu />
-            Main Menu
+            Home
           </button>
           <button type="button" className="button button--ghost" onClick={onOpenCollection}>
             <BookOpen />
-            Sticker Book
+            Book
           </button>
           <button type="button" className="button button--quiet" onClick={onResetProgress}>
             <RotateCcw />
-            Reset Trip
+            Reset
           </button>
         </div>
       </header>
@@ -110,22 +112,22 @@ export function DestinationScreen({
             <div className="destination-hero-panel__stats">
               <div className="summary-chip">
                 <Map />
-                <span>Trail</span>
-                <strong>{selected.run.finishDistance}m route</strong>
+                <span>Distance</span>
+                <strong>{selected.run.finishDistance}m</strong>
               </div>
               <div className="summary-chip">
                 <Stamp />
-                <span>{selectedCannotLose ? 'Memory' : 'Tandborste'}</span>
+                <span>{selectedCannotLose ? 'Memory' : 'Goal'}</span>
                 <strong>
                   {selectedCannotLose
-                    ? 'No fail state'
-                    : `${selected.run.targetScore} tandborste`}
+                    ? 'Cannot lose'
+                    : `${selected.run.targetScore} Tandborste`}
                 </strong>
               </div>
               <div className="summary-chip">
                 <Gauge />
-                <span>Stage</span>
-                <strong>Level {selected.run.difficulty}: {selected.run.skillFocus}</strong>
+                <span>Route</span>
+                <strong>Level {selected.run.difficulty}</strong>
               </div>
               <div className="summary-chip">
                 <Stamp />
@@ -138,9 +140,16 @@ export function DestinationScreen({
               <div className="destination-hero-panel__playbox">
                 <div className="destination-pack-summary destination-pack-summary--hero">
                   <div className="destination-pack-summary__copy">
-                    <span className="eyebrow">Power Pack</span>
-                    <strong>{equippedBoost?.name ?? 'Packed light'}</strong>
-                    <small>{equippedBoost?.description ?? 'Optional helpers can be clipped before the run.'}</small>
+                    <span className="eyebrow">Helper</span>
+                    <strong>
+                      {equippedBoost?.name ?? (hasHelperChoices ? 'None clipped' : 'No helpers yet')}
+                    </strong>
+                    <small>
+                      {equippedBoost?.description ??
+                        (hasHelperChoices
+                          ? 'Chloe can run without one.'
+                          : 'Run without one. Helpers show up after clears.')}
+                    </small>
                   </div>
                   {progress.equippedBoostId && (
                     <button type="button" className="button button--quiet" onClick={onClearBoost}>
@@ -149,42 +158,44 @@ export function DestinationScreen({
                     </button>
                   )}
                 </div>
-                <div className="destination-pack-grid destination-pack-grid--hero">
-                  {boosts.map((boost) => {
-                    const amount = progress.boostInventory[boost.id];
-                    const active = progress.equippedBoostId === boost.id;
+                {hasHelperChoices && (
+                  <div className="destination-pack-grid destination-pack-grid--hero">
+                    {availableBoosts.map((boost) => {
+                      const amount = progress.boostInventory[boost.id];
+                      const active = progress.equippedBoostId === boost.id;
 
-                    return (
-                      <button
-                        key={boost.id}
-                        type="button"
-                        className={`destination-pack-card${active ? ' is-active' : ''}${amount <= 0 ? ' is-empty' : ''}`}
-                        style={{ '--boost-accent': boost.accent } as CSSProperties}
-                        onClick={() => amount > 0 && onEquipBoost(boost.id)}
-                        disabled={amount <= 0}
-                      >
-                        <div className="destination-pack-card__top">
-                          <span className="daypack-choice__dot" aria-hidden="true" />
-                          <span className="destination-pack-card__count">{amount}x</span>
-                        </div>
-                        <div className="destination-pack-card__copy">
-                          <strong>{boost.name}</strong>
-                          <span>{boost.shortLabel}</span>
-                          <p>{boost.description}</p>
-                        </div>
-                        <span className="destination-pack-card__state">
-                          {active ? 'Packed' : amount > 0 ? 'Pack' : 'Empty'}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
+                      return (
+                        <button
+                          key={boost.id}
+                          type="button"
+                          className={`destination-pack-card${active ? ' is-active' : ''}${amount <= 0 ? ' is-empty' : ''}`}
+                          style={{ '--boost-accent': boost.accent } as CSSProperties}
+                          onClick={() => amount > 0 && onEquipBoost(boost.id)}
+                          disabled={amount <= 0}
+                        >
+                          <div className="destination-pack-card__top">
+                            <span className="daypack-choice__dot" aria-hidden="true" />
+                            <span className="destination-pack-card__count">{amount}x</span>
+                          </div>
+                          <div className="destination-pack-card__copy">
+                            <strong>{boost.name}</strong>
+                            <span>{boost.shortLabel}</span>
+                            <p>{boost.description}</p>
+                          </div>
+                          <span className="destination-pack-card__state">
+                            {active ? 'Packed' : amount > 0 ? 'Pack' : 'Empty'}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
 
                 <div className="destination-challenge-preview">
                   <div className="destination-challenge-preview__header">
                     <Gauge />
                     <div>
-                      <span>Stage Skill</span>
+                      <span>Run Feel</span>
                       <strong>{selected.run.challengeSummary}</strong>
                     </div>
                   </div>
@@ -195,15 +206,19 @@ export function DestinationScreen({
                   </div>
                 </div>
 
-                <div className="destination-hero-panel__actions">
-                  <div className="loadout-chip">
-                    <Backpack />
-                    <span>Ready</span>
-                    <strong>{equippedBoost?.shortLabel ?? 'No pack clipped'}</strong>
-                  </div>
+                <div
+                  className={`destination-hero-panel__actions${hasHelperChoices ? '' : ' destination-hero-panel__actions--run-only'}`}
+                >
+                  {hasHelperChoices && (
+                    <div className="loadout-chip">
+                      <Backpack />
+                      <span>Helper</span>
+                      <strong>{equippedBoost?.shortLabel ?? 'None'}</strong>
+                    </div>
+                  )}
                   <button type="button" className="button button--primary" onClick={onPlay}>
                     <Play />
-                    Start Run
+                    Run Route
                   </button>
                 </div>
               </div>
@@ -215,18 +230,18 @@ export function DestinationScreen({
           <section className="screen-card destination-sidebar__section">
             <div className="section-heading section-heading--compact destination-stop-header">
               <div>
-                <p className="eyebrow">Stage Map</p>
-                <h3>Pick an open sticker stop.</h3>
+                <p className="eyebrow">Route Board</p>
+                <h3>Choose a route.</h3>
               </div>
               <div className="destination-stop-summary">
                 <div className="summary-chip">
                   <Stamp />
-                  <span>Trail Stamps</span>
+                  <span>Clears</span>
                   <strong>{progress.totalWins}</strong>
                 </div>
                 <div className="summary-chip">
                   <BookOpen />
-                  <span>Snack Cards</span>
+                  <span>Cards</span>
                   <strong>{progress.unlockedRecipes.length}/{destinations.length}</strong>
                 </div>
               </div>
@@ -241,7 +256,7 @@ export function DestinationScreen({
                 const stateLabel = isSelected
                   ? isFreshStop
                     ? 'Next'
-                    : 'Live'
+                    : 'Selected'
                   : isFreshStop
                     ? 'New'
                     : unlocked
@@ -278,9 +293,9 @@ export function DestinationScreen({
                         </span>
                         <span className="destination-card__status">
                           {isFreshStop
-                            ? 'Ready for the first stamp'
+                            ? 'First clear ready'
                             : unlocked
-                              ? `${wins} stamp${wins === 1 ? '' : 's'}`
+                              ? `${wins} clear${wins === 1 ? '' : 's'}`
                               : destination.unlockHint}
                         </span>
                       </div>

@@ -50,24 +50,24 @@ function getFinishLabel(finishProgress: number, cannotLose: boolean) {
       return 'Bridge crossed';
     }
     if (finishProgress >= 0.82) {
-      return 'Warm lights ahead';
+      return 'Almost there';
     }
     if (finishProgress >= 0.48) {
-      return 'Rainbow glide';
+      return 'Halfway';
     }
-    return 'Gentle start';
+    return 'Start';
   }
 
   if (finishProgress >= 1) {
-    return 'Finish gate reached';
+    return 'Done';
   }
   if (finishProgress >= 0.82) {
-    return 'Final stretch';
+    return 'Almost there';
   }
   if (finishProgress >= 0.48) {
-        return 'Mid run';
+    return 'Halfway';
   }
-  return 'Starting line';
+  return 'Start';
 }
 
 export function RunScreen({
@@ -168,12 +168,12 @@ export function RunScreen({
             </div>
             <div className="run-hud__panel run-hud__panel--run">
               <Backpack />
-            <span className="eyebrow">Combo</span>
+              <span className="eyebrow">Stride</span>
               <strong>x{hud.chain} stride</strong>
-              <small>{cannotLose ? 'No losing here' : hud.boostLabel ?? 'No pack clipped'}</small>
+              <small>{cannotLose ? 'Safe run' : hud.boostLabel ?? 'No helper'}</small>
               {cannotLose ? (
                 <div className="run-paws run-paws--forever" aria-label="Forever clear">
-                  <span className="run-paws__forever">Forever clear</span>
+                  <span className="run-paws__forever">Safe clear</span>
                 </div>
               ) : (
                 <div className="run-paws" aria-label={`${hud.hearts} paws left`}>
@@ -190,7 +190,7 @@ export function RunScreen({
 
           <button type="button" className="button button--ghost" onClick={onAbort}>
             <DoorOpen />
-            Exit Run
+            Routes
           </button>
         </div>
 
@@ -205,16 +205,16 @@ export function RunScreen({
 
         <div className="run-bottombar">
           <div className="run-tip">
-            <span className="eyebrow">Stage Notes</span>
+            <span className="eyebrow">Run Note</span>
             <div className="run-focus">
-              <span>Level {destination.run.difficulty}</span>
+              <span>Lv. {destination.run.difficulty}</span>
               <span>{destination.run.skillFocus}</span>
             </div>
             <strong>{destination.run.trailNote}</strong>
             <div className="run-controls">
-              <span>A / Left</span>
-              <span>D / Right</span>
-              <span>Space / Tap</span>
+              <span>Left</span>
+              <span>Right</span>
+              <span>Hop</span>
             </div>
           </div>
         </div>
