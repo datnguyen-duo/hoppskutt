@@ -267,7 +267,8 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
                 roots. Even the in-game treats are Swedish for
                 &quot;toothbrush&quot;. These Purina Dentalife treats were a
                 part of Chloe&apos;s daily routine of &quot;brushing&quot;
-                before bedtime.
+                before bedtime. It was one of those tiny routines that made our
+                life with her feel so full.
               </p>
               <p>
                 This game is a small way to keep these memories alive.
