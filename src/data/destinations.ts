@@ -365,7 +365,7 @@ export const destinations: Destination[] = [
     country: 'Rainbow Bridge',
     name: 'Rainbow Bridge',
     routeLabel: 'Forever Road',
-    tagline: "Chloe's final road. No losing here.",
+    tagline: "Chloe's final road.",
     overview:
       "A soft rainbow run for Chloe's last day. Just lights, clouds, and love.",
     unlockHint: 'Clear Vietnam.',
