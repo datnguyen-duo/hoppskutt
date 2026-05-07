@@ -10,6 +10,46 @@ type DrillMusicProfile = {
   hatRolls: number[];
 };
 
+type RouteMusicAsset = {
+  src: string;
+  volume: number;
+};
+
+const routeMusicAssets: Partial<Record<DestinationId, RouteMusicAsset>> = {
+  maryland: {
+    src: '/assets/audio/town-theme-rpg.mp3',
+    volume: 0.38,
+  },
+  'moco-police-station': {
+    src: '/assets/audio/path-to-lake-land.ogg',
+    volume: 0.32,
+  },
+  'rhode-island': {
+    src: '/assets/audio/bossa-nova.mp3',
+    volume: 0.34,
+  },
+  colorado: {
+    src: '/assets/audio/next-to-you.mp3',
+    volume: 0.36,
+  },
+  greece: {
+    src: '/assets/audio/calamatiano-1924.ogg',
+    volume: 0.34,
+  },
+  sweden: {
+    src: '/assets/audio/bortglomda-valsen.ogg',
+    volume: 0.34,
+  },
+  vietnam: {
+    src: '/assets/audio/len-ngan-thanh-tung.ogg',
+    volume: 0.34,
+  },
+  'rainbow-bridge': {
+    src: '/assets/audio/invincible-loop.ogg',
+    volume: 0.3,
+  },
+};
+
 const routeMusicProfiles: Record<DestinationId, DrillMusicProfile> = {
   maryland: {
     bpm: 138,
@@ -73,8 +113,11 @@ class SoundManager {
   private context: AudioContext | null = null;
   private master: GainNode | null = null;
   private musicGain: GainNode | null = null;
+  private musicElement: HTMLAudioElement | null = null;
   private musicTimer: number | null = null;
+  private activeTrackSrc: string | null = null;
   private activeRouteMusic: DestinationId | null = null;
+  private pendingRouteMusic: DestinationId | null = null;
 
   private getLoopLength(routeId: DestinationId) {
     return (60 / routeMusicProfiles[routeId].bpm) * 8;
@@ -99,11 +142,21 @@ class SoundManager {
       this.musicGain.connect(this.master);
     }
 
-    if (this.context.state === 'suspended') {
-      void this.context.resume();
+    return this.context;
+  }
+
+  private resumeContext(context: AudioContext, onReady?: () => void) {
+    if (context.state !== 'suspended') {
+      onReady?.();
+      return;
     }
 
-    return this.context;
+    void context
+      .resume()
+      .then(() => {
+        onReady?.();
+      })
+      .catch(() => undefined);
   }
 
   private pulse(
@@ -113,12 +166,14 @@ class SoundManager {
     volume: number,
     type: SoundShape,
     delay = 0,
-    output: GainNode | null = this.master,
+    output?: GainNode | null,
   ) {
     const context = this.ensureContext();
-    if (!context || !output) {
+    const target = output ?? this.master;
+    if (!context || !target) {
       return;
     }
+    this.resumeContext(context);
 
     const oscillator = context.createOscillator();
     const gain = context.createGain();
@@ -134,7 +189,7 @@ class SoundManager {
     gain.gain.exponentialRampToValueAtTime(0.0001, stop);
 
     oscillator.connect(gain);
-    gain.connect(output);
+    gain.connect(target);
     oscillator.start(start);
     oscillator.stop(stop);
   }
@@ -143,13 +198,15 @@ class SoundManager {
     duration: number,
     volume: number,
     delay = 0,
-    output: GainNode | null = this.master,
+    output?: GainNode | null,
     cutoff = 3800,
   ) {
     const context = this.ensureContext();
-    if (!context || !output) {
+    const target = output ?? this.master;
+    if (!context || !target) {
       return;
     }
+    this.resumeContext(context);
 
     const frameCount = Math.max(1, Math.floor(context.sampleRate * duration));
     const buffer = context.createBuffer(1, frameCount, context.sampleRate);
@@ -174,7 +231,7 @@ class SoundManager {
     source.buffer = buffer;
     source.connect(filter);
     filter.connect(gain);
-    gain.connect(output);
+    gain.connect(target);
     source.start(start);
     source.stop(stop);
   }
@@ -185,12 +242,14 @@ class SoundManager {
     volume: number,
     type: SoundShape,
     delay = 0,
-    output: GainNode | null = this.master,
+    output?: GainNode | null,
   ) {
     const context = this.ensureContext();
-    if (!context || !output) {
+    const target = output ?? this.master;
+    if (!context || !target) {
       return;
     }
+    this.resumeContext(context);
 
     const oscillator = context.createOscillator();
     const filter = context.createBiquadFilter();
@@ -210,9 +269,48 @@ class SoundManager {
 
     oscillator.connect(filter);
     filter.connect(gain);
-    gain.connect(output);
+    gain.connect(target);
     oscillator.start(start);
     oscillator.stop(stop);
+  }
+
+  private startMusicLoop(routeId: DestinationId) {
+    if (!this.musicGain || typeof window === 'undefined') {
+      return;
+    }
+
+    this.scheduleDrillLoop(routeId);
+    const intervalMs = this.getLoopLength(routeId) * 1000;
+    this.musicTimer = window.setInterval(() => {
+      this.scheduleDrillLoop(routeId);
+    }, intervalMs);
+  }
+
+  private startAssetMusic(routeId: DestinationId, asset: RouteMusicAsset) {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    if (
+      this.activeRouteMusic === routeId &&
+      this.musicElement &&
+      this.activeTrackSrc === asset.src
+    ) {
+      this.musicElement.volume = asset.volume;
+      void this.musicElement.play().catch(() => undefined);
+      return;
+    }
+
+    this.stopRunMusic();
+
+    const audio = new Audio(asset.src);
+    audio.loop = true;
+    audio.preload = 'auto';
+    audio.volume = asset.volume;
+    this.musicElement = audio;
+    this.activeTrackSrc = asset.src;
+    this.activeRouteMusic = routeId;
+    void audio.play().catch(() => undefined);
   }
 
   private bass808(frequency: number, duration: number, volume: number, delay = 0) {
@@ -220,6 +318,7 @@ class SoundManager {
     if (!context || !this.musicGain) {
       return;
     }
+    this.resumeContext(context);
 
     const sine = context.createOscillator();
     const bite = context.createOscillator();
@@ -300,6 +399,12 @@ class SoundManager {
   }
 
   startRunMusic(routeId: DestinationId) {
+    const asset = routeMusicAssets[routeId];
+    if (asset) {
+      this.startAssetMusic(routeId, asset);
+      return;
+    }
+
     const context = this.ensureContext();
     if (!context || !this.musicGain || typeof window === 'undefined') {
       return;
@@ -311,19 +416,51 @@ class SoundManager {
 
     this.stopRunMusic();
     this.activeRouteMusic = routeId;
-    this.scheduleDrillLoop(routeId);
-    const intervalMs = this.getLoopLength(routeId) * 1000;
-    this.musicTimer = window.setInterval(() => {
-      this.scheduleDrillLoop(routeId);
-    }, intervalMs);
+    this.pendingRouteMusic = routeId;
+    this.resumeContext(context, () => {
+      if (this.pendingRouteMusic !== routeId || this.activeRouteMusic !== routeId) {
+        return;
+      }
+
+      this.pendingRouteMusic = null;
+      this.startMusicLoop(routeId);
+    });
+  }
+
+  pauseRunMusic() {
+    if (this.musicElement) {
+      this.musicElement.pause();
+      return;
+    }
+
+    if (typeof window !== 'undefined' && this.musicTimer !== null) {
+      window.clearInterval(this.musicTimer);
+    }
+    this.musicTimer = null;
+    this.pendingRouteMusic = null;
+  }
+
+  resumeRunMusic(routeId: DestinationId) {
+    this.startRunMusic(routeId);
   }
 
   stopRunMusic() {
     if (typeof window !== 'undefined' && this.musicTimer !== null) {
       window.clearInterval(this.musicTimer);
     }
+    if (this.musicElement) {
+      this.musicElement.pause();
+      try {
+        this.musicElement.currentTime = 0;
+      } catch {
+        // Some browsers reject seeking before metadata loads.
+      }
+    }
+    this.musicElement = null;
+    this.activeTrackSrc = null;
     this.musicTimer = null;
     this.activeRouteMusic = null;
+    this.pendingRouteMusic = null;
   }
 
   playMenu() {

@@ -1795,7 +1795,7 @@ export function createRunnerGame({
       window.cancelAnimationFrame(animationFrame);
       animationFrame = null;
     }
-    soundManager.stopRunMusic();
+    soundManager.pauseRunMusic();
   }
 
   function resume() {
@@ -1805,7 +1805,7 @@ export function createRunnerGame({
 
     paused = false;
     elapsed = performance.now() * 0.001;
-    soundManager.startRunMusic(destination.id);
+    soundManager.resumeRunMusic(destination.id);
     animationFrame = window.requestAnimationFrame(step);
   }
 

@@ -305,6 +305,46 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
                 <li>OpenAI Codex</li>
                 <li>OpenAI image generation</li>
                 <li>Kenney UI Pack (CC0)</li>
+                <li>
+                  <a href="https://opengameart.org/content/town-theme-rpg" target="_blank" rel="noreferrer">
+                    Town Theme RPG by cynicmusic (CC0)
+                  </a>
+                </li>
+                <li>
+                  <a href="https://opengameart.org/content/path-to-lake-land" target="_blank" rel="noreferrer">
+                    Path to Lake Land by HorrorPen (CC BY 3.0)
+                  </a>
+                </li>
+                <li>
+                  <a href="https://opengameart.org/content/bossa-nova" target="_blank" rel="noreferrer">
+                    Bossa Nova by Joth (CC0)
+                  </a>
+                </li>
+                <li>
+                  <a href="https://opengameart.org/content/next-to-you" target="_blank" rel="noreferrer">
+                    Next to You by Joth (CC0)
+                  </a>
+                </li>
+                <li>
+                  <a href="https://commons.wikimedia.org/wiki/File:Calamatiano_(1924).ogg" target="_blank" rel="noreferrer">
+                    Calamatiano, performed by Sotirios Stasinopoulos (public domain)
+                  </a>
+                </li>
+                <li>
+                  <a href="https://commons.wikimedia.org/wiki/File:Bortgl%C3%B6mda_valsen_-_SMV_-_SVA_BA_0016_09.wav" target="_blank" rel="noreferrer">
+                    Bortglomda valsen by Justus Gille (CC0)
+                  </a>
+                </li>
+                <li>
+                  <a href="https://commons.wikimedia.org/wiki/File:Len_ngan_-_Thanh_Tung.ogg" target="_blank" rel="noreferrer">
+                    Len ngan by Nguyen Thanh Tung (CC BY 3.0)
+                  </a>
+                </li>
+                <li>
+                  <a href="https://opengameart.org/content/invincibility-loop" target="_blank" rel="noreferrer">
+                    Invincibility Loop by Zane Little Music Sun (CC0)
+                  </a>
+                </li>
                 <li>Lucide icons</li>
                 <li>Playwright</li>
                 <li>React</li>
