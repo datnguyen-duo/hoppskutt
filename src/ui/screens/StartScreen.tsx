@@ -274,7 +274,7 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
                 This game is a small way to keep these memories alive.
               </p>
               <p>
-                RIP Chloe 5/4/2026. I love and miss you everyday.
+                RIP Chloe. I love and miss you everyday.
               </p>
             </div>
           )}
@@ -326,23 +326,23 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
                   </a>
                 </li>
                 <li>
-                  <a href="https://commons.wikimedia.org/wiki/File:Calamatiano_(1924).ogg" target="_blank" rel="noreferrer">
-                    Calamatiano, performed by Sotirios Stasinopoulos (public domain)
+                  <a href="https://pixabay.com/music/folk-traditional-greek-music-165000/" target="_blank" rel="noreferrer">
+                    Traditional greek music by ckotty3 (Pixabay Content License)
                   </a>
                 </li>
                 <li>
-                  <a href="https://commons.wikimedia.org/wiki/File:Bortgl%C3%B6mda_valsen_-_SMV_-_SVA_BA_0016_09.wav" target="_blank" rel="noreferrer">
-                    Bortglomda valsen by Justus Gille (CC0)
+                  <a href="https://commons.wikimedia.org/wiki/File:G%C3%A5ngl%C3%A5t_-_SMV_-_MMF7_0662_08.wav" target="_blank" rel="noreferrer">
+                    Ganglat - SMV - MMF7 0662 08 by Joel Jansson (CC0)
                   </a>
                 </li>
                 <li>
-                  <a href="https://commons.wikimedia.org/wiki/File:Len_ngan_-_Thanh_Tung.ogg" target="_blank" rel="noreferrer">
-                    Len ngan by Nguyen Thanh Tung (CC BY 3.0)
+                  <a href="https://pixabay.com/music/world-vietnam-bamboo-flute-143601/" target="_blank" rel="noreferrer">
+                    Vietnam Bamboo Flute by VPRODMUSIC_Asia_BGM (Pixabay Content License)
                   </a>
                 </li>
                 <li>
-                  <a href="https://opengameart.org/content/invincibility-loop" target="_blank" rel="noreferrer">
-                    Invincibility Loop by Zane Little Music Sun (CC0)
+                  <a href="https://opengameart.org/content/heavenly-loop" target="_blank" rel="noreferrer">
+                    Heavenly Loop by isaiah658 (CC0)
                   </a>
                 </li>
                 <li>Lucide icons</li>

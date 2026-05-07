@@ -3581,3 +3581,316 @@ h3,
     transform: translateY(-4px);
   }
 }
+
+@supports (height: 100dvh) {
+  .app-shell,
+  .start-landing,
+  .run-screen {
+    min-height: 100dvh;
+  }
+
+  .start-menu-drawer,
+  .run-screen__canvas {
+    height: 100dvh;
+  }
+}
+
+@media (max-width: 700px) {
+  .destination-route-track--top {
+    width: 100%;
+    margin-inline: -0.08rem;
+    padding: 0.08rem 0.08rem 0.45rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-inline: contain;
+    scrollbar-width: none;
+    scroll-snap-type: x proximity;
+  }
+
+  .destination-route-track--top::-webkit-scrollbar {
+    display: none;
+  }
+
+  .destination-route-track--top .destination-stop-list {
+    grid-auto-columns: minmax(8.4rem, 42vw);
+    grid-auto-flow: column;
+    grid-template-columns: none;
+    width: max-content;
+    min-width: 100%;
+  }
+
+  .destination-route-track--top .destination-stop-card {
+    gap: 0.42rem;
+    min-height: 0;
+    padding: 2.05rem 0.52rem 0.52rem;
+    scroll-snap-align: start;
+  }
+
+  .destination-route-track--top .destination-stop-card__node {
+    top: 0.45rem;
+    left: 0.45rem;
+    padding: 0.18rem 0.38rem;
+    font-size: 0.62rem;
+  }
+
+  .destination-route-track--top .destination-stop-card__art .postcard-scene--compact {
+    aspect-ratio: 1.62 / 1;
+  }
+
+  .destination-route-track--top .destination-card__challenge {
+    display: none;
+  }
+
+  .destination-route-track--top .destination-stop-card__copy strong {
+    font-size: 0.9rem;
+    line-height: 1.04;
+  }
+
+  .destination-route-track--top .destination-stop-card__state {
+    padding: 0.24rem 0.42rem;
+    font-size: 0.62rem;
+  }
+
+  .destination-hero-panel__art {
+    min-height: clamp(16rem, 48svh, 20rem);
+  }
+
+  .run-screen {
+    overflow: hidden;
+  }
+
+  .run-overlay {
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    padding: max(0.55rem, env(safe-area-inset-top)) max(0.55rem, env(safe-area-inset-right)) max(0.55rem, env(safe-area-inset-bottom)) max(0.55rem, env(safe-area-inset-left));
+  }
+
+  .run-topbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.42rem;
+    align-items: start;
+  }
+
+  .run-hud {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.36rem;
+  }
+
+  .run-hud__panel,
+  .run-hud__panel--score,
+  .run-hud__panel--route,
+  .run-hud__panel--run {
+    grid-column: auto;
+    width: auto;
+    min-width: 0;
+    padding: 0.46rem 0.48rem;
+  }
+
+  .run-hud__panel > svg {
+    width: 0.82rem;
+    height: 0.82rem;
+    margin-bottom: 0.08rem;
+  }
+
+  .run-hud__panel .eyebrow {
+    font-size: 0.56rem;
+    line-height: 1.05;
+  }
+
+  .run-hud__panel strong {
+    margin-top: 0.1rem;
+    font-size: 0.82rem;
+    line-height: 1.08;
+  }
+
+  .run-hud__panel small {
+    display: none;
+  }
+
+  .run-progress {
+    margin-top: 0.28rem;
+  }
+
+  .run-progress__track {
+    height: 0.42rem;
+  }
+
+  .run-paws {
+    gap: 0.22rem;
+    margin-top: 0.28rem;
+  }
+
+  .run-paws__dot {
+    width: 0.56rem;
+    height: 0.56rem;
+    border-width: 1px;
+  }
+
+  .run-paws__forever {
+    min-height: auto;
+    padding: 0.08rem 0.3rem;
+    font-size: 0.58rem;
+  }
+
+  .run-actions {
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .run-actions .button {
+    width: 2.72rem;
+    min-width: 2.72rem;
+    height: 2.72rem;
+    min-height: 2.72rem;
+    padding: 0;
+    font-size: 0;
+  }
+
+  .run-actions .button svg {
+    width: 1.08rem;
+    height: 1.08rem;
+    margin-right: 0;
+  }
+
+  .run-bottombar {
+    align-self: end;
+  }
+
+  .run-tip {
+    width: min(100%, 23rem);
+    max-width: calc(100vw - 1.1rem);
+    padding: 0.5rem 0.55rem;
+  }
+
+  .run-tip .eyebrow,
+  .run-tip strong {
+    display: none;
+  }
+
+  .run-focus {
+    margin-top: 0;
+    gap: 0.3rem;
+  }
+
+  .run-focus span {
+    font-size: 0.68rem;
+    line-height: 1.1;
+  }
+
+  .run-controls {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.28rem;
+    margin-top: 0.38rem;
+  }
+
+  .run-controls span {
+    display: grid;
+    min-height: 1.8rem;
+    place-items: center;
+    padding: 0.24rem 0.18rem;
+    font-size: 0.66rem;
+  }
+
+  .run-popups {
+    bottom: calc(5.7rem + env(safe-area-inset-bottom));
+    width: min(20rem, calc(100vw - 1.1rem));
+  }
+
+  .hud-pop {
+    padding: 0.55rem 0.68rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .destination-topbar .topbar__actions .button {
+    padding-inline: 0.62rem;
+  }
+
+  .destination-route-track--top .destination-stop-list {
+    grid-auto-columns: minmax(7.6rem, 44vw);
+  }
+
+  .reward-card {
+    padding: 0.72rem;
+  }
+
+  .reward-card__hero-clear {
+    max-width: calc(100% - 1.4rem);
+    text-align: center;
+  }
+}
+
+@media (max-width: 1199px) {
+  .run-bottombar {
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .run-tip {
+    margin-inline: auto;
+  }
+}
+
+@media (max-height: 520px) and (orientation: landscape) {
+  .start-landing__lede {
+    display: none;
+  }
+
+  .start-landing__hero {
+    gap: 0.7rem;
+  }
+
+  .destination-topbar__main {
+    grid-template-columns: minmax(12rem, 0.7fr) minmax(0, 1fr);
+    align-items: end;
+  }
+
+  .destination-topbar__copy h2 {
+    font-size: clamp(1.8rem, 6vw, 2.4rem);
+  }
+
+  .destination-topbar__copy p:not(.eyebrow) {
+    display: none;
+  }
+
+  .destination-topbar .topbar__actions {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .destination-topbar .topbar__actions .button {
+    min-height: 2.85rem;
+    padding-block: 0.48rem;
+  }
+
+  .destination-route-track--top .destination-stop-list {
+    grid-auto-columns: minmax(8.8rem, 24vw);
+  }
+
+  .destination-route-track--top .destination-stop-card {
+    gap: 0.34rem;
+    padding: 0.52rem;
+  }
+
+  .destination-route-track--top .destination-stop-card__node {
+    position: static;
+    justify-self: start;
+  }
+
+  .destination-route-track--top .destination-stop-card__art {
+    display: none;
+  }
+
+  .run-overlay {
+    padding: 0.42rem;
+  }
+
+  .run-tip {
+    display: none;
+  }
+
+  .run-popups {
+    bottom: 0.55rem;
+  }
+}

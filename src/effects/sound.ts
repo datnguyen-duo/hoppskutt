@@ -33,19 +33,19 @@ const routeMusicAssets: Partial<Record<DestinationId, RouteMusicAsset>> = {
     volume: 0.36,
   },
   greece: {
-    src: '/assets/audio/calamatiano-1924.ogg',
-    volume: 0.34,
+    src: '/assets/audio/traditional-greek-music.mp3',
+    volume: 0.3,
   },
   sweden: {
-    src: '/assets/audio/bortglomda-valsen.ogg',
+    src: '/assets/audio/ganglat-smv-mmf7-0662-08.ogg',
     volume: 0.34,
   },
   vietnam: {
-    src: '/assets/audio/len-ngan-thanh-tung.ogg',
-    volume: 0.34,
+    src: '/assets/audio/vietnam-bamboo-flute.mp3',
+    volume: 0.32,
   },
   'rainbow-bridge': {
-    src: '/assets/audio/invincible-loop.ogg',
+    src: '/assets/audio/heavenly-loop.ogg',
     volume: 0.3,
   },
 };
