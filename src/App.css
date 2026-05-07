@@ -840,6 +840,12 @@ p {
   margin-bottom: 0;
 }
 
+.destination-topbar__main {
+  display: grid;
+  gap: 0.8rem;
+  align-items: center;
+}
+
 .destination-topbar__copy {
   display: grid;
   gap: 0.58rem;
@@ -1141,6 +1147,11 @@ p {
   overflow: hidden;
 }
 
+.destination-route-track--top {
+  padding: 0;
+  overflow: visible;
+}
+
 .destination-route-track .destination-stop-header {
   display: grid;
   gap: 0.7rem;
@@ -1345,6 +1356,10 @@ p {
   gap: 0.65rem;
 }
 
+.destination-pack-grid.destination-pack-grid--hero {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+}
+
 .empty-helper-note {
   display: grid;
   gap: 0.14rem;
@@ -1376,6 +1391,13 @@ p {
   text-align: left;
 }
 
+.destination-pack-grid--hero .destination-pack-card {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  min-height: 0;
+  padding: 0.64rem;
+}
+
 .destination-pack-card.is-active {
   border-color: color-mix(in srgb, var(--boost-accent) 42%, #43675a);
   box-shadow: 0 12px 20px rgba(73, 90, 84, 0.08);
@@ -1392,6 +1414,12 @@ p {
   align-items: center;
 }
 
+.destination-pack-grid--hero .destination-pack-card__top {
+  display: grid;
+  gap: 0.24rem;
+  justify-items: center;
+}
+
 .destination-pack-card__count {
   color: rgba(32, 49, 43, 0.58);
   font-size: 0.78rem;
@@ -1403,10 +1431,20 @@ p {
 .destination-pack-card__copy {
   display: grid;
   gap: 0.18rem;
+  min-width: 0;
+}
+
+.destination-pack-grid--hero .destination-pack-card__copy {
+  gap: 0.08rem;
 }
 
 .destination-pack-card__copy strong {
   font-size: 0.96rem;
+}
+
+.destination-pack-grid--hero .destination-pack-card__copy strong {
+  font-size: 0.92rem;
+  line-height: 1.1;
 }
 
 .destination-pack-card__copy span {
@@ -1419,6 +1457,16 @@ p {
   color: var(--brand-muted);
   font-size: 0.84rem;
   line-height: 1.35;
+}
+
+.destination-pack-grid--hero .destination-pack-card__copy p {
+  display: none;
+}
+
+.destination-pack-grid--hero .destination-pack-card__state {
+  align-self: center;
+  padding: 0.32rem 0.48rem;
+  white-space: nowrap;
 }
 
 .board-layout {
@@ -2092,7 +2140,7 @@ p {
   }
 
   .destination-hub {
-    grid-template-columns: minmax(0, 1.45fr) minmax(19.5rem, 0.72fr);
+    grid-template-columns: 1fr;
     align-items: start;
   }
 
@@ -2123,14 +2171,27 @@ p {
     grid-template-columns: 1fr;
   }
 
+  .destination-route-track--top .destination-stop-list {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 10.5rem), 1fr));
+  }
+
   .destination-stop-card {
     grid-template-columns: minmax(5.5rem, 0.34fr) minmax(0, 1fr);
     align-items: stretch;
   }
 
+  .destination-route-track--top .destination-stop-card {
+    grid-template-columns: 1fr;
+  }
+
   .destination-stop-card__art .postcard-scene--compact {
     height: 100%;
     aspect-ratio: auto;
+  }
+
+  .destination-route-track--top .destination-stop-card__art .postcard-scene--compact {
+    height: auto;
+    aspect-ratio: 2.05 / 1;
   }
 
   .board-feature__main {
@@ -2583,12 +2644,11 @@ h3,
 }
 
 .destination-topbar {
-  position: sticky;
-  top: 0;
-  z-index: 12;
-  grid-template-columns: minmax(14rem, 1fr) minmax(0, 26rem);
+  position: relative;
+  z-index: 5;
+  grid-template-columns: 1fr;
   gap: 0.8rem;
-  align-items: center;
+  align-items: stretch;
   padding: 0.68rem;
   border: 3px solid rgba(16, 23, 38, 0.88);
   border-radius: 8px;
@@ -2597,6 +2657,10 @@ h3,
     rgba(239, 255, 221, 0.96);
   box-shadow: 6px 6px 0 rgba(16, 23, 38, 0.14);
   backdrop-filter: blur(8px);
+}
+
+.destination-topbar__main {
+  grid-template-columns: minmax(14rem, 1fr) minmax(0, 26rem);
 }
 
 .destination-topbar__copy h2 {
@@ -2769,6 +2833,10 @@ h3,
     #fff5cd;
 }
 
+.destination-route-track--top {
+  background: transparent;
+}
+
 .destination-route-track .destination-stop-list {
   position: relative;
 }
@@ -2861,7 +2929,7 @@ h3,
   }
 
   .destination-route-track .destination-stop-list {
-    grid-template-columns: repeat(7, minmax(9.4rem, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     padding-bottom: 0.35rem;
   }
 
@@ -2879,6 +2947,10 @@ h3,
   .destination-topbar {
     grid-template-columns: 1fr;
     align-items: start;
+  }
+
+  .destination-topbar__main {
+    grid-template-columns: 1fr;
   }
 
   .destination-topbar .topbar__actions {
@@ -3298,6 +3370,10 @@ h3,
     grid-template-columns: 1fr;
     gap: 0.55rem;
     padding: 0.62rem;
+  }
+
+  .destination-topbar__main {
+    gap: 0.55rem;
   }
 
   .destination-topbar__copy {

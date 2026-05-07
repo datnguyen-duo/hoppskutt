@@ -18,6 +18,13 @@ const routeMusicProfiles: Record<DestinationId, DrillMusicProfile> = {
     bass: [0, -5, -2, -7],
     hatRolls: [7],
   },
+  'moco-police-station': {
+    bpm: 140,
+    root: 151.72,
+    lead: [12, 10, 14, 7, 12, 17, 14, 10],
+    bass: [0, -5, -3, -7],
+    hatRolls: [4, 7],
+  },
   'rhode-island': {
     bpm: 142,
     root: 155.56,

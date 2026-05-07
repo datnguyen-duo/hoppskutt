@@ -187,7 +187,7 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
             onClick={() => openSection('credits')}
           >
             <BookOpen />
-            About
+            Credits
           </button>
           <button
             type="button"
@@ -254,8 +254,26 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
             <div className="start-menu-panel">
               <p className="eyebrow">Story</p>
               <p>
-                Chloe gets one more bright arcade trip, built from family places,
-                little jokes, and familiar details.
+                I started building this game in April 2026 to honor Chloe, my
+                favorite trucker, and the adventures that we&apos;ve been on
+                together. We&apos;ve taken Chloe to over 20 states and parts of
+                Canada. She has walked through and woken up in some of the most
+                beautiful places in the world.
+              </p>
+              <p>
+                The name Hoppskutt was inspired by the Swedish words
+                &quot;hopp&quot; and &quot;skutt,&quot; meaning &quot;hop&quot;
+                or &quot;jump&quot; to pay homage to her &quot;Swedish&quot;
+                roots. Even the in-game treats are Swedish for
+                &quot;toothbrush&quot;. These Purina Dentalife treats were a
+                part of Chloe&apos;s daily routine of &quot;brushing&quot;
+                before bedtime.
+              </p>
+              <p>
+                This game is a small way to keep these memories alive.
+              </p>
+              <p>
+                RIP Chloe 5/4/2026. I love and miss you everyday.
               </p>
             </div>
           )}
@@ -263,14 +281,25 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
           {menuSection === 'memory' && (
             <div className="start-menu-panel">
               <p className="eyebrow">Chloe</p>
-              <p>Her seat, her collar, her road trip.</p>
-              <p>A small place for the details only the family knows.</p>
+              <p>
+                Chloe is part Lab, Pointer and Rottweiler and 100% princess.
+                She&apos;s the most gentle, loving and sweetest dog ever. But
+                don&apos;t let that fool you - she will hustle you to give her
+                food by targeting the weakest link at the dinner table. She is
+                the type of dog to demand attention from everyone in the room
+                but still cuddle you when you&apos;re sad. She&apos;s
+                one-of-a-kind and a perfect mix of goofy and royalty.
+              </p>
             </div>
           )}
 
           {menuSection === 'credits' && (
             <div className="start-menu-panel">
-              <p className="eyebrow">About</p>
+              <p className="eyebrow">Credits</p>
+              <p>
+                Made for Chloe with reference photography, generated game art,
+                open assets, and a lot of love.
+              </p>
               <ul className="start-menu-resources">
                 <li>OpenAI Codex</li>
                 <li>OpenAI image generation</li>

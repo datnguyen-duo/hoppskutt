@@ -19,7 +19,10 @@ test('homepage loads and opens the destination board', async ({ page }) => {
   ).toBeVisible();
   await expect(page.locator('.destination-hero-panel').getByText('Lv. 1')).toBeVisible();
   await expect(page.locator('.destination-hero-panel__copy p')).toHaveCount(1);
-  await expect(page.getByRole('heading', { name: 'All routes.' })).toBeVisible();
+  await expect(page.locator('.destination-topbar .destination-stop-card')).toHaveCount(8);
+  await expect(
+    page.locator('.destination-topbar .destination-stop-card[aria-current="true"]'),
+  ).toContainText('Home Greenway');
   await expect(
     page.locator('.destination-challenge-preview__tips').getByText('Path right', {
       exact: true,

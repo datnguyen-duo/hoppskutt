@@ -129,6 +129,101 @@ function makeBuoy(color: string) {
   return buoy;
 }
 
+function makeStationSign(accent: string, secondary: string) {
+  const sign = new THREE.Group();
+  const postMaterial = makeMaterial('#8b5a3b');
+  const postA = new THREE.Mesh(new THREE.BoxGeometry(0.16, 1.16, 0.16), postMaterial);
+  const postB = postA.clone();
+  const panel = new THREE.Mesh(
+    new THREE.BoxGeometry(1.42, 0.72, 0.14),
+    makeMaterial(accent, {
+      emissive: new THREE.Color(accent).multiplyScalar(0.05),
+    }),
+  );
+  const stripe = new THREE.Mesh(
+    new THREE.BoxGeometry(1.12, 0.08, 0.16),
+    makeMaterial(secondary, {
+      emissive: new THREE.Color(secondary).multiplyScalar(0.14),
+    }),
+  );
+  postA.position.set(-0.72, 0.58, 0);
+  postB.position.set(0.72, 0.58, 0);
+  panel.position.y = 0.94;
+  stripe.position.set(0, 1.08, 0.08);
+  sign.add(postA, postB, panel, stripe);
+  return sign;
+}
+
+function makeStationBeacon(blue: string, red: string) {
+  const beacon = new THREE.Group();
+  const pole = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.05, 0.05, 1.06, 8),
+    makeMaterial('#38444c'),
+  );
+  const lightBar = new THREE.Group();
+  const blueLens = new THREE.Mesh(
+    new THREE.BoxGeometry(0.3, 0.18, 0.26),
+    makeMaterial(blue, {
+      emissive: new THREE.Color(blue).multiplyScalar(0.32),
+    }),
+  );
+  const redLens = new THREE.Mesh(
+    new THREE.BoxGeometry(0.3, 0.18, 0.26),
+    makeMaterial(red, {
+      emissive: new THREE.Color(red).multiplyScalar(0.28),
+    }),
+  );
+  const base = new THREE.Mesh(
+    new THREE.BoxGeometry(0.76, 0.08, 0.34),
+    makeMaterial('#152638'),
+  );
+  pole.position.y = 0.53;
+  blueLens.position.x = -0.17;
+  redLens.position.x = 0.17;
+  lightBar.position.y = 1.12;
+  lightBar.add(base, blueLens, redLens);
+  beacon.add(pole, lightBar);
+  beacon.userData.lightBar = lightBar;
+  return beacon;
+}
+
+function makeStationCruiser(accent: string, red: string) {
+  const cruiser = new THREE.Group();
+  const body = new THREE.Mesh(
+    new THREE.BoxGeometry(1.28, 0.34, 0.64),
+    makeMaterial('#f5f5ec', {
+      emissive: new THREE.Color('#f5f5ec').multiplyScalar(0.04),
+    }),
+  );
+  const cabin = new THREE.Mesh(
+    new THREE.BoxGeometry(0.62, 0.28, 0.5),
+    makeMaterial('#2f5368'),
+  );
+  const stripe = new THREE.Mesh(
+    new THREE.BoxGeometry(1.18, 0.08, 0.04),
+    makeMaterial(accent),
+  );
+  const lightA = new THREE.Mesh(
+    new THREE.BoxGeometry(0.18, 0.08, 0.12),
+    makeMaterial(accent, {
+      emissive: new THREE.Color(accent).multiplyScalar(0.24),
+    }),
+  );
+  const lightB = new THREE.Mesh(
+    new THREE.BoxGeometry(0.18, 0.08, 0.12),
+    makeMaterial(red, {
+      emissive: new THREE.Color(red).multiplyScalar(0.22),
+    }),
+  );
+  body.position.y = 0.24;
+  cabin.position.y = 0.52;
+  stripe.position.set(0, 0.28, 0.34);
+  lightA.position.set(-0.1, 0.72, 0);
+  lightB.position.set(0.1, 0.72, 0);
+  cruiser.add(body, cabin, stripe, lightA, lightB);
+  return cruiser;
+}
+
 function makeCloudCluster(color: string) {
   const cloud = new THREE.Group();
   const material = makeMaterial(color, {
@@ -304,6 +399,19 @@ export function createRouteScene(
     root.add(line);
   }
 
+  if (destination.id === 'moco-police-station') {
+    const crosswalkMaterial = new THREE.MeshBasicMaterial({
+      color: '#fff8df',
+      transparent: true,
+      opacity: 0.74,
+    });
+    for (let index = 0; index < 7; index += 1) {
+      const stripe = new THREE.Mesh(new THREE.BoxGeometry(5.8, 0.022, 0.2), crosswalkMaterial);
+      stripe.position.set(0, 0.285, -21.4 + index * 0.52);
+      root.add(stripe);
+    }
+  }
+
   const context = new THREE.Group();
 
   if (destination.id === 'maryland') {
@@ -322,6 +430,39 @@ export function createRouteScene(
       buoy.position.y = Math.sin(elapsed * 2.2) * 0.06;
     });
     context.add(reedsLeft, reedsRight, post, buoy);
+  }
+
+  if (destination.id === 'moco-police-station') {
+    const sign = makeStationSign(destination.theme.accent, destination.theme.secondary);
+    sign.position.set(-7, 0, -15.6);
+    sign.rotation.y = 0.2;
+
+    const beaconLeft = makeStationBeacon(destination.theme.accent, destination.theme.decoB);
+    beaconLeft.position.set(-6.7, 0, -23.4);
+    const beaconRight = makeStationBeacon(destination.theme.accent, destination.theme.decoB);
+    beaconRight.position.set(6.8, 0, -18.8);
+
+    const cruiser = makeStationCruiser(destination.theme.accent, destination.theme.decoB);
+    cruiser.position.set(6.9, 0, -13.2);
+    cruiser.rotation.y = -0.42;
+
+    const curbBlock = new THREE.Mesh(
+      new THREE.BoxGeometry(1.4, 0.32, 0.42),
+      makeMaterial(destination.theme.obstacleAlt, {
+        emissive: new THREE.Color(destination.theme.obstacleAlt).multiplyScalar(0.05),
+      }),
+    );
+    curbBlock.position.set(-6.7, 0.16, -27.6);
+
+    animated.push((elapsed) => {
+      const leftBar = beaconLeft.userData.lightBar as THREE.Object3D;
+      const rightBar = beaconRight.userData.lightBar as THREE.Object3D;
+      leftBar.rotation.y = Math.sin(elapsed * 3.6) * 0.32;
+      rightBar.rotation.y = Math.sin(elapsed * 3.6 + Math.PI) * 0.32;
+      cruiser.position.y = Math.sin(elapsed * 1.6) * 0.025;
+    });
+
+    context.add(sign, beaconLeft, beaconRight, cruiser, curbBlock);
   }
 
   if (destination.id === 'rhode-island') {

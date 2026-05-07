@@ -1,5 +1,6 @@
 export const destinationIds = [
   'maryland',
+  'moco-police-station',
   'rhode-island',
   'colorado',
   'greece',
@@ -10,6 +11,7 @@ export const destinationIds = [
 
 export const recipeIds = [
   'maryland-crab-cake',
+  'moco-station-badge',
   'rhode-island-clam-cakes',
   'colorado-burrito',
   'greece-spanakopita',

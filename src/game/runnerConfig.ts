@@ -143,6 +143,63 @@ const boardwalkPatterns: Record<RoutePhase, RunnerPattern[]> = {
   ],
 };
 
+const stationLoopPatterns: Record<RoutePhase, RunnerPattern[]> = {
+  warmup: [
+    {
+      obstacles: [{ lane: -1, kind: 'hurdle' }],
+      tandborste: [{ lane: -1, y: 1.12 }, { lane: 0 }],
+    },
+    {
+      obstacles: [{ lane: 1, kind: 'crate' }],
+      tandborste: [{ lane: -1 }, { lane: 0, z: -0.28 }],
+    },
+    {
+      obstacles: [],
+      tandborste: [{ lane: -1, z: -0.3 }, { lane: 0 }, { lane: 1, z: -0.3 }],
+    },
+    {
+      obstacles: [{ lane: 0, kind: 'hurdle' }],
+      tandborste: [{ lane: 0, y: 1.18 }, { lane: 1 }],
+    },
+  ],
+  middle: [
+    {
+      obstacles: [{ lane: -1, kind: 'crate' }],
+      tandborste: [{ lane: 0 }, { lane: 1, z: -0.28 }],
+    },
+    {
+      obstacles: [{ lane: 1, kind: 'hurdle' }],
+      tandborste: [{ lane: -1 }, { lane: 1, y: 1.18 }],
+    },
+    {
+      obstacles: [{ lane: 0, kind: 'bench' }],
+      tandborste: [{ lane: -1 }, { lane: 1 }],
+    },
+    {
+      obstacles: [{ lane: -1, kind: 'hurdle' }, { lane: 1, kind: 'crate' }],
+      tandborste: [{ lane: 0 }, { lane: -1, y: 1.16 }],
+    },
+  ],
+  final: [
+    {
+      obstacles: [{ lane: -1, kind: 'crate' }, { lane: 0, kind: 'hurdle' }],
+      tandborste: [{ lane: 0, y: 1.18 }, { lane: 1 }],
+    },
+    {
+      obstacles: [{ lane: 1, kind: 'crate' }, { lane: 0, kind: 'hurdle' }],
+      tandborste: [{ lane: -1 }, { lane: 0, y: 1.18 }],
+    },
+    {
+      obstacles: [{ lane: -1, kind: 'bench' }],
+      tandborste: [{ lane: 0 }, { lane: 1, z: -0.28 }],
+    },
+    {
+      obstacles: [{ lane: 1, kind: 'bench' }],
+      tandborste: [{ lane: -1, z: -0.28 }, { lane: 0 }],
+    },
+  ],
+};
+
 const alternatingPatterns: Record<RoutePhase, RunnerPattern[]> = {
   warmup: [
     {
@@ -535,6 +592,16 @@ export const routePatternSets = {
       final: [1.24, 1.42],
     },
     patterns: boardwalkPatterns,
+  },
+  'moco-police-station': {
+    styleBias: 'alternating',
+    selectionMode: 'cycle',
+    spawnRanges: {
+      warmup: [1.08, 1.24],
+      middle: [0.96, 1.1],
+      final: [0.84, 0.98],
+    },
+    patterns: stationLoopPatterns,
   },
   'rhode-island': {
     styleBias: 'breezy',

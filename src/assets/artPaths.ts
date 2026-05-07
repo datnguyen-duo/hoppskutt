@@ -7,6 +7,7 @@ export const heroPortraitArtPath = `${stickerArcadeBasePath}/chloe-hero-sticker-
 
 export const postcardArtPaths: Record<DestinationId, string> = {
   maryland: `${stickerArcadeBasePath}/maryland-kerwood-greenway-postcard-sticker-arcade.png`,
+  'moco-police-station': `${stickerArcadeBasePath}/moco-police-station-postcard-sticker-arcade.png`,
   'rhode-island': `${stickerArcadeBasePath}/rhode-island-postcard-sticker-arcade.png`,
   colorado: `${stickerArcadeBasePath}/colorado-postcard-sticker-arcade.png`,
   greece: `${stickerArcadeBasePath}/greece-postcard-sticker-arcade.png`,
@@ -17,6 +18,7 @@ export const postcardArtPaths: Record<DestinationId, string> = {
 
 export const recipeArtPaths: Record<RecipeId, string> = {
   'maryland-crab-cake': `${stickerArcadeBasePath}/maryland-crab-cake-sticker-arcade.png`,
+  'moco-station-badge': `${stickerArcadeBasePath}/moco-police-station-card-sticker-arcade.png`,
   'rhode-island-clam-cakes': `${stickerArcadeBasePath}/rhode-island-clam-cakes-sticker-arcade.png`,
   'colorado-burrito': `${stickerArcadeBasePath}/colorado-burrito-sticker-arcade.png`,
   'greece-spanakopita': `${stickerArcadeBasePath}/greece-spanakopita-sticker-arcade.png`,

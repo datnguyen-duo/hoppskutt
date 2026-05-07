@@ -298,6 +298,25 @@ function createObstacleMesh(kind: RunnerObstacleKind, destination: Destination) 
     const group = new THREE.Group();
     group.add(shadow(0.7));
 
+    if (routeId === 'moco-police-station') {
+      const curb = createBox(0.96, 0.48, 0.62, destination.theme.obstacleAlt, {
+        emissive: new THREE.Color(destination.theme.obstacleAlt).multiplyScalar(0.06),
+      });
+      const stripeA = createBox(0.72, 0.08, 0.07, destination.theme.secondary, {
+        emissive: new THREE.Color(destination.theme.secondary).multiplyScalar(0.14),
+      });
+      const stripeB = stripeA.clone();
+      const marker = createBox(0.26, 0.34, 0.16, destination.theme.accent, {
+        emissive: new THREE.Color(destination.theme.accent).multiplyScalar(0.16),
+      });
+      curb.position.y = 0.34;
+      stripeA.position.set(0, 0.48, 0.34);
+      stripeB.position.set(0, 0.28, 0.34);
+      marker.position.set(0.34, 0.58, 0.24);
+      group.add(curb, stripeA, stripeB, marker);
+      return group;
+    }
+
     if (routeId === 'rhode-island') {
       const bollard = new THREE.Mesh(
         new THREE.CylinderGeometry(0.42, 0.5, 0.74, 6),
@@ -407,6 +426,27 @@ function createObstacleMesh(kind: RunnerObstacleKind, destination: Destination) 
   if (kind === 'bench') {
     const group = new THREE.Group();
     group.add(shadow(0.92));
+
+    if (routeId === 'moco-police-station') {
+      const rail = createBox(1.26, 0.18, 0.18, destination.theme.obstacle, {
+        emissive: new THREE.Color(destination.theme.obstacle).multiplyScalar(0.14),
+      });
+      const stripe = createBox(0.92, 0.08, 0.05, '#fff8ea', {
+        emissive: new THREE.Color('#fff8ea').multiplyScalar(0.08),
+      });
+      const footA = createBox(0.16, 0.48, 0.16, '#38444c');
+      const footB = footA.clone();
+      const light = createBox(0.28, 0.12, 0.1, destination.theme.decoB, {
+        emissive: new THREE.Color(destination.theme.decoB).multiplyScalar(0.28),
+      });
+      rail.position.y = 0.78;
+      stripe.position.set(0, 0.78, 0.1);
+      footA.position.set(-0.48, 0.34, 0);
+      footB.position.set(0.48, 0.34, 0);
+      light.position.set(0, 0.96, 0.08);
+      group.add(rail, stripe, footA, footB, light);
+      return group;
+    }
 
     if (routeId === 'rhode-island') {
       const wall = createBox(1.24, 0.58, 0.44, '#8d877a', {
@@ -526,6 +566,25 @@ function createObstacleMesh(kind: RunnerObstacleKind, destination: Destination) 
 
   const group = new THREE.Group();
   group.add(shadow(0.72));
+
+  if (routeId === 'moco-police-station') {
+    const cone = new THREE.Mesh(
+      new THREE.ConeGeometry(0.38, 0.72, 12),
+      material(destination.theme.obstacle, 0.12),
+    );
+    const base = createBox(0.74, 0.14, 0.62, '#2f4147', {
+      emissive: new THREE.Color('#2f4147').multiplyScalar(0.04),
+    });
+    const stripe = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.19, 0.25, 0.07, 12),
+      material('#fff8ea', 0.08),
+    );
+    cone.position.y = 0.48;
+    base.position.y = 0.08;
+    stripe.position.y = 0.48;
+    group.add(base, cone, stripe);
+    return group;
+  }
 
   if (routeId === 'rhode-island') {
     const postA = createBox(0.12, 0.54, 0.12, '#d8cab7', {
