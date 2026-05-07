@@ -5,7 +5,7 @@ import {
   useState,
   type CSSProperties,
 } from 'react';
-import { Backpack, DoorOpen, Map, Stamp } from 'lucide-react';
+import { Backpack, DoorOpen, Map, Pause, Play, Stamp } from 'lucide-react';
 import { boostLookup } from '../data/boosts';
 import {
   createRunnerGame,
@@ -77,10 +77,12 @@ export function RunScreen({
   onComplete,
 }: RunScreenProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const controllerRef = useRef<ReturnType<typeof createRunnerGame> | null>(null);
   const popupIdRef = useRef(0);
   const popupTimersRef = useRef<number[]>([]);
   const [hud, setHud] = useState(() => createInitialHud(destination, activeBoostId));
   const [popups, setPopups] = useState<Popup[]>([]);
+  const [isPaused, setIsPaused] = useState(false);
   const cannotLose = destination.run.cannotLose ?? false;
   const scoreLabel = cannotLose ? 'Memory Lights' : 'Tandborste';
   const finishLabel = getFinishLabel(hud.finishProgress, cannotLose);
@@ -100,8 +102,28 @@ export function RunScreen({
   });
 
   const handleComplete = useEffectEvent((summary: RunSummary) => {
+    setIsPaused(false);
     onComplete(summary);
   });
+
+  const pauseRun = () => {
+    controllerRef.current?.pause();
+    setIsPaused(true);
+  };
+
+  const resumeRun = () => {
+    controllerRef.current?.resume();
+    setIsPaused(false);
+  };
+
+  const togglePause = () => {
+    if (controllerRef.current?.isPaused() ?? isPaused) {
+      resumeRun();
+      return;
+    }
+
+    pauseRun();
+  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -109,6 +131,7 @@ export function RunScreen({
       return;
     }
 
+    setIsPaused(false);
     const controller = createRunnerGame({
       canvas,
       destination,
@@ -117,13 +140,46 @@ export function RunScreen({
       onScoreEvent: handleScoreEvent,
       onComplete: handleComplete,
     });
+    controllerRef.current = controller;
 
     return () => {
       controller.dispose();
+      if (controllerRef.current === controller) {
+        controllerRef.current = null;
+      }
       popupTimersRef.current.forEach((timeout) => window.clearTimeout(timeout));
       popupTimersRef.current = [];
     };
   }, [activeBoostId, destination]);
+
+  useEffect(() => {
+    const handlePauseShortcut = (event: KeyboardEvent) => {
+      if (event.repeat) {
+        return;
+      }
+
+      if (event.key === 'Escape' || event.key.toLowerCase() === 'p') {
+        event.preventDefault();
+        setIsPaused((current) => {
+          const controller = controllerRef.current;
+          if (!controller) {
+            return current;
+          }
+
+          if (current) {
+            controller.resume();
+            return false;
+          }
+
+          controller.pause();
+          return true;
+        });
+      }
+    };
+
+    window.addEventListener('keydown', handlePauseShortcut);
+    return () => window.removeEventListener('keydown', handlePauseShortcut);
+  }, []);
 
   return (
     <section className="run-screen">
@@ -188,10 +244,21 @@ export function RunScreen({
             </div>
           </div>
 
-          <button type="button" className="button button--ghost" onClick={onAbort}>
-            <DoorOpen />
-            Exit
-          </button>
+          <div className="run-actions">
+            <button
+              type="button"
+              className="button button--ghost"
+              onClick={togglePause}
+              aria-pressed={isPaused}
+            >
+              {isPaused ? <Play /> : <Pause />}
+              {isPaused ? 'Resume' : 'Pause'}
+            </button>
+            <button type="button" className="button button--ghost" onClick={onAbort}>
+              <DoorOpen />
+              Exit
+            </button>
+          </div>
         </div>
 
         <div className="run-popups" aria-live="polite">
@@ -218,6 +285,25 @@ export function RunScreen({
             </div>
           </div>
         </div>
+
+        {isPaused && (
+          <div className="run-pause" role="dialog" aria-modal="true" aria-label="Run paused">
+            <div className="run-pause__panel">
+              <span className="eyebrow">Paused</span>
+              <strong>{destination.name}</strong>
+              <div className="run-pause__actions">
+                <button type="button" className="button button--primary" onClick={resumeRun}>
+                  <Play />
+                  Resume
+                </button>
+                <button type="button" className="button button--ghost" onClick={onAbort}>
+                  <DoorOpen />
+                  Exit
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

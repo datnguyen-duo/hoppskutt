@@ -17,6 +17,9 @@ test('homepage loads and opens the destination board', async ({ page }) => {
   await expect(
     page.locator('.destination-play-card').getByRole('button', { name: /run route/i }),
   ).toBeVisible();
+  await expect(
+    page.locator('.destination-topbar .topbar__actions').getByRole('button', { name: /run route/i }),
+  ).toBeVisible();
   await expect(page.locator('.destination-hero-panel').getByText('Lv. 1')).toBeVisible();
   await expect(page.locator('.destination-hero-panel__copy p')).toHaveCount(1);
   await expect(page.locator('.destination-topbar .destination-stop-card')).toHaveCount(8);
@@ -87,6 +90,13 @@ test('route run loads the canvas and HUD without crashing', async ({ page }) => 
   await expect(page.getByText('Run Note')).toBeVisible();
   await expect(page.getByText('Lv. 1')).toBeVisible();
   await expect(page.getByText('Home Greenway')).toBeVisible();
+
+  await page.getByRole('button', { name: /^pause$/i }).click();
+  const pauseDialog = page.getByRole('dialog', { name: 'Run paused' });
+  await expect(pauseDialog).toBeVisible();
+  await expect(pauseDialog.getByRole('button', { name: /^resume$/i })).toBeVisible();
+  await pauseDialog.getByRole('button', { name: /^resume$/i }).click();
+  await expect(pauseDialog).toHaveCount(0);
 
   await page.getByRole('button', { name: /^exit$/i }).click();
   await expect(page).toHaveURL(/view=destinations/);

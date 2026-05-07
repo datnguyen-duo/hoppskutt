@@ -1934,6 +1934,14 @@ p {
   pointer-events: auto;
 }
 
+.run-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.55rem;
+  pointer-events: auto;
+}
+
 .run-bottombar {
   align-self: end;
   justify-content: flex-start;
@@ -2044,6 +2052,40 @@ p {
   color: var(--brand-ink);
   font-size: 0.76rem;
   font-weight: 900;
+}
+
+.run-pause {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(16, 23, 38, 0.34);
+  pointer-events: auto;
+}
+
+.run-pause__panel {
+  width: min(24rem, 100%);
+  padding: 1.1rem;
+  border: 3px solid rgba(16, 23, 38, 0.9);
+  border-radius: 8px;
+  background: rgba(255, 248, 221, 0.97);
+  box-shadow: 6px 6px 0 rgba(16, 23, 38, 0.28);
+  color: var(--brand-ink);
+}
+
+.run-pause__panel strong {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 1.35rem;
+}
+
+.run-pause__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 1rem;
 }
 
 .run-popups {
@@ -2660,7 +2702,7 @@ h3,
 }
 
 .destination-topbar__main {
-  grid-template-columns: minmax(14rem, 1fr) minmax(0, 26rem);
+  grid-template-columns: minmax(14rem, 1fr) minmax(0, 39rem);
 }
 
 .destination-topbar__copy h2 {
@@ -2669,11 +2711,11 @@ h3,
 
 .destination-topbar .topbar__actions {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(10.5rem, 1.2fr) minmax(0, 0.9fr);
   gap: 0.55rem;
   align-items: stretch;
   justify-self: end;
-  width: min(100%, 26rem);
+  width: min(100%, 39rem);
 }
 
 .destination-topbar .topbar__actions .button {
@@ -2957,6 +2999,7 @@ h3,
     justify-self: stretch;
     width: 100%;
   }
+
 }
 
 @media (max-width: 760px) {
@@ -3391,10 +3434,6 @@ h3,
     width: 100%;
   }
 
-  .destination-topbar__play {
-    grid-column: 1 / -1;
-  }
-
   .destination-topbar .topbar__actions .button--quiet {
     grid-column: auto;
     justify-self: center;
@@ -3452,6 +3491,16 @@ h3,
   .run-topbar .button {
     min-height: 2.8rem;
     padding: 0.58rem 0.72rem;
+  }
+
+  .run-actions {
+    flex-direction: column;
+    gap: 0.42rem;
+  }
+
+  .run-actions .button {
+    width: 100%;
+    justify-content: center;
   }
 
   .run-tip {

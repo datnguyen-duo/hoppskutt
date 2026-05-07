@@ -61,6 +61,9 @@ type RunnerGameParams = {
 
 type RunnerGameController = {
   dispose: () => void;
+  isPaused: () => boolean;
+  pause: () => void;
+  resume: () => void;
 };
 
 type Spark = {
@@ -744,7 +747,7 @@ function createFinishGate(destination: Destination): FinishGateRig {
   };
 }
 
-function createDog(destination: Destination): DogRig {
+function createDog(): DogRig {
   const root = new THREE.Group();
   const model = new THREE.Group();
   const furWhite = new THREE.MeshLambertMaterial({
@@ -848,52 +851,6 @@ function createDog(destination: Destination): DogRig {
   tailTip.position.set(0, 0, 0.08);
   tail.add(tailTip);
 
-  const collar = new THREE.Group();
-  const collarLeather = new THREE.MeshLambertMaterial({
-    color: '#08090d',
-    emissive: new THREE.Color(destination.run.cannotLose ? '#1b1130' : '#08090d').multiplyScalar(
-      0.08,
-    ),
-  });
-  const collarSilver = new THREE.MeshLambertMaterial({
-    color: '#e3ebf0',
-    emissive: new THREE.Color('#f8fcff').multiplyScalar(0.18),
-  });
-  const collarBand = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.12, 0.56), collarLeather);
-  const buckle = createBox(0.1, 0.13, 0.04, '#dbe3e8', {
-    emissive: new THREE.Color('#f2f7fa').multiplyScalar(0.12),
-  });
-  buckle.position.set(0.34, 0.01, -0.3);
-  collar.add(collarBand, buckle);
-
-  for (const z of [-0.305, 0.305]) {
-    for (let row = 0; row < 2; row += 1) {
-      for (let index = 0; index < 6; index += 1) {
-        const stud = new THREE.Mesh(new THREE.SphereGeometry(0.035, 10, 8), collarSilver);
-        stud.scale.set(1, 0.62, 1);
-        stud.position.set(-0.28 + index * 0.112, row === 0 ? -0.032 : 0.038, z);
-        collar.add(stud);
-      }
-    }
-  }
-
-  collar.position.set(0, 1.18, -0.62);
-  collar.rotation.x = -0.18;
-
-  const rearCollar = new THREE.Group();
-  const rearCollarBand = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.13, 0.2), collarLeather);
-  rearCollar.add(rearCollarBand);
-  for (const z of [0.045, 0.12]) {
-    for (let index = 0; index < 7; index += 1) {
-      const stud = new THREE.Mesh(new THREE.SphereGeometry(0.046, 10, 8), collarSilver);
-      stud.scale.set(1, 0.55, 1);
-      stud.position.set(-0.3 + index * 0.1, 0.055, z);
-      rearCollar.add(stud);
-    }
-  }
-  rearCollar.position.set(0, 1.34, -0.36);
-  rearCollar.rotation.x = -0.16;
-
   const legs: THREE.Group[] = [];
   const legPositions: Array<{ x: number; z: number; front: boolean }> = [
     { x: -0.28, z: -0.36, front: true },
@@ -943,8 +900,6 @@ function createDog(destination: Destination): DogRig {
     neck,
     head,
     tail,
-    collar,
-    rearCollar,
   );
 
   root.add(shadow, model);
@@ -1045,7 +1000,7 @@ export function createRunnerGame({
         ? -6.5
         : -6.8;
 
-  const dogRig = createDog(destination);
+  const dogRig = createDog();
   const playerRoot = dogRig.root;
   playerRoot.position.set(0, 0, PLAYER_Z);
   scene.add(playerRoot);
@@ -1105,7 +1060,9 @@ export function createRunnerGame({
     crate: [],
     bench: [],
   };
-  let animationFrame = 0;
+  let animationFrame: number | null = null;
+  let disposed = false;
+  let paused = false;
   let score = 0;
   let hearts = 3;
   let chain = 0;
@@ -1408,7 +1365,7 @@ export function createRunnerGame({
   }
 
   function requestJump() {
-    if (finishCountdown >= 0) {
+    if (paused || finishCountdown >= 0) {
       return;
     }
 
@@ -1686,6 +1643,10 @@ export function createRunnerGame({
   }
 
   function handleKeyDown(event: KeyboardEvent) {
+    if (paused) {
+      return;
+    }
+
     if (event.key === 'ArrowLeft' || event.key.toLowerCase() === 'a') {
       targetLane = Math.max(-1, (targetLane - 1) as LaneIndex) as LaneIndex;
     }
@@ -1716,6 +1677,10 @@ export function createRunnerGame({
   }
 
   function handlePointerDown(event: PointerEvent) {
+    if (paused) {
+      return;
+    }
+
     const rect = canvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
     if (x < rect.width * 0.32) {
@@ -1730,6 +1695,10 @@ export function createRunnerGame({
   }
 
   function step(now: number) {
+    if (disposed || paused) {
+      return;
+    }
+
     const current = now * 0.001;
     const delta = Math.min(0.033, current - elapsed || 0.016);
     elapsed = current;
@@ -1816,6 +1785,30 @@ export function createRunnerGame({
     animationFrame = window.requestAnimationFrame(step);
   }
 
+  function pause() {
+    if (disposed || paused) {
+      return;
+    }
+
+    paused = true;
+    if (animationFrame !== null) {
+      window.cancelAnimationFrame(animationFrame);
+      animationFrame = null;
+    }
+    soundManager.stopRunMusic();
+  }
+
+  function resume() {
+    if (disposed || !paused) {
+      return;
+    }
+
+    paused = false;
+    elapsed = performance.now() * 0.001;
+    soundManager.startRunMusic(destination.id);
+    animationFrame = window.requestAnimationFrame(step);
+  }
+
   publishHud(true);
   resize();
   soundManager.startRunMusic(destination.id);
@@ -1826,9 +1819,17 @@ export function createRunnerGame({
   animationFrame = window.requestAnimationFrame(step);
 
   return {
+    isPaused() {
+      return paused;
+    },
+    pause,
+    resume,
     dispose() {
+      disposed = true;
       soundManager.stopRunMusic();
-      window.cancelAnimationFrame(animationFrame);
+      if (animationFrame !== null) {
+        window.cancelAnimationFrame(animationFrame);
+      }
       window.removeEventListener('resize', resize);
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);

@@ -121,6 +121,14 @@ export function DestinationScreen({
               <BookOpen />
               Book
             </button>
+            <button
+              type="button"
+              className="button button--primary destination-topbar__play"
+              onClick={onPlay}
+            >
+              <Play />
+              Run Route
+            </button>
             <button type="button" className="button button--quiet" onClick={onResetProgress}>
               <RotateCcw />
               Reset
