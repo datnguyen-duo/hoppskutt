@@ -254,7 +254,7 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
             <div className="start-menu-panel">
               <p className="eyebrow">Story</p>
               <p>
-                I started building this game in April 2026 to honor Chloe, my
+                I started building this game in the beginning of 2026 to honor Chloe, my
                 favorite trucker, and the adventures that we&apos;ve been on
                 together. We&apos;ve taken Chloe to over 20 states and parts of
                 Canada. She has walked through and woken up in some of the most
@@ -263,10 +263,10 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
               <p>
                 The name Hoppskutt was inspired by the Swedish words
                 &quot;hopp&quot; and &quot;skutt,&quot; meaning &quot;hop&quot;
-                or &quot;jump&quot; to pay homage to her &quot;Swedish&quot;
+                or &quot;jump&quot; to pay homage to her Swedish
                 roots. Even the in-game treats are Swedish for
                 &quot;toothbrush&quot;. These Purina Dentalife treats were a
-                part of Chloe&apos;s daily routine of &quot;brushing&quot;
+                part of Chloe&apos;s daily routine of brushing
                 before bedtime. It was one of those tiny routines that made our
                 life with her feel so full.
               </p>
