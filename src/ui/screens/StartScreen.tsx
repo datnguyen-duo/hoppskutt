@@ -41,7 +41,7 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
             <source srcSet={heroArtPath} media="(min-width: 960px)" />
             <img
               src={heroPortraitArtPath}
-              alt="Sticker-arcade portrait of Chloe as a roadtrip copilot with a Maryland marsh route outside"
+              alt="Portrait of Chloe as a roadtrip copilot with a Maryland marsh route outside"
               className="start-landing__photo"
             />
           </picture>
@@ -264,7 +264,7 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
                 The name Hoppskutt was inspired by the Swedish words
                 &quot;hopp&quot; and &quot;skutt,&quot; meaning &quot;hop&quot;
                 or &quot;jump&quot; to pay homage to her Swedish
-                roots. Even the in-game treats are Swedish for
+                roots. Even the in-game treats, tandborste are Swedish for
                 &quot;toothbrush&quot;. These Purina Dentalife treats were a
                 part of Chloe&apos;s daily routine of brushing
                 before bedtime. It was one of those tiny routines that made our

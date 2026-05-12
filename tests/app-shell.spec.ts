@@ -12,6 +12,7 @@ test('homepage loads and opens the destination board', async ({ page }) => {
   await page.goto('/');
 
   await expect(page.getByRole('heading', { name: 'Hoppskutt' })).toBeVisible();
+  await expect(page).toHaveTitle('Hoppskutt | A Game for Chloe');
   await expect(
     page.getByText("A game dedicated to Chloe's many adventures."),
   ).toBeVisible();
