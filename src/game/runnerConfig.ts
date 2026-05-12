@@ -16,6 +16,7 @@ export type PatternPickup = {
   lane: LaneIndex;
   y?: number;
   z?: number;
+  requiresJump?: boolean;
 };
 
 export type RunnerPattern = {

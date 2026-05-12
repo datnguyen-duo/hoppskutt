@@ -311,8 +311,8 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
                   </a>
                 </li>
                 <li>
-                  <a href="https://opengameart.org/content/path-to-lake-land" target="_blank" rel="noreferrer">
-                    Path to Lake Land by HorrorPen (CC BY 3.0)
+                  <a href="https://opengameart.org/content/funky-menu-loop" target="_blank" rel="noreferrer">
+                    Funky Menu Loop by iamoneabe (CC0)
                   </a>
                 </li>
                 <li>

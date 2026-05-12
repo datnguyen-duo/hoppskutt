@@ -31,6 +31,7 @@ type RunnerEntity = {
   response: ObstacleResponse | null;
   clearHeight: number;
   baseY: number;
+  requiresJumpPickup: boolean;
 };
 
 export type HudSnapshot = {
@@ -106,6 +107,10 @@ const DEFAULT_PICKUP_Y = 0.98;
 const DEFAULT_PICKUP_Z_OFFSET = -0.2;
 const HURDLE_PICKUP_MIN_Y = 1.38;
 const HURDLE_PICKUP_Z_WINDOW = 0.48;
+const JUMP_PICKUP_MIN_JUMP_Y = Math.max(
+  0.12,
+  obstacleSpecs.hurdle.clearHeight - HURDLE_BODY_CLEARANCE - HURDLE_CLEARANCE_GRACE,
+);
 const SPAWN_Z = -44;
 const FINISH_TRIGGER_Z = PLAYER_Z - 0.45;
 const SPAWN_LOOKAHEAD = PLAYER_Z - SPAWN_Z;
@@ -132,6 +137,47 @@ function createBox(
       ...options,
     }),
   );
+}
+
+function createCylinder(
+  radiusTop: number,
+  radiusBottom: number,
+  height: number,
+  color: string,
+  options: Partial<THREE.MeshLambertMaterialParameters> = {},
+  radialSegments = 12,
+) {
+  return new THREE.Mesh(
+    new THREE.CylinderGeometry(radiusTop, radiusBottom, height, radialSegments),
+    new THREE.MeshLambertMaterial({
+      color,
+      ...options,
+    }),
+  );
+}
+
+function createHorizontalCylinder(
+  radius: number,
+  length: number,
+  color: string,
+  options: Partial<THREE.MeshLambertMaterialParameters> = {},
+  radialSegments = 10,
+) {
+  const mesh = createCylinder(radius, radius, length, color, options, radialSegments);
+  mesh.rotation.z = Math.PI / 2;
+  return mesh;
+}
+
+function createFrontDisk(
+  radius: number,
+  depth: number,
+  color: string,
+  options: Partial<THREE.MeshLambertMaterialParameters> = {},
+  radialSegments = 18,
+) {
+  const mesh = createCylinder(radius, radius, depth, color, options, radialSegments);
+  mesh.rotation.x = Math.PI / 2;
+  return mesh;
 }
 
 function disposeObject3D(object: THREE.Object3D) {
@@ -237,7 +283,7 @@ function createObstacleMesh(kind: RunnerObstacleKind, destination: Destination) 
 
     if (kind === 'crate') {
       const halo = new THREE.Mesh(
-        new THREE.SphereGeometry(0.48, 18, 12),
+        new THREE.SphereGeometry(0.38, 18, 12),
         new THREE.MeshLambertMaterial({
           color: destination.theme.secondary,
           emissive: new THREE.Color(destination.theme.secondary).multiplyScalar(0.24),
@@ -252,10 +298,22 @@ function createObstacleMesh(kind: RunnerObstacleKind, destination: Destination) 
       const ribbon = createBox(0.82, 0.08, 0.08, destination.theme.accent, {
         emissive: new THREE.Color(destination.theme.accent).multiplyScalar(0.2),
       });
+      const cloudA = new THREE.Mesh(
+        new THREE.SphereGeometry(0.2, 12, 8),
+        material('#fff8ef', 0.16),
+      );
+      const cloudB = cloudA.clone();
+      const star = new THREE.Mesh(
+        new THREE.OctahedronGeometry(0.14, 0),
+        material(destination.theme.accent, 0.34),
+      );
       halo.position.y = 0.52;
       core.position.y = 0.52;
       ribbon.position.set(0, 0.52, 0.42);
-      group.add(halo, core, ribbon);
+      cloudA.position.set(-0.32, 0.3, 0.18);
+      cloudB.position.set(0.32, 0.3, 0.14);
+      star.position.set(0, 0.9, 0.08);
+      group.add(halo, core, ribbon, cloudA, cloudB, star);
       return group;
     }
 
@@ -270,11 +328,22 @@ function createObstacleMesh(kind: RunnerObstacleKind, destination: Destination) 
       const glow = createBox(0.9, 0.08, 0.08, '#fff8ef', {
         emissive: new THREE.Color('#fff8ef').multiplyScalar(0.28),
       });
+      const lowerBeam = createBox(1.08, 0.1, 0.14, destination.theme.accent, {
+        emissive: new THREE.Color(destination.theme.accent).multiplyScalar(0.24),
+      });
+      const cloudA = new THREE.Mesh(
+        new THREE.SphereGeometry(0.16, 12, 8),
+        material('#fff8ef', 0.18),
+      );
+      const cloudB = cloudA.clone();
       postA.position.set(-0.56, 0.46, 0);
       postB.position.set(0.56, 0.46, 0);
       beam.position.set(0, 0.92, 0);
       glow.position.set(0, 0.7, 0.24);
-      group.add(postA, postB, beam, glow);
+      lowerBeam.position.set(0, 0.5, 0.02);
+      cloudA.position.set(-0.68, 0.22, 0.12);
+      cloudB.position.set(0.68, 0.22, 0.12);
+      group.add(postA, postB, beam, glow, lowerBeam, cloudA, cloudB);
       return group;
     }
 
@@ -289,11 +358,15 @@ function createObstacleMesh(kind: RunnerObstacleKind, destination: Destination) 
       emissive: new THREE.Color('#fff8ef').multiplyScalar(0.18),
     });
     const postB = postA.clone();
+    const glowLine = createBox(0.84, 0.06, 0.06, destination.theme.secondary, {
+      emissive: new THREE.Color(destination.theme.secondary).multiplyScalar(0.34),
+    });
     bar.position.y = 0.42;
     star.position.set(0, 0.64, 0.02);
     postA.position.set(-0.48, 0.24, 0);
     postB.position.set(0.48, 0.24, 0);
-    group.add(bar, star, postA, postB);
+    glowLine.position.set(0, 0.3, 0.1);
+    group.add(bar, star, postA, postB, glowLine);
     return group;
   }
 
@@ -302,39 +375,62 @@ function createObstacleMesh(kind: RunnerObstacleKind, destination: Destination) 
     group.add(shadow(0.7));
 
     if (routeId === 'moco-police-station') {
-      const curb = createBox(0.96, 0.48, 0.62, destination.theme.obstacleAlt, {
-        emissive: new THREE.Color(destination.theme.obstacleAlt).multiplyScalar(0.06),
+      const base = createBox(1.08, 0.42, 0.64, '#f7f0dc', {
+        emissive: new THREE.Color('#f7f0dc').multiplyScalar(0.06),
       });
-      const stripeA = createBox(0.72, 0.08, 0.07, destination.theme.secondary, {
-        emissive: new THREE.Color(destination.theme.secondary).multiplyScalar(0.14),
+      const frontPanel = createBox(0.98, 0.32, 0.04, '#fff8ea', {
+        emissive: new THREE.Color('#fff8ea').multiplyScalar(0.08),
+      });
+      const stripeA = createBox(0.18, 0.42, 0.045, destination.theme.obstacle, {
+        emissive: new THREE.Color(destination.theme.obstacle).multiplyScalar(0.16),
       });
       const stripeB = stripeA.clone();
-      const marker = createBox(0.26, 0.34, 0.16, destination.theme.accent, {
-        emissive: new THREE.Color(destination.theme.accent).multiplyScalar(0.16),
+      const beaconBlue = createFrontDisk(0.1, 0.045, destination.theme.accent, {
+        emissive: new THREE.Color(destination.theme.accent).multiplyScalar(0.28),
       });
-      curb.position.y = 0.34;
-      stripeA.position.set(0, 0.48, 0.34);
-      stripeB.position.set(0, 0.28, 0.34);
-      marker.position.set(0.34, 0.58, 0.24);
-      group.add(curb, stripeA, stripeB, marker);
+      const beaconRed = createFrontDisk(0.1, 0.045, destination.theme.decoB, {
+        emissive: new THREE.Color(destination.theme.decoB).multiplyScalar(0.28),
+      });
+      const footA = createBox(0.18, 0.14, 0.74, '#2f4147', {
+        emissive: new THREE.Color('#2f4147').multiplyScalar(0.04),
+      });
+      const footB = footA.clone();
+      base.position.y = 0.32;
+      frontPanel.position.set(0, 0.34, 0.34);
+      stripeA.position.set(-0.24, 0.36, 0.37);
+      stripeB.position.set(0.24, 0.36, 0.37);
+      stripeA.rotation.z = -0.52;
+      stripeB.rotation.z = -0.52;
+      beaconBlue.position.set(-0.36, 0.62, 0.37);
+      beaconRed.position.set(0.36, 0.62, 0.37);
+      footA.position.set(-0.42, 0.1, 0);
+      footB.position.set(0.42, 0.1, 0);
+      group.add(base, frontPanel, stripeA, stripeB, beaconBlue, beaconRed, footA, footB);
       return group;
     }
 
     if (routeId === 'rhode-island') {
-      const bollard = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.42, 0.5, 0.74, 6),
-        material('#8f8a7d', 0.05),
-      );
-      const cap = createBox(0.78, 0.12, 0.68, '#d8cab7', {
+      const stonePost = createCylinder(0.36, 0.48, 0.62, '#8f8a7d', {
+        emissive: new THREE.Color('#8f8a7d').multiplyScalar(0.05),
+      }, 8);
+      const lighthouseTop = createCylinder(0.22, 0.28, 0.24, '#f6f0df', {
+        emissive: new THREE.Color('#f6f0df').multiplyScalar(0.06),
+      }, 8);
+      const light = createFrontDisk(0.12, 0.045, destination.theme.secondary, {
+        emissive: new THREE.Color(destination.theme.secondary).multiplyScalar(0.24),
+      });
+      const cap = createBox(0.78, 0.1, 0.66, '#d8cab7', {
         emissive: new THREE.Color('#d8cab7').multiplyScalar(0.05),
       });
       const stripe = createBox(0.62, 0.08, 0.07, destination.theme.secondary, {
         emissive: new THREE.Color(destination.theme.secondary).multiplyScalar(0.12),
       });
-      bollard.position.y = 0.42;
-      cap.position.y = 0.82;
-      stripe.position.set(0, 0.5, 0.42);
-      group.add(bollard, cap, stripe);
+      stonePost.position.y = 0.36;
+      cap.position.y = 0.66;
+      lighthouseTop.position.y = 0.84;
+      light.position.set(0, 0.84, 0.22);
+      stripe.position.set(0, 0.38, 0.42);
+      group.add(stonePost, cap, lighthouseTop, light, stripe);
       return group;
     }
 
@@ -347,82 +443,130 @@ function createObstacleMesh(kind: RunnerObstacleKind, destination: Destination) 
         new THREE.DodecahedronGeometry(0.26, 0),
         material('#b9956d', 0.04),
       );
+      const pebble = new THREE.Mesh(
+        new THREE.DodecahedronGeometry(0.18, 0),
+        material('#d0b085', 0.04),
+      );
+      const snowCap = createBox(0.36, 0.08, 0.3, '#fff4dc', {
+        emissive: new THREE.Color('#fff4dc').multiplyScalar(0.05),
+      });
       boulder.scale.set(1.05, 0.78, 0.86);
       boulder.position.set(-0.08, 0.48, 0);
       boulder.rotation.set(0.22, 0.38, -0.12);
       chip.scale.set(1, 0.7, 0.8);
       chip.position.set(0.38, 0.27, 0.2);
-      group.add(boulder, chip);
+      pebble.scale.set(1.1, 0.62, 0.84);
+      pebble.position.set(-0.42, 0.2, 0.24);
+      snowCap.position.set(-0.16, 0.78, 0.06);
+      snowCap.rotation.z = -0.18;
+      group.add(boulder, chip, pebble, snowCap);
       return group;
     }
 
     if (routeId === 'greece') {
-      const base = createBox(1.02, 0.42, 0.78, '#f6efe2', {
+      const base = createBox(1.04, 0.26, 0.78, '#f6efe2', {
         emissive: new THREE.Color('#f6efe2').multiplyScalar(0.08),
       });
-      const step = createBox(0.78, 0.3, 0.64, '#fffaf0', {
+      const middleStep = createBox(0.84, 0.22, 0.62, '#fffaf0', {
         emissive: new THREE.Color('#fffaf0').multiplyScalar(0.09),
       });
-      const tile = createBox(0.76, 0.08, 0.08, destination.theme.accent, {
+      const topStep = createBox(0.58, 0.2, 0.48, '#fffef4', {
+        emissive: new THREE.Color('#fffef4').multiplyScalar(0.1),
+      });
+      const tile = createBox(0.7, 0.08, 0.08, destination.theme.accent, {
         emissive: new THREE.Color(destination.theme.accent).multiplyScalar(0.16),
       });
-      base.position.y = 0.3;
-      step.position.set(0.12, 0.66, -0.04);
-      tile.position.set(0.12, 0.53, 0.42);
-      group.add(base, step, tile);
+      const sideTile = createBox(0.12, 0.18, 0.06, destination.theme.secondary, {
+        emissive: new THREE.Color(destination.theme.secondary).multiplyScalar(0.14),
+      });
+      base.position.y = 0.2;
+      middleStep.position.set(0.08, 0.46, -0.04);
+      topStep.position.set(0.18, 0.68, -0.12);
+      tile.position.set(0.08, 0.36, 0.42);
+      sideTile.position.set(-0.36, 0.52, 0.3);
+      group.add(base, middleStep, topStep, tile, sideTile);
       return group;
     }
 
     if (routeId === 'sweden') {
-      const logMaterial = material('#7b513c', 0.04);
-      const logA = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.2, 1.04, 8), logMaterial);
+      const logMaterial = new THREE.MeshLambertMaterial({
+        color: '#7b513c',
+        emissive: new THREE.Color('#7b513c').multiplyScalar(0.04),
+      });
+      const logA = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.18, 1.04, 8), logMaterial);
       const logB = logA.clone();
-      const cabinStripe = createBox(0.92, 0.1, 0.08, destination.theme.secondary, {
+      const logC = logA.clone();
+      const rope = createBox(0.92, 0.08, 0.08, destination.theme.secondary, {
         emissive: new THREE.Color(destination.theme.secondary).multiplyScalar(0.14),
       });
+      const sawEndA = createFrontDisk(0.11, 0.04, '#f1c996', {
+        emissive: new THREE.Color('#f1c996').multiplyScalar(0.05),
+      });
+      const sawEndB = sawEndA.clone();
       logA.rotation.z = Math.PI / 2;
       logB.rotation.z = Math.PI / 2;
-      logA.position.set(0, 0.36, -0.12);
-      logB.position.set(0, 0.6, 0.12);
-      cabinStripe.position.set(0, 0.5, 0.42);
-      group.add(logA, logB, cabinStripe);
+      logC.rotation.z = Math.PI / 2;
+      logA.position.set(0, 0.28, -0.16);
+      logB.position.set(0, 0.48, 0.08);
+      logC.position.set(0, 0.68, -0.1);
+      rope.position.set(0, 0.49, 0.42);
+      sawEndA.position.set(-0.44, 0.48, 0.43);
+      sawEndB.position.set(0.44, 0.48, 0.43);
+      group.add(logA, logB, logC, rope, sawEndA, sawEndB);
       return group;
     }
 
     if (routeId === 'vietnam') {
-      const basket = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.46, 0.52, 0.62, 8),
-        material('#8a5b38', 0.05),
-      );
+      const basket = createCylinder(0.46, 0.52, 0.62, '#8a5b38', {
+        emissive: new THREE.Color('#8a5b38').multiplyScalar(0.05),
+      }, 10);
       const rim = createBox(0.92, 0.12, 0.78, destination.theme.secondary, {
         emissive: new THREE.Color(destination.theme.secondary).multiplyScalar(0.18),
       });
-      const glow = createBox(0.48, 0.16, 0.08, '#f5c46e', {
+      const handle = createHorizontalCylinder(0.035, 0.72, '#6f4227', {
+        emissive: new THREE.Color('#6f4227').multiplyScalar(0.05),
+      });
+      const fruitA = createFrontDisk(0.09, 0.045, '#f5c46e', {
         emissive: new THREE.Color('#f5c46e').multiplyScalar(0.28),
+      });
+      const fruitB = createFrontDisk(0.075, 0.045, '#ff7148', {
+        emissive: new THREE.Color('#ff7148').multiplyScalar(0.22),
       });
       basket.scale.set(1.05, 1, 0.82);
       basket.position.y = 0.42;
       rim.position.y = 0.76;
-      glow.position.set(0, 0.48, 0.43);
-      group.add(basket, rim, glow);
+      handle.position.set(0, 0.88, 0);
+      fruitA.position.set(-0.12, 0.5, 0.43);
+      fruitB.position.set(0.1, 0.42, 0.43);
+      group.add(basket, rim, handle, fruitA, fruitB);
       return group;
     }
 
-    const cooler = createBox(0.98, 0.66, 0.76, destination.theme.obstacle, {
+    const cooler = createBox(0.98, 0.62, 0.76, destination.theme.obstacle, {
       emissive: new THREE.Color(destination.theme.obstacle).multiplyScalar(0.04),
     });
-    cooler.position.y = 0.37;
+    cooler.position.y = 0.36;
     const lid = createBox(1.04, 0.14, 0.82, '#fff9ed', {
       emissive: new THREE.Color('#fff9ed').multiplyScalar(0.06),
     });
-    lid.position.y = 0.75;
-    const latch = createBox(0.2, 0.16, 0.08, '#ffefc8');
-    latch.position.set(0, 0.5, 0.42);
+    lid.position.y = 0.72;
+    const handle = createHorizontalCylinder(0.035, 0.54, '#fff9ed', {
+      emissive: new THREE.Color('#fff9ed').multiplyScalar(0.08),
+    });
+    const latch = createBox(0.18, 0.18, 0.08, '#ffefc8');
     const stripe = createBox(0.5, 0.08, 0.06, destination.theme.secondary, {
       emissive: new THREE.Color(destination.theme.secondary).multiplyScalar(0.18),
     });
+    const wheelA = createFrontDisk(0.1, 0.06, '#2d3c35', {
+      emissive: new THREE.Color('#2d3c35').multiplyScalar(0.04),
+    });
+    const wheelB = wheelA.clone();
+    handle.position.set(0, 0.88, 0.14);
+    latch.position.set(0, 0.49, 0.42);
     stripe.position.set(0, 0.4, 0.41);
-    group.add(cooler, lid, latch, stripe);
+    wheelA.position.set(-0.34, 0.08, 0.42);
+    wheelB.position.set(0.34, 0.08, 0.42);
+    group.add(cooler, lid, handle, latch, stripe, wheelA, wheelB);
     return group;
   }
 
@@ -431,23 +575,52 @@ function createObstacleMesh(kind: RunnerObstacleKind, destination: Destination) 
     group.add(shadow(0.92));
 
     if (routeId === 'moco-police-station') {
-      const rail = createBox(1.26, 0.18, 0.18, destination.theme.obstacle, {
-        emissive: new THREE.Color(destination.theme.obstacle).multiplyScalar(0.14),
-      });
-      const stripe = createBox(0.92, 0.08, 0.05, '#fff8ea', {
+      const gateArm = createBox(1.34, 0.14, 0.14, '#fff8ea', {
         emissive: new THREE.Color('#fff8ea').multiplyScalar(0.08),
       });
-      const footA = createBox(0.16, 0.48, 0.16, '#38444c');
-      const footB = footA.clone();
-      const light = createBox(0.28, 0.12, 0.1, destination.theme.decoB, {
-        emissive: new THREE.Color(destination.theme.decoB).multiplyScalar(0.28),
+      const armStripeA = createBox(0.24, 0.15, 0.04, destination.theme.decoB, {
+        emissive: new THREE.Color(destination.theme.decoB).multiplyScalar(0.18),
       });
-      rail.position.y = 0.78;
-      stripe.position.set(0, 0.78, 0.1);
-      footA.position.set(-0.48, 0.34, 0);
-      footB.position.set(0.48, 0.34, 0);
-      light.position.set(0, 0.96, 0.08);
-      group.add(rail, stripe, footA, footB, light);
+      const armStripeB = armStripeA.clone();
+      const armStripeC = createBox(0.24, 0.15, 0.04, destination.theme.accent, {
+        emissive: new THREE.Color(destination.theme.accent).multiplyScalar(0.2),
+      });
+      const postA = createBox(0.16, 0.76, 0.18, '#38444c', {
+        emissive: new THREE.Color('#38444c').multiplyScalar(0.05),
+      });
+      const postB = postA.clone();
+      const footA = createBox(0.42, 0.14, 0.44, '#2f4147', {
+        emissive: new THREE.Color('#2f4147').multiplyScalar(0.04),
+      });
+      const footB = footA.clone();
+      const beaconBlue = createFrontDisk(0.08, 0.045, destination.theme.accent, {
+        emissive: new THREE.Color(destination.theme.accent).multiplyScalar(0.35),
+      });
+      const beaconRed = createFrontDisk(0.08, 0.045, destination.theme.decoB, {
+        emissive: new THREE.Color(destination.theme.decoB).multiplyScalar(0.35),
+      });
+      gateArm.position.set(0, 0.78, 0);
+      armStripeA.position.set(-0.4, 0.78, 0.09);
+      armStripeB.position.set(0.4, 0.78, 0.09);
+      armStripeC.position.set(0, 0.78, 0.09);
+      postA.position.set(-0.56, 0.44, 0);
+      postB.position.set(0.56, 0.44, 0);
+      footA.position.set(-0.56, 0.08, 0);
+      footB.position.set(0.56, 0.08, 0);
+      beaconBlue.position.set(-0.2, 0.98, 0.1);
+      beaconRed.position.set(0.2, 0.98, 0.1);
+      group.add(
+        gateArm,
+        armStripeA,
+        armStripeB,
+        armStripeC,
+        postA,
+        postB,
+        footA,
+        footB,
+        beaconBlue,
+        beaconRed,
+      );
       return group;
     }
 
@@ -458,31 +631,44 @@ function createObstacleMesh(kind: RunnerObstacleKind, destination: Destination) 
       const cap = createBox(1.32, 0.14, 0.5, '#d8cab7', {
         emissive: new THREE.Color('#d8cab7').multiplyScalar(0.05),
       });
-      const rail = createBox(1.1, 0.08, 0.08, destination.theme.secondary, {
+      const rail = createHorizontalCylinder(0.04, 1.1, destination.theme.secondary, {
         emissive: new THREE.Color(destination.theme.secondary).multiplyScalar(0.12),
+      });
+      const postA = createBox(0.1, 0.32, 0.1, '#f1e6d2', {
+        emissive: new THREE.Color('#f1e6d2').multiplyScalar(0.05),
+      });
+      const postB = postA.clone();
+      const tideStripe = createBox(1.06, 0.05, 0.05, '#f4fbff', {
+        emissive: new THREE.Color('#f4fbff').multiplyScalar(0.08),
       });
       wall.position.y = 0.38;
       cap.position.y = 0.74;
-      rail.position.set(0, 0.86, -0.22);
-      group.add(wall, cap, rail);
+      rail.position.set(0, 0.92, -0.22);
+      postA.position.set(-0.48, 0.9, -0.22);
+      postB.position.set(0.48, 0.9, -0.22);
+      tideStripe.position.set(0, 0.38, 0.24);
+      group.add(wall, cap, rail, postA, postB, tideStripe);
       return group;
     }
 
     if (routeId === 'colorado') {
-      const log = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.22, 0.26, 1.28, 8),
-        material('#76503b', 0.04),
-      );
+      const log = createHorizontalCylinder(0.24, 1.28, '#76503b', {
+        emissive: new THREE.Color('#76503b').multiplyScalar(0.04),
+      }, 8);
       const rockA = new THREE.Mesh(
         new THREE.DodecahedronGeometry(0.28, 0),
         material('#9b8065', 0.04),
       );
       const rockB = rockA.clone();
-      log.rotation.z = Math.PI / 2;
+      const branch = createBox(0.44, 0.07, 0.08, '#4f7f3f', {
+        emissive: new THREE.Color('#4f7f3f').multiplyScalar(0.05),
+      });
       log.position.y = 0.58;
       rockA.position.set(-0.5, 0.28, 0.22);
       rockB.position.set(0.5, 0.28, -0.18);
-      group.add(log, rockA, rockB);
+      branch.position.set(0.18, 0.78, 0.18);
+      branch.rotation.z = -0.28;
+      group.add(log, rockA, rockB, branch);
       return group;
     }
 
@@ -493,13 +679,27 @@ function createObstacleMesh(kind: RunnerObstacleKind, destination: Destination) 
       const blueCap = createBox(1.18, 0.14, 0.48, destination.theme.accent, {
         emissive: new THREE.Color(destination.theme.accent).multiplyScalar(0.14),
       });
-      const sunTile = createBox(0.18, 0.18, 0.06, destination.theme.secondary, {
+      const window = createBox(0.32, 0.26, 0.06, destination.theme.accent, {
+        emissive: new THREE.Color(destination.theme.accent).multiplyScalar(0.18),
+      });
+      const windowCrossV = createBox(0.04, 0.26, 0.065, '#fff8ea', {
+        emissive: new THREE.Color('#fff8ea').multiplyScalar(0.08),
+      });
+      const windowCrossH = createBox(0.32, 0.04, 0.065, '#fff8ea', {
+        emissive: new THREE.Color('#fff8ea').multiplyScalar(0.08),
+      });
+      const sunTile = createBox(0.16, 0.16, 0.06, destination.theme.secondary, {
         emissive: new THREE.Color(destination.theme.secondary).multiplyScalar(0.18),
       });
       wall.position.y = 0.42;
       blueCap.position.y = 0.82;
-      sunTile.position.set(0, 0.5, 0.25);
-      group.add(wall, blueCap, sunTile);
+      window.position.set(-0.22, 0.48, 0.24);
+      windowCrossV.position.copy(window.position);
+      windowCrossV.position.z += 0.01;
+      windowCrossH.position.copy(window.position);
+      windowCrossH.position.z += 0.012;
+      sunTile.position.set(0.34, 0.48, 0.25);
+      group.add(wall, blueCap, window, windowCrossV, windowCrossH, sunTile);
       return group;
     }
 
@@ -513,10 +713,24 @@ function createObstacleMesh(kind: RunnerObstacleKind, destination: Destination) 
       const timber = createBox(1.08, 0.08, 0.08, '#f1dcc5', {
         emissive: new THREE.Color('#f1dcc5').multiplyScalar(0.06),
       });
+      const door = createBox(0.22, 0.32, 0.06, '#6a4535', {
+        emissive: new THREE.Color('#6a4535').multiplyScalar(0.04),
+      });
+      const windowA = createBox(0.18, 0.18, 0.065, '#f8e0a0', {
+        emissive: new THREE.Color('#f8e0a0').multiplyScalar(0.18),
+      });
+      const windowB = windowA.clone();
+      const chimney = createBox(0.16, 0.22, 0.16, '#704a40', {
+        emissive: new THREE.Color('#704a40').multiplyScalar(0.04),
+      });
       body.position.y = 0.42;
       roof.position.y = 0.78;
       timber.position.set(0, 0.5, 0.25);
-      group.add(body, roof, timber);
+      door.position.set(0, 0.34, 0.25);
+      windowA.position.set(-0.36, 0.5, 0.25);
+      windowB.position.set(0.36, 0.5, 0.25);
+      chimney.position.set(0.38, 0.94, -0.05);
+      group.add(body, roof, timber, door, windowA, windowB, chimney);
       return group;
     }
 
@@ -527,28 +741,39 @@ function createObstacleMesh(kind: RunnerObstacleKind, destination: Destination) 
       const canopy = createBox(1.34, 0.16, 0.54, destination.theme.secondary, {
         emissive: new THREE.Color(destination.theme.secondary).multiplyScalar(0.2),
       });
+      const canopyTrim = createBox(1.18, 0.08, 0.05, '#ff7148', {
+        emissive: new THREE.Color('#ff7148').multiplyScalar(0.2),
+      });
       const lanternA = createBox(0.16, 0.18, 0.12, '#f2bd62', {
         emissive: new THREE.Color('#f2bd62').multiplyScalar(0.35),
       });
       const lanternB = lanternA.clone();
+      const wheelA = createFrontDisk(0.12, 0.06, '#4a2d20', {
+        emissive: new THREE.Color('#4a2d20').multiplyScalar(0.04),
+      });
+      const wheelB = wheelA.clone();
       cart.position.y = 0.36;
       canopy.position.y = 0.74;
+      canopyTrim.position.set(0, 0.62, 0.3);
       lanternA.position.set(-0.38, 0.57, 0.29);
       lanternB.position.set(0.38, 0.57, 0.29);
-      group.add(cart, canopy, lanternA, lanternB);
+      wheelA.position.set(-0.42, 0.14, 0.28);
+      wheelB.position.set(0.42, 0.14, 0.28);
+      group.add(cart, canopy, canopyTrim, lanternA, lanternB, wheelA, wheelB);
       return group;
     }
 
-    const seatMaterial = {
+    const slatMaterial = {
       emissive: new THREE.Color(destination.theme.decoA).multiplyScalar(0.08),
     };
     const supportMaterial = {
       emissive: new THREE.Color('#fff8ea').multiplyScalar(0.05),
     };
-    const seat = createBox(1.22, 0.18, 0.34, destination.theme.decoA, seatMaterial);
-    const back = createBox(1.2, 0.18, 0.14, destination.theme.decoA, seatMaterial);
-    const base = createBox(1.02, 0.22, 0.26, '#fff8ea', supportMaterial);
-    const supportA = createBox(0.22, 0.44, 0.22, '#fff8ea', supportMaterial);
+    const seatFront = createBox(1.22, 0.12, 0.12, destination.theme.decoA, slatMaterial);
+    const seatBack = seatFront.clone();
+    const backLow = createBox(1.2, 0.12, 0.1, destination.theme.decoA, slatMaterial);
+    const backHigh = backLow.clone();
+    const supportA = createBox(0.16, 0.56, 0.16, '#fff8ea', supportMaterial);
     const supportB = supportA.clone();
     const frontRail = createBox(0.94, 0.1, 0.12, destination.theme.secondary, {
       emissive: new THREE.Color(destination.theme.secondary).multiplyScalar(0.12),
@@ -556,14 +781,15 @@ function createObstacleMesh(kind: RunnerObstacleKind, destination: Destination) 
     const stretcher = createBox(0.86, 0.08, 0.16, destination.theme.obstacleAlt, {
       emissive: new THREE.Color(destination.theme.obstacleAlt).multiplyScalar(0.08),
     });
-    seat.position.set(0, 0.56, 0.04);
-    back.position.set(0, 0.88, -0.14);
-    base.position.set(0, 0.22, 0.02);
-    supportA.position.set(-0.42, 0.22, 0.06);
-    supportB.position.set(0.42, 0.22, 0.06);
+    seatFront.position.set(0, 0.56, 0.12);
+    seatBack.position.set(0, 0.56, -0.12);
+    backLow.position.set(0, 0.82, -0.2);
+    backHigh.position.set(0, 1, -0.24);
+    supportA.position.set(-0.42, 0.32, 0.04);
+    supportB.position.set(0.42, 0.32, 0.04);
     frontRail.position.set(0, 0.38, -0.06);
     stretcher.position.set(0, 0.06, 0.08);
-    group.add(seat, back, base, supportA, supportB, frontRail, stretcher);
+    group.add(seatFront, seatBack, backLow, backHigh, supportA, supportB, frontRail, stretcher);
     return group;
   }
 
@@ -571,21 +797,35 @@ function createObstacleMesh(kind: RunnerObstacleKind, destination: Destination) 
   group.add(shadow(0.72));
 
   if (routeId === 'moco-police-station') {
-    const cone = new THREE.Mesh(
-      new THREE.ConeGeometry(0.38, 0.72, 12),
-      material(destination.theme.obstacle, 0.12),
-    );
-    const base = createBox(0.74, 0.14, 0.62, '#2f4147', {
+    const topRail = createBox(1.08, 0.12, 0.12, '#fff8ea', {
+      emissive: new THREE.Color('#fff8ea').multiplyScalar(0.08),
+    });
+    const lowerRail = createBox(0.94, 0.1, 0.1, destination.theme.obstacle, {
+      emissive: new THREE.Color(destination.theme.obstacle).multiplyScalar(0.16),
+    });
+    const stripeA = createBox(0.16, 0.34, 0.04, destination.theme.obstacle, {
+      emissive: new THREE.Color(destination.theme.obstacle).multiplyScalar(0.16),
+    });
+    const stripeB = stripeA.clone();
+    const postA = createBox(0.12, 0.5, 0.12, '#2f4147', {
       emissive: new THREE.Color('#2f4147').multiplyScalar(0.04),
     });
-    const stripe = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.19, 0.25, 0.07, 12),
-      material('#fff8ea', 0.08),
-    );
-    cone.position.y = 0.48;
-    base.position.y = 0.08;
-    stripe.position.y = 0.48;
-    group.add(base, cone, stripe);
+    const postB = postA.clone();
+    const footA = createBox(0.34, 0.1, 0.42, '#2f4147', {
+      emissive: new THREE.Color('#2f4147').multiplyScalar(0.04),
+    });
+    const footB = footA.clone();
+    topRail.position.set(0, 0.46, 0);
+    lowerRail.position.set(0, 0.28, 0.02);
+    stripeA.position.set(-0.24, 0.46, 0.08);
+    stripeB.position.set(0.24, 0.46, 0.08);
+    stripeA.rotation.z = -0.5;
+    stripeB.rotation.z = -0.5;
+    postA.position.set(-0.5, 0.28, 0);
+    postB.position.set(0.5, 0.28, 0);
+    footA.position.set(-0.5, 0.08, 0);
+    footB.position.set(0.5, 0.08, 0);
+    group.add(topRail, lowerRail, stripeA, stripeB, postA, postB, footA, footB);
     return group;
   }
 
@@ -594,32 +834,43 @@ function createObstacleMesh(kind: RunnerObstacleKind, destination: Destination) 
       emissive: new THREE.Color('#d8cab7').multiplyScalar(0.05),
     });
     const postB = postA.clone();
-    const rope = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.04, 0.04, 1.02, 8),
-      material(destination.theme.secondary, 0.14),
-    );
+    const topRope = createHorizontalCylinder(0.04, 1.02, destination.theme.secondary, {
+      emissive: new THREE.Color(destination.theme.secondary).multiplyScalar(0.14),
+    }, 8);
+    const lowerRope = createHorizontalCylinder(0.03, 0.86, '#f4e2bd', {
+      emissive: new THREE.Color('#f4e2bd').multiplyScalar(0.08),
+    }, 8);
+    const capA = createFrontDisk(0.08, 0.04, destination.theme.secondary, {
+      emissive: new THREE.Color(destination.theme.secondary).multiplyScalar(0.16),
+    });
+    const capB = capA.clone();
     postA.position.set(-0.46, 0.28, 0);
     postB.position.set(0.46, 0.28, 0);
-    rope.rotation.z = Math.PI / 2;
-    rope.position.y = 0.46;
-    group.add(postA, postB, rope);
+    topRope.position.y = 0.48;
+    lowerRope.position.y = 0.32;
+    capA.position.set(-0.46, 0.58, 0.08);
+    capB.position.set(0.46, 0.58, 0.08);
+    group.add(postA, postB, topRope, lowerRope, capA, capB);
     return group;
   }
 
   if (routeId === 'colorado') {
-    const log = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.1, 0.12, 1.04, 8),
-      material('#7b513c', 0.04),
-    );
+    const log = createHorizontalCylinder(0.12, 1.04, '#7b513c', {
+      emissive: new THREE.Color('#7b513c').multiplyScalar(0.04),
+    }, 8);
     const postA = createBox(0.12, 0.36, 0.12, '#8d6a4d', {
       emissive: new THREE.Color('#8d6a4d').multiplyScalar(0.05),
     });
     const postB = postA.clone();
-    log.rotation.z = Math.PI / 2;
+    const pineTip = createBox(0.26, 0.06, 0.08, '#3f7d3d', {
+      emissive: new THREE.Color('#3f7d3d').multiplyScalar(0.05),
+    });
     log.position.y = 0.34;
     postA.position.set(-0.42, 0.18, 0);
     postB.position.set(0.42, 0.18, 0);
-    group.add(log, postA, postB);
+    pineTip.position.set(0.18, 0.46, 0.08);
+    pineTip.rotation.z = -0.34;
+    group.add(log, postA, postB, pineTip);
     return group;
   }
 
@@ -634,28 +885,36 @@ function createObstacleMesh(kind: RunnerObstacleKind, destination: Destination) 
       emissive: new THREE.Color('#efe3d0').multiplyScalar(0.06),
     });
     const postB = postA.clone();
+    const tileA = createBox(0.12, 0.12, 0.05, destination.theme.secondary, {
+      emissive: new THREE.Color(destination.theme.secondary).multiplyScalar(0.14),
+    });
+    const tileB = tileA.clone();
     lip.position.y = 0.26;
     stripe.position.set(0, 0.35, 0.1);
     postA.position.set(-0.42, 0.14, 0);
     postB.position.set(0.42, 0.14, 0);
-    group.add(lip, stripe, postA, postB);
+    tileA.position.set(-0.2, 0.24, 0.12);
+    tileB.position.set(0.2, 0.24, 0.12);
+    group.add(lip, stripe, postA, postB, tileA, tileB);
     return group;
   }
 
   if (routeId === 'sweden') {
-    const log = new THREE.Mesh(
-      new THREE.CylinderGeometry(0.11, 0.12, 1.02, 8),
-      material('#6d4b39', 0.04),
-    );
+    const log = createHorizontalCylinder(0.12, 1.02, '#6d4b39', {
+      emissive: new THREE.Color('#6d4b39').multiplyScalar(0.04),
+    }, 8);
     const capA = createBox(0.16, 0.16, 0.16, destination.theme.secondary, {
       emissive: new THREE.Color(destination.theme.secondary).multiplyScalar(0.1),
     });
     const capB = capA.clone();
-    log.rotation.z = Math.PI / 2;
+    const baseRail = createBox(0.86, 0.08, 0.1, '#f1dcc5', {
+      emissive: new THREE.Color('#f1dcc5').multiplyScalar(0.06),
+    });
     log.position.y = 0.32;
     capA.position.set(-0.5, 0.32, 0);
     capB.position.set(0.5, 0.32, 0);
-    group.add(log, capA, capB);
+    baseRail.position.set(0, 0.16, 0.04);
+    group.add(log, capA, capB, baseRail);
     return group;
   }
 
@@ -663,6 +922,9 @@ function createObstacleMesh(kind: RunnerObstacleKind, destination: Destination) 
     const bar = createBox(1.02, 0.1, 0.12, destination.theme.secondary, {
       emissive: new THREE.Color(destination.theme.secondary).multiplyScalar(0.22),
     });
+    const lowerBamboo = createHorizontalCylinder(0.035, 0.86, '#d79b56', {
+      emissive: new THREE.Color('#d79b56').multiplyScalar(0.08),
+    }, 8);
     const postA = createBox(0.1, 0.42, 0.1, '#7a5238', {
       emissive: new THREE.Color('#7a5238').multiplyScalar(0.06),
     });
@@ -670,42 +932,42 @@ function createObstacleMesh(kind: RunnerObstacleKind, destination: Destination) 
     const lantern = createBox(0.18, 0.2, 0.12, '#f4bf68', {
       emissive: new THREE.Color('#f4bf68').multiplyScalar(0.34),
     });
+    const lanternGlow = createFrontDisk(0.07, 0.04, '#ff7148', {
+      emissive: new THREE.Color('#ff7148').multiplyScalar(0.28),
+    });
     bar.position.y = 0.36;
+    lowerBamboo.position.y = 0.22;
     postA.position.set(-0.46, 0.22, 0);
     postB.position.set(0.46, 0.22, 0);
     lantern.position.set(0, 0.55, 0.02);
-    group.add(bar, postA, postB, lantern);
+    lanternGlow.position.set(0, 0.55, 0.09);
+    group.add(bar, lowerBamboo, postA, postB, lantern, lanternGlow);
     return group;
   }
 
-  const braceMaterial = {
+  const rail = createBox(1.08, 0.12, 0.14, destination.theme.secondary, {
+    emissive: new THREE.Color(destination.theme.secondary).multiplyScalar(0.2),
+  });
+  const postA = createBox(0.12, 0.42, 0.12, destination.theme.obstacleAlt, {
     emissive: new THREE.Color(destination.theme.obstacleAlt).multiplyScalar(0.08),
-  };
-  const bar = createBox(1.04, 0.14, 0.16, destination.theme.secondary, {
-    emissive: new THREE.Color(destination.theme.secondary).multiplyScalar(0.24),
   });
-  const stripeA = createBox(0.24, 0.04, 0.02, '#fff8ea', {
-    emissive: new THREE.Color('#fff8ea').multiplyScalar(0.05),
+  const postB = postA.clone();
+  const braceA = createBox(0.1, 0.38, 0.08, destination.theme.obstacleAlt, {
+    emissive: new THREE.Color(destination.theme.obstacleAlt).multiplyScalar(0.08),
   });
-  const stripeB = stripeA.clone();
-  const braceLeftA = createBox(0.1, 0.28, 0.1, destination.theme.obstacleAlt, braceMaterial);
-  const braceLeftB = braceLeftA.clone();
-  const braceRightA = braceLeftA.clone();
-  const braceRightB = braceLeftA.clone();
-
-  bar.position.set(0, 0.22, 0);
-  stripeA.position.set(-0.24, 0.22, 0.09);
-  stripeB.position.set(0.24, 0.22, 0.09);
-  braceLeftA.position.set(-0.36, 0.1, 0);
-  braceLeftB.position.set(-0.24, 0.1, 0);
-  braceRightA.position.set(0.24, 0.1, 0);
-  braceRightB.position.set(0.36, 0.1, 0);
-  braceLeftA.rotation.z = -0.46;
-  braceLeftB.rotation.z = 0.46;
-  braceRightA.rotation.z = -0.46;
-  braceRightB.rotation.z = 0.46;
-
-  group.add(bar, stripeA, stripeB, braceLeftA, braceLeftB, braceRightA, braceRightB);
+  const braceB = braceA.clone();
+  const grassStripe = createBox(0.86, 0.06, 0.04, '#fff8ea', {
+    emissive: new THREE.Color('#fff8ea').multiplyScalar(0.06),
+  });
+  rail.position.set(0, 0.34, 0);
+  postA.position.set(-0.46, 0.2, 0);
+  postB.position.set(0.46, 0.2, 0);
+  braceA.position.set(-0.2, 0.2, 0.02);
+  braceB.position.set(0.2, 0.2, 0.02);
+  braceA.rotation.z = -0.46;
+  braceB.rotation.z = 0.46;
+  grassStripe.position.set(0, 0.36, 0.08);
+  group.add(rail, postA, postB, braceA, braceB, grassStripe);
   return group;
 }
 
@@ -1175,6 +1437,7 @@ export function createRunnerGame({
     depth: number,
     response: ObstacleResponse | null,
     clearHeight: number,
+    requiresJumpPickup = false,
   ): RunnerEntity {
     let entity = entityPools[kind].find((candidate) => !candidate.active);
     if (!entity) {
@@ -1196,6 +1459,7 @@ export function createRunnerGame({
         response,
         clearHeight,
         baseY: y,
+        requiresJumpPickup,
       };
       entityPools[kind].push(entity);
       entities.push(entity);
@@ -1212,6 +1476,7 @@ export function createRunnerGame({
     entity.response = response;
     entity.clearHeight = clearHeight;
     entity.baseY = y;
+    entity.requiresJumpPickup = requiresJumpPickup;
     entity.active = true;
     entity.mesh.visible = true;
     entity.mesh.position.set(entity.x, y, z);
@@ -1272,6 +1537,7 @@ export function createRunnerGame({
 
       return {
         ...pickup,
+        requiresJump: true,
         y: Math.max(pickupY(pickup), HURDLE_PICKUP_MIN_Y),
         z: pairedHurdle.z ?? 0,
       };
@@ -1337,6 +1603,7 @@ export function createRunnerGame({
         0.52,
         null,
         0,
+        pickup.requiresJump ?? false,
       );
     });
 
@@ -1485,7 +1752,10 @@ export function createRunnerGame({
 
       if (entity.kind === 'pickup') {
         const chestHeight = 1.1 + jumpY;
-        if (Math.abs(chestHeight - entity.mesh.position.y) < pickupHeightTolerance) {
+        const catchesStandardPickup =
+          Math.abs(chestHeight - entity.mesh.position.y) < pickupHeightTolerance;
+        const catchesJumpPickup = entity.requiresJumpPickup && jumpY >= JUMP_PICKUP_MIN_JUMP_Y;
+        if (catchesStandardPickup || catchesJumpPickup) {
           collect(entity);
         }
         continue;

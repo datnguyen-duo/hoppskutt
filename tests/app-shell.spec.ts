@@ -59,9 +59,11 @@ test('homepage menu keeps the trip guidance short', async ({ page }) => {
 
   await page.getByRole('button', { name: /^credits$/i }).click();
   await expect(page.getByText('Traditional greek music by ckotty3')).toBeVisible();
+  await expect(page.getByText('Funky Menu Loop by iamoneabe')).toBeVisible();
   await expect(page.getByText('Ganglat - SMV - MMF7 0662 08')).toBeVisible();
   await expect(page.getByText('Vietnam Bamboo Flute by VPRODMUSIC_Asia_BGM')).toBeVisible();
   await expect(page.getByText('Heavenly Loop by isaiah658')).toBeVisible();
+  await expect(page.getByText('Path to Lake Land by HorrorPen')).toHaveCount(0);
   await expect(page.getByText('Invincibility Loop by Zane Little Music Sun')).toHaveCount(0);
 });
 

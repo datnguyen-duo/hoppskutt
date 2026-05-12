@@ -21,8 +21,8 @@ const routeMusicAssets: Partial<Record<DestinationId, RouteMusicAsset>> = {
     volume: 0.38,
   },
   'moco-police-station': {
-    src: '/assets/audio/path-to-lake-land.ogg',
-    volume: 0.32,
+    src: '/assets/audio/funky-menu-loop.mp3',
+    volume: 0.34,
   },
   'rhode-island': {
     src: '/assets/audio/bossa-nova.mp3',
