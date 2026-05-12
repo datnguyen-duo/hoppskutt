@@ -285,7 +285,7 @@ export function StartScreen({ progress, onStart, onOpenCollection }: StartScreen
               <p>
                 Chloe is part Lab, Pointer and Rottweiler and 100% princess.
                 She&apos;s the most gentle, loving and sweetest dog ever. But
-                don&apos;t let that fool you - she will hustle you to give her
+                don&apos;t let her fool you. She will hustle you to give her
                 food by targeting the weakest link at the dinner table. She is
                 the type of dog to demand attention from everyone in the room
                 but still cuddle you when you&apos;re sad. She&apos;s
